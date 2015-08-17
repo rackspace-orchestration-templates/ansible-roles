@@ -1,0 +1,28 @@
+---
+- name: tzdata-update
+  command: /usr/sbin/tzdata-update
+  notify: hwclock sync
+
+- name: hwclock sync
+  command: /sbin/hwclock --systohc
+  notify: restart rsyslog
+
+- name: restart rsyslog
+  service: 
+    state=restarted
+    name=rsyslog
+    enabled=yes
+  notify: restart crond
+
+- name: restart crond
+  service: 
+    state=restarted
+    name=crond
+    enabled=yes
+  notify: restart ntpd
+
+- name: restart ntpd
+  service:
+    state=restarted
+    name=ntpd
+    enabled=yes

@@ -1,0 +1,114 @@
+---
+# This role provides a fresh installation of Magento on a new virtualhost and new database.
+- name: mysql packages are present
+  yum: 
+    state=present
+    name={{ item }}
+  with_items:
+  - MySQL-python
+  - mysql
+
+- name: document root exists
+  file: 
+    path={{ document_root }}
+    state=directory
+    mode=0775
+
+- name: downloading...
+  get_url:
+    url={{ item }}
+    dest={{ document_root }}
+    owner={{ vhost_user }}
+    group={{ vhost_user }}
+  with_items:
+  - "https://www.magentocommerce.com/downloads/assets/{{ magento_version }}/magento-{{ magento_version }}.tar.gz"
+  - "https://www.magentocommerce.com/downloads/assets/{{ magento_version }}/magento-sample-data-{{ magento_version }}.tar.gz"
+
+- name: unpacking...
+  unarchive: 
+    src={{ document_root }}/{{ item }}
+    dest={{ document_root }}
+    copy=no
+  with_items:
+  - "magento-{{ magento_version }}.tar.gz"
+  - "magento-sample-data-{{ magento_version }}.tar.gz"
+
+- name: root's mysql client is updated
+  template: 
+    src=templates/root/.my.cnf.j2
+    dest=/root/.my.cnf
+    owner=root
+    group=root
+    mode=0600
+
+- name: database is present
+  mysql_db: 
+    state=present
+    login_host={{ mysql_host_ip }}
+    name={{ magento_db_name }}
+
+- name: import sample mysql data
+  mysql_db: 
+    state=import
+    login_host={{ mysql_host_ip }}
+    name={{ magento_db_name }}
+    target={{ document_root }}/magento-sample-data-{{ magento_version }}/magento_sample_data_for_{{ magento_version }}.sql
+
+- name: database user is present
+  mysql_user: 
+    state=present
+    login_host={{ mysql_host_ip }}
+    name={{ magento_db_user }}
+    password={{ magento_db_password }}
+    priv={{ magento_db_name }}.*:ALL
+    host=%
+
+- name: copy core files
+  shell: 
+    chdir={{ document_root }}
+    cp -a magento/{{ item.core }} . &&
+    cp -a magento-sample-data-{{ magento_version }}/{{ item.sample }} .
+  ignore_errors: yes
+  with_items:
+    - { core: '*', sample: 'media' }
+    - { core: '.htaccess', sample: 'skin' }
+
+# TEST SCRTIPS AND TOOLS HERE
+
+- name: garbage collection
+  shell: 
+    chdir={{ document_root }}
+    rm -rf {{ item }}
+  with_items: garbage_files
+
+- name: ownership & directory permissions
+  file: 
+    state=directory
+    recurse=yes
+    path={{ document_root }}/
+    owner={{ vhost_user }}
+    group={{ vhost_user }}
+    mode=0755
+
+- name: file mode permissions
+  shell: 
+    chdir={{ document_root }}
+    find . -type f -exec chmod 644 {} \;
+
+- name: installing magento...
+  shell: 
+    chdir={{ document_root }}
+    chmod 500 mage &&
+    ./mage mage-setup . &&
+    ./mage config-set preferred_state stable &&
+    ./mage install http://connect20.magentocommerce.com/community Mage_All_Latest --force &&
+    php -f install.php -- --license_agreement_accepted "yes" --locale "en_US" --timezone "{{ tz }}" --default_currency "USD" --db_host {{ mysql_host_ip }} --db_name {{ magento_db_name }} --db_user {{ magento_db_user }} --db_pass {{ magento_db_password }} --url http://{{ vhost_domain }} --skip_url_validation --use_rewrites "yes" --use_secure "no" --secure_base_url https://{{ vhost_domain }} --use_secure_admin "no" --admin_firstname {{ magento_admin_fname }} --admin_lastname {{ magento_admin_lname }} --admin_email {{ magento_admin_email }} --admin_username {{ magento_admin_user }} --admin_password {{ magento_admin_pass }} &&
+    php -f shell/indexer.php reindexall
+
+- name: restart web stack
+  service: 
+    name={{ item }}
+    state=restarted
+  with_items:
+    - "{{ webserver }}"
+    - php-fpm

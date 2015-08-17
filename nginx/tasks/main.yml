@@ -1,0 +1,94 @@
+---
+- name: Check if httpd package is present
+  shell: rpm -q httpd
+  register: httpd_check
+  ignore_errors: yes
+  when: ansible_os_family == "RedHat"
+
+- name: httpd is stopped and disabled 
+  service: 
+    state=stopped
+    name=httpd
+    enabled=no
+  when: httpd_check.rc == 0
+
+- name: nginx.repo is installed
+  template: 
+    src=etc/yum.repos.d/nginx.repo.j2
+    dest=/etc/yum.repos.d/nginx.repo
+    backup=yes
+
+- name: nginx is present
+  yum: 
+    state=latest
+    name=nginx
+  notify: restart nginx
+
+
+- name: nginx base is configured
+  template:
+    src=etc/nginx/nginx.conf.j2
+    dest=/etc/nginx/nginx.conf
+    backup=yes
+  notify: restart nginx
+
+- name: nginx vhost is configured
+  template: 
+    src=etc/nginx/conf.d/vhost.conf.j2
+    dest=/etc/nginx/conf.d/{{ vhost_domain }}.conf
+    backup=yes
+  notify: reload nginx
+
+- name: default.conf placeholder is present
+  template: 
+    src=etc/nginx/conf.d/default.conf.j2
+    dest=/etc/nginx/conf.d/default.conf
+    backup=yes
+  notify: reload nginx
+
+- name: ulimit is adjusted for nginx
+  template:
+    src=etc/security/nginx.conf.j2
+    dest=/etc/security/limits.d/nginx.conf
+    backup=yes
+  notify: restart nginx
+
+- name: document root exists
+  file: 
+    state=directory
+    path={{ document_root }}
+    owner={{ vhost_user_uid }}
+    group={{ vhost_user_uid }}
+    mode=0775
+
+- name: vhost user exists
+  user: 
+    state=present
+    name={{ vhost_user }}
+    uid={{ vhost_user_uid }}
+    groups={{ webserver }}
+    shell={{ vhost_user_shell }}
+    comment={{ vhost_domain }}
+    home={{ document_root }}/
+    non_unique=yes
+
+- name: placeholder content is present
+  copy: 
+    src={{ item }}
+    dest={{ document_root }}
+    owner={{ vhost_user_uid }}
+    group={{ vhost_user_uid }}
+    mode=0775
+    backup=yes
+  with_items:
+    - htdocs/index.html
+    - htdocs/nginx-logo.png
+    - htdocs/poweredby.png
+    - htdocs/phpinfo.php
+  when: placeholder_content == 1
+
+- name: nginx is started and enabled on boot
+  service: 
+    state=started
+    name=nginx
+    enabled=yes

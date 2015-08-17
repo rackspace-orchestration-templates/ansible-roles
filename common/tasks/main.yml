@@ -1,0 +1,69 @@
+---
+- name: libselinux-python is present
+  yum: 
+    state=present
+    name=libselinux-python
+
+- name: disable iptables
+  service: 
+    state=stopped
+    name=iptables
+    enabled=no
+
+#- name: disable httpd
+#  service: 
+#    state=stopped
+#    name=httpd
+#    enabled=no
+#
+#- name: disable mysql
+#  service: 
+#    state=stopped
+#    name=mysqld
+#    enabled=no
+
+- name: timezone is set correctly in clock file
+  template: 
+    src=etc/sysconfig/clock.j2
+    dest=/etc/sysconfig/clock
+    backup=yes
+  notify: tzdata-update
+
+## Rackspace managed dedicated servers use the epel-release package
+- name: epel-release is installed on RAX dedicated servers
+  yum: 
+    state=present
+    name=epel-release
+  when: ansible_form_factor == "Rack Mount Chassis"
+#
+## Install epel via templates on all other servers
+- name: check if epel repo is present...
+  shell: yum repolist | grep -i epel
+  register: epel_check
+  ignore_errors: yes
+  when: ansible_form_factor != "Rack Mount Chassis" and ansible_os_family == "RedHat" 
+#
+- name: epel.repo is present
+  template: 
+    src=etc/yum.repos.d/epel.repo.j2
+    dest=/etc/yum.repos.d/epel.repo
+    backup=yes
+  when: ansible_form_factor != "Rack Mount Chassis" and epel_check.rc == 1
+#
+- name: epel gpg key is present
+  copy: 
+    src=etc/pki/RPM-GPG-KEY-EPEL-6
+    dest=/etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6
+    backup=yes
+  when: ansible_form_factor != "Rack Mount Chassis" and epel_check.rc == 1
+#
+- name: ntpd is installed
+  yum: 
+    state=present
+    name=ntp
+
+- name: ntpd is running and enabled at boot
+  service: 
+    state=started
+    name=ntpd
+    enabled=yes

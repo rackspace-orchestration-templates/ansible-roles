@@ -1,0 +1,3 @@
+---
+nginx_http_port: 80
+tcp_nodelay: on
