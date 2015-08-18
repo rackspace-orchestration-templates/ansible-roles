@@ -1,0 +1,28 @@
+---
+- name: php-fpm package is present
+  yum: 
+    state=present
+    name={{ php_version }}-fpm
+
+- name: php-fpm is configured
+  template: 
+    src={{ item.src }}
+    dest={{ item.dest }}
+    backup=yes
+  with_items:
+    - { src: 'etc/php-fpm.conf.j2', dest: '/etc/php-fpm.conf' }
+    - { src: 'etc/php-fpm.d/vhost.conf.j2', dest: '/etc/php-fpm.d/{{ vhost_domain }}.conf' }
+  notify: restart php-fpm
+
+- name: default php-fpm pool placeholder is in place
+  template:
+    src=etc/php-fpm.d/www.conf.j2
+    dest=/etc/php-fpm.d/www.conf
+    backup=yes
+  notify: restart php-fpm
+
+- name: php-fpm is started and enabled on boot
+  service: 
+    state=started
+    name=php-fpm 
+    enabled=yes

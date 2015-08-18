@@ -1,0 +1,18 @@
+#  _____________________________________
+# /                                     \
+# | This file was deployed by Ansible.  Feel free to modify it as needed   |
+# \_____________________________________/
+#       \   ^__^
+#        \  (oo)\_______
+#           (__)\       )\/\
+#               ||----w |
+#               ||     ||
+# {{ ansible_managed }}
+
+[ius]
+name=IUS Community Packages for Enterprise Linux 6 - $basearch
+mirrorlist=http://dmirr.iuscommunity.org/mirrorlist/?repo=ius-centos6&arch=$basearch
+failovermethod=priority
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/IUS-COMMUNITY-GPG-KEY

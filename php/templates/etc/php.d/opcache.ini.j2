@@ -1,0 +1,18 @@
+;  _____________________________________
+; /                                     \
+; | This file was deployed by Ansible.  Feel free to modify it as needed   |
+; \_____________________________________/
+;       \   ^__^
+;        \  (oo)\_______
+;           (__)\       )\/\
+;               ||----w |
+;               ||     ||
+; {{ ansible_managed }}
+
+ zend_extension=/usr/lib64/php/modules/opcache.so
+ opcache.memory_consumption=256
+ opcache.interned_strings_buffer=8
+ opcache.max_accelerated_files=16228
+ opcache.revalidate_freq=2
+ opcache.fast_shutdown=1
+ opcache.enable_cli=1

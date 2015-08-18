@@ -1,0 +1,95 @@
+---
+- name: php packages are installed
+  yum: state=present name={{ item }}
+  with_items:
+    - "{{ php_version }}"
+    - "{{ php_version }}-devel"
+    - "{{ php_version }}-imap"
+    - "{{ php_version }}-pdo"
+    - "{{ php_version }}-gd"
+    - "{{ php_version }}-mysql"
+    - "{{ php_version }}-mcrypt"
+    - "{{ php_version }}-xml"
+    - "{{ php_version }}-xmlrpc"
+    - "{{ php_version }}-soap"
+    - "{{ php_version }}-mbstring"
+    - "{{ php_version }}-pecl-lzf"
+    - "{{ php_version }}-pecl-apc"
+    - "{{ php_version }}-pecl-redis"
+    - "{{ php_version }}-pecl-memcache"
+  when: php_version == 'php'
+- name: php packages are installed
+  yum: state=present name={{ item }}
+  with_items:
+    - "{{ php_version }}"
+    - "{{ php_version }}-devel"
+    - "{{ php_version }}-imap"
+    - "{{ php_version }}-pdo"
+    - "{{ php_version }}-gd"
+    - "{{ php_version }}-mysql"
+    - "{{ php_version }}-mcrypt"
+    - "{{ php_version }}-xml"
+    - "{{ php_version }}-xmlrpc"
+    - "{{ php_version }}-soap"
+    - "{{ php_version }}-mbstring"
+    - "{{ php_version }}-pecl-lzf"
+    - "{{ php_version }}-pecl-zendopcache"
+    - "{{ php_version }}-ioncube-loader"
+    - "{{ php_version }}-pecl-redis"
+    - "{{ php_version }}-pecl-memcache"
+  when: php_version == 'php54'
+
+- name: php packages are installed
+  yum: state=present name={{ item }}
+  with_items:
+    - "{{ php_version }}"
+    - "{{ php_version }}-devel"
+    - "{{ php_version }}-imap"
+    - "{{ php_version }}-pdo"
+    - "{{ php_version }}-gd"
+    - "{{ php_version }}-mysqlnd"
+    - "{{ php_version }}-mcrypt"
+    - "{{ php_version }}-xml"
+    - "{{ php_version }}-xmlrpc"
+    - "{{ php_version }}-soap"
+    - "{{ php_version }}-mbstring"
+    - "{{ php_version }}-pecl-lzf"
+    - "{{ php_version }}-opcache"
+    - "{{ php_version }}-ioncube-loader"
+    - "{{ php_version }}-pecl-redis"
+    - "{{ php_version }}-pecl-memcache"
+  when: php_version == 'php55u'
+
+- name: php modules are configured
+  template: 
+    src={{ item.src }}
+    dest={{ item.dest }}
+    backup=yes
+  with_items:
+    - { src: 'etc/php.ini.j2', dest: '/etc/php.ini' }
+    - { src: 'etc/php.d/apc.ini.j2', dest: '/etc/php.d/apc.ini' }
+    - { src: 'etc/php.d/redis.ini.j2', dest: '/etc/php.d/redis.ini' }
+  when: php_version == 'php'
+
+- name: php modules are configured
+  template: 
+    src={{ item.src }}
+    dest={{ item.dest }}
+    backup=yes
+  with_items:
+    - { src: 'etc/php.ini.j2', dest: '/etc/php.ini' }
+    - { src: 'etc/php.d/opcache.ini.j2', dest: '/etc/php.d/opcache.ini' }
+    - { src: 'etc/php.d/redis.ini.j2', dest: '/etc/php.d/redis.ini' }
+  when: php_version == 'php54'
+
+- name: php modules are configured
+  template: 
+    src={{ item.src }}
+    dest={{ item.dest }}
+    backup=yes
+  with_items:
+    - { src: 'etc/php.ini.j2', dest: '/etc/php.ini' }
+    - { src: 'etc/php.d/opcache.ini.j2', dest: '/etc/php.d/10-opcache.ini' }
+    - { src: 'etc/php.d/redis.ini.j2', dest: '/etc/php.d/50-redis.ini' }
+  when: php_version == 'php55u'
+

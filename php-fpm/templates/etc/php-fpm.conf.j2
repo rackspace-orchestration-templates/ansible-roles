@@ -1,0 +1,16 @@
+;  _____________________________________
+; /                                     \
+; | This file was deployed by Ansible.  Feel free to modify it as needed   |
+; \_____________________________________/
+;       \   ^__^
+;        \  (oo)\_______
+;           (__)\       )\/\
+;               ||----w |
+;               ||     ||
+; {{ ansible_managed }}
+
+include=/etc/php-fpm.d/*.conf
+
+[global]
+pid = /var/run/php-fpm/php-fpm.pid
+error_log = /var/log/php-fpm/error.log

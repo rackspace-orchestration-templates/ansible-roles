@@ -1,0 +1,3 @@
+---
+php_fpm_max_children: 50
+php_fpm_max_requests: 5000
