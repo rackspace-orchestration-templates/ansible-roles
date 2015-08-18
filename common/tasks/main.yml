@@ -12,7 +12,7 @@
 
 - name: timezone is set correctly in clock file
   shell: timedatectl set-timezone {{ tz }}
-  notify: tzdata-update
+  notify: hwclock sync
 
 ## Rackspace managed dedicated servers use the epel-release package
 - name: epel-release is installed on RAX dedicated servers
