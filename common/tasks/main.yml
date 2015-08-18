@@ -11,10 +11,7 @@
     enabled=no
 
 - name: timezone is set correctly in clock file
-  template: 
-    src=etc/sysconfig/clock.j2
-    dest=/etc/sysconfig/clock
-    backup=yes
+  shell: timedatectl set-timezone {{ tz }}
   notify: tzdata-update
 
 ## Rackspace managed dedicated servers use the epel-release package
