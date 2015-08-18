@@ -1,12 +1,13 @@
 ---
+# WARNING
 # This role provides a fresh installation of Magento on a new virtualhost and new database.
 - name: mysql packages are present
   yum: 
     state=present
     name={{ item }}
   with_items:
-  - MySQL-python
-  - mysql
+    - MySQL-python
+    - mysql
 
 - name: document root exists
   file: 
@@ -16,13 +17,13 @@
 
 - name: downloading...
   get_url:
-    url={{ item }}
+    url={{ item.url }}
     dest={{ document_root }}
     owner={{ vhost_user }}
     group={{ vhost_user }}
   with_items:
-  - "https://www.magentocommerce.com/downloads/assets/{{ magento_version }}/magento-{{ magento_version }}.tar.gz"
-  - "https://www.magentocommerce.com/downloads/assets/{{ magento_version }}/magento-sample-data-{{ magento_version }}.tar.gz"
+    - "https://www.magentocommerce.com/downloads/assets/{{ magento_version }}/magento-{{ magento_version }}.tar.gz"
+    - "https://www.magentocommerce.com/downloads/assets/{{ magento_sample_data_version }}/magento-sample-data-{{ magento_sample_data_version }}.tar.gz"
 
 - name: unpacking...
   unarchive: 
@@ -30,8 +31,8 @@
     dest={{ document_root }}
     copy=no
   with_items:
-  - "magento-{{ magento_version }}.tar.gz"
-  - "magento-sample-data-{{ magento_version }}.tar.gz"
+    - "magento-{{ magento_version }}.tar.gz"
+    - "magento-sample-data-{{ magento_sample_data_version }}.tar.gz"
 
 - name: root's mysql client is updated
   template: 
@@ -52,7 +53,7 @@
     state=import
     login_host={{ mysql_host_ip }}
     name={{ magento_db_name }}
-    target={{ document_root }}/magento-sample-data-{{ magento_version }}/magento_sample_data_for_{{ magento_version }}.sql
+    target={{ document_root }}/magento-sample-data-{{ magento_sample_data_version }}/magento_sample_data_for_{{ magento_sample_data_version }}.sql
 
 - name: database user is present
   mysql_user: 
@@ -67,7 +68,7 @@
   shell: 
     chdir={{ document_root }}
     cp -a magento/{{ item.core }} . &&
-    cp -a magento-sample-data-{{ magento_version }}/{{ item.sample }} .
+    cp -a magento-sample-data-{{ magento_sample_data_version }}/{{ item.sample }} .
   ignore_errors: yes
   with_items:
     - { core: '*', sample: 'media' }
@@ -110,5 +111,5 @@
     name={{ item }}
     state=restarted
   with_items:
-    - "{{ webserver }}"
+    - nginx
     - php-fpm
