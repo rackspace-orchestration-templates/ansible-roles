@@ -24,6 +24,15 @@
     name=nginx
   notify: restart nginx
 
+- name: enable port 80 on firewall
+  firewalld:
+    port="80/tcp"
+    permanent=yes
+    immediate=yes
+    zone=public
+    state=enabled
+  notify: restart firewalld
+
 
 - name: nginx base is configured
   template:
