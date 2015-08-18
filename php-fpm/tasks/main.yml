@@ -2,7 +2,7 @@
 - name: php-fpm package is present
   yum: 
     state=present
-    name={{ php_version }}-fpm
+    name=php-fpm
 
 - name: php-fpm is configured
   template: 
