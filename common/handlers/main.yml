@@ -1,8 +1,4 @@
 ---
-- name: tzdata-update
-  command: /usr/sbin/tzdata-update
-  notify: hwclock sync
-
 - name: hwclock sync
   command: /sbin/hwclock --systohc
   notify: restart rsyslog
