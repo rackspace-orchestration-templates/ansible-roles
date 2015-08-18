@@ -1,0 +1,91 @@
+---
+- name: redis package is present
+  yum: 
+    state=present
+    name=redis28u
+
+# http://redis.io/topics/admin
+- name: the kernel is tuned for redis
+  # https://github.com/ansible/ansible/issues/6272
+  ignore_errors: yes
+  sysctl: 
+    state=present
+    name=vm.overcommit_memory
+    value=1
+    reload=yes
+- name: net.core.somaxconn tuning
+  # https://github.com/ansible/ansible/issues/6272
+  ignore_errors: yes
+  sysctl: 
+    state=present
+    name=net.core.somaxconn
+    value=3240000
+    reload=yes
+
+- name: ulimit is adjusted for redis
+  template:
+    src=etc/security/limits.d/redis.conf.j2
+    dest=/etc/security/limits.d/redis.conf
+    backup=yes
+  notify: restart redis
+
+- name: enable THP
+  lineinfile:
+    dest=/etc/rc.d/rc.local
+    regexp='^echo never > /sys/kernel/mm/transparent_hugepage/enabled$'
+    line="echo never > /sys/kernel/mm/transparent_hugepage/enabled"
+
+- name: /var/lib/redis/name is configured
+  file: 
+    path=/var/lib/redis/{{ item.name }}
+    state=directory
+    owner=root
+    group=root
+    mode=0755
+  with_items: redis_instances
+
+- name: /etc/redis/ is configured
+  file: 
+    path=/etc/redis/
+    state=directory
+    owner=root
+    group=root
+    mode=0755
+
+- name: redis-base.conf is configured
+  template: 
+    src=etc/redis/redis-base.conf.j2
+    dest=/etc/redis/redis-base.conf
+    owner=root
+    group=root
+    mode=0644
+    backup=yes
+  notify: restart redis
+
+- name: /etc/redis/redis-name.conf is configured
+  template: 
+    src=etc/redis/redis-instance.conf.j2
+    dest=/etc/redis/redis-{{item.name}}.conf
+    owner=root
+    group=root
+    mode=0644
+    backup=yes
+  notify: restart redis
+  with_items: redis_instances  
+
+- name: /etc/init.d/redis-name is configured
+  template: 
+    src=etc/init.d/redis-instance.j2
+    dest=/etc/init.d/redis-{{item.name}}
+    owner=root
+    group=root
+    mode=0744
+    backup=yes
+  with_items: redis_instances  
+
+- name: redis services is started and enabled
+  service: 
+    state=started
+    name=redis-{{item.name}}
+    enabled=yes
+  with_items: redis_instances

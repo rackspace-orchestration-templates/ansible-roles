@@ -1,0 +1,3 @@
+---
+redis_instances:
+    - { name: 'instance', port: '6379', persistent: 'FALSE', maxmemory: '1gb' }
