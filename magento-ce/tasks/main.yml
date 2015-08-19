@@ -17,7 +17,7 @@
 
 - name: downloading...
   get_url:
-    url={{ item.url }}
+    url={{ item }}
     dest={{ document_root }}
     owner={{ vhost_user }}
     group={{ vhost_user }}
