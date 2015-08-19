@@ -34,9 +34,9 @@
     - "magento-{{ magento_version }}.tar.gz"
     - "magento-sample-data-{{ magento_sample_data_version }}.tar.gz"
 
-- name: root's mysql client is updated
+- name: mysql client is updated
   template: 
-    src=templates/root/.my.cnf.j2
+    src=root/.my.cnf.j2
     dest=/root/.my.cnf
     owner=root
     group=root
