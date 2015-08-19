@@ -1,6 +1,6 @@
 ---
 # Magento to deploy
-magento_version: 1.9.2.1
+magento_version: 1.9.1.0
 magento_sample_data_version: 1.9.1.0
 
 # MySQL database connection
