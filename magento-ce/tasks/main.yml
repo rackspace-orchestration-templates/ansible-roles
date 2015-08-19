@@ -55,15 +55,6 @@
     name={{ magento_db_name }}
     target={{ document_root }}/magento-sample-data-{{ magento_sample_data_version }}/magento_sample_data_for_{{ magento_sample_data_version }}.sql
 
-- name: database user is present
-  mysql_user: 
-    state=present
-    login_host={{ mysql_host_ip }}
-    name={{ magento_db_user }}
-    password={{ magento_db_password }}
-    priv={{ magento_db_name }}.*:ALL
-    host=%
-
 - name: copy core files
   shell: 
     chdir={{ document_root }}
