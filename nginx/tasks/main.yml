@@ -94,7 +94,7 @@
     - htdocs/nginx-logo.png
     - htdocs/poweredby.png
     - htdocs/phpinfo.php
-  when: placeholder_content == "1"
+  when: placeholder_content == True
 
 - name: nginx is started and enabled on boot
   service: 
