@@ -15,24 +15,33 @@
     state=directory
     mode=0775
 
-- name: downloading...
+- name: downloading magento
   get_url:
-    url={{ item }}
+    url="https://www.magentocommerce.com/downloads/assets/{{ magento_version }}/magento-{{ magento_version }}.tar.gz"
     dest={{ document_root }}
     owner={{ vhost_user }}
     group={{ vhost_user }}
-  with_items:
-    - "https://www.magentocommerce.com/downloads/assets/{{ magento_version }}/magento-{{ magento_version }}.tar.gz"
-    - "https://www.magentocommerce.com/downloads/assets/{{ magento_sample_data_version }}/magento-sample-data-{{ magento_sample_data_version }}.tar.gz"
-
-- name: unpacking...
+    
+- name: downloading sample content
+  get_url:
+    url="https://www.magentocommerce.com/downloads/assets/{{ magento_sample_data_version }}/magento-sample-data-{{ magento_sample_data_version }}.tar.gz"
+    dest={{ document_root }}
+    owner={{ vhost_user }}
+    group={{ vhost_user }}
+  when: placeholder_content == True
+  
+- name: unpacking magento
   unarchive: 
-    src={{ document_root }}/{{ item }}
+    src={{ document_root }}/magento-{{ magento_version }}.tar.gz
     dest={{ document_root }}
     copy=no
-  with_items:
-    - "magento-{{ magento_version }}.tar.gz"
-    - "magento-sample-data-{{ magento_sample_data_version }}.tar.gz"
+    
+- name: unpacking sample content
+  unarchive: 
+    src={{ document_root }}/magento-sample-data-{{ magento_sample_data_version }}.tar.gz
+    dest={{ document_root }}
+    copy=no
+  when: placeholder_content == True
 
 - name: mysql client is updated
   template: 
@@ -54,16 +63,26 @@
     login_host={{ mysql_host_ip }}
     name={{ magento_db_name }}
     target={{ document_root }}/magento-sample-data-{{ magento_sample_data_version }}/magento_sample_data_for_{{ magento_sample_data_version }}.sql
+  when: placeholder_content == True
 
 - name: copy core files
   shell: 
     chdir={{ document_root }}
-    cp -a magento/{{ item.core }} . &&
+    cp -a magento/{{ item.core }} .
+  ignore_errors: yes
+  with_items:
+    - { core: '*', sample: 'media' }
+    - { core: '.htaccess', sample: 'skin' }
+
+- name: copy core sample files
+  shell: 
+    chdir={{ document_root }}
     cp -a magento-sample-data-{{ magento_sample_data_version }}/{{ item.sample }} .
   ignore_errors: yes
   with_items:
     - { core: '*', sample: 'media' }
     - { core: '.htaccess', sample: 'skin' }
+  when: placeholder_content == True
 
 # TEST SCRTIPS AND TOOLS HERE
 
@@ -71,6 +90,7 @@
   shell: 
     chdir={{ document_root }}
     rm -rf {{ item }}
+  ignore_errors: yes
   with_items: garbage_files
 
 - name: ownership & directory permissions
