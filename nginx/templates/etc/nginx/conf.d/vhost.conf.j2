@@ -29,6 +29,10 @@ server {
         expires 30d;
     }
 
+    location ~* \.(eot|ttf|woff)$ {
+          add_header Access-Control-Allow-Origin *;
+    }
+
     location @handler {
         rewrite / /index.php;
     }
