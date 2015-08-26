@@ -22,9 +22,11 @@ user = {{ vhost_user }}
 group = {{ vhost_user }}
 
 pm = dynamic
+pm.start_servers = {{ php_fpm_start_servers }}
+pm.min_spare_servers = {{ php_fpm_min_spare_servers }}
+pm.max_spare_servers = {{ php_fpm_max_spare_servers }}
 pm.max_children = {{ php_fpm_max_children }}
 pm.max_requests = {{ php_fpm_max_requests }}
-pm.max_requests = 500
 pm.process_idle_timeout = 20s
 pm.status_path = /php-status
 
