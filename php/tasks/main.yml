@@ -14,7 +14,6 @@
     - "php-soap"
     - "php-mbstring"
     - "php-pecl-lzf"
-    - "php-pecl-apc"
     - "php-pecl-redis"
     - "php-pecl-memcache"
 
