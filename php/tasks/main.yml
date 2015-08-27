@@ -14,9 +14,9 @@
     - "php-soap"
     - "php-mbstring"
     - "php-pecl-lzf"
-    - "php-pecl-apc"
     - "php-pecl-redis"
     - "php-pecl-memcache"
+    - "php-pecl-zendopcache"
 
 - name: php modules are configured
   template: 
@@ -25,5 +25,5 @@
     backup=yes
   with_items:
     - { src: 'etc/php.ini.j2', dest: '/etc/php.ini' }
-    - { src: 'etc/php.d/apc.ini.j2', dest: '/etc/php.d/apc.ini' }
+    - { src: 'etc/php.d/opcache.ini.j2', dest: '/etc/php.d/opcache.ini' }
     - { src: 'etc/php.d/redis.ini.j2', dest: '/etc/php.d/redis.ini' }

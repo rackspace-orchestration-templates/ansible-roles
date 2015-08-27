@@ -1,3 +1,6 @@
 ---
+php_fpm_start_servers: 20
+php_fpm_min_spare_servers: 20
+php_fpm_max_spare_servers: 30
 php_fpm_max_children: 50
-php_fpm_max_requests: 5000
+php_fpm_max_requests: 500
