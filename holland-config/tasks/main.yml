@@ -3,4 +3,3 @@
   copy:
     src=backupsets/default.conf
     dest=/etc/holland/backupsets/default.conf
-  creates: /etc/holland/backupsets/default.conf
