@@ -4,6 +4,9 @@
     state=present
     name=php-fpm
 
+- name: add sftp user
+  user: name=magentosftp
+
 - name: php-fpm is configured
   template: 
     src={{ item.src }}
