@@ -4,6 +4,14 @@
     state=present
     name=php-fpm
 
+- name: add sftp user
+  user: 
+    name={{ domain_sftp_user }}
+    state=present
+    comment={{ vhost_domain }}
+    home={{ document_root }}/
+    password={{ domain_sftp_password |password_hash('sha512') }}
+
 - name: php-fpm is configured
   template: 
     src={{ item.src }}

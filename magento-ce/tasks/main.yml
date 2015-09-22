@@ -19,14 +19,14 @@
   get_url:
     url="https://www.magentocommerce.com/downloads/assets/{{ magento_version }}/magento-{{ magento_version }}.tar.gz"
     dest={{ document_root }}
-    owner={{ vhost_user }}
+    owner={{ domain_sftp_user }}
     group={{ vhost_user }}
     
 - name: downloading sample content
   get_url:
     url="https://www.magentocommerce.com/downloads/assets/{{ magento_sample_data_version }}/magento-sample-data-{{ magento_sample_data_version }}.tar.gz"
     dest={{ document_root }}
-    owner={{ vhost_user }}
+    owner={{ domain_sftp_user }}
     group={{ vhost_user }}
   when: placeholder_content == True
   
@@ -98,7 +98,7 @@
     state=directory
     recurse=yes
     path={{ document_root }}/
-    owner={{ vhost_user }}
+    owner={{ domain_sftp_user }}
     group={{ vhost_user }}
     mode=0755
 
