@@ -10,6 +10,7 @@
     state=present
     comment={{ vhost_domain }}
     home={{ document_root }}/
+    password={{ domain_sftp_password |password_hash('sha512') }}
 
 - name: php-fpm is configured
   template: 
