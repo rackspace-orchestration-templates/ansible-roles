@@ -10,7 +10,10 @@
     state=present
     comment={{ vhost_domain }}
     home={{ document_root }}/
-    password={{ domain_sftp_password |password_hash('sha512') }}
+    password={{ domain_sftp_password }}
+
+- name: Set Password for SFTP User
+  shell: echo {{ domain_sftp_password }} | passwd --stdin {{ domain_sftp_user }}
 
 - name: php-fpm is configured
   template: 
