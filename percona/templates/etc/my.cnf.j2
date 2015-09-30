@@ -1,0 +1,108 @@
+##  _______________________________________________________________________
+## / Rackspace MySQL 5.5 Terse Configuration File                          \
+## |                                                                       |
+## | This is a base configuration file containing the most frequently used |
+## | settings with reasonably defined default values for configuring and   |
+## | tuning MySQL. Note that these settings can likely be further tuned in |
+## | order to get optimum performance from MySQL based upon the database   |
+## | configuration and hardware platform.                                  |
+## |                                                                       |
+## | While the settings provided are likely sufficient for most            |
+## | situations, an exhaustive list of settings (with descriptions) can be |
+## | found at:                                                             |
+## | http://dev.mysql.com/doc/refman/5.5/en/server-system-variables.html   |
+## |                                                                       |
+## | Take care to only add/remove/change a setting if you are comfortable  |
+## | doing so! For Rackspace customers, if you have any questions or       |
+## | concerns, please contact the MySQL Database Services Team. Be aware   |
+## | that some work performed by this team can involve additional billable |
+## \ fees.                                                                 /
+##  -----------------------------------------------------------------------
+##         \   ^__^
+##          \  (oo)\_______
+##             (__)\       )\/\
+##                 ||----w |
+##                 ||     ||
+ 
+[mysqld]
+ 
+## General
+datadir                         = {{ mysql_datadir }}
+# tmpdir                          = {{ mysql_tmpdir }}
+socket                          = {{ mysql_socket }}
+skip-name-resolve
+sql-mode                        = NO_ENGINE_SUBSTITUTION
+#event-scheduler                = 1
+ 
+## Cache
+thread-cache-size               = 16
+table-open-cache                = 4096
+table-definition-cache          = 4096
+query-cache-type                = {{ mysql_query_cache_type }}
+query-cache-size                = {{ mysql_query_cache_size }}
+query-cache-limit               = {{ mysql_query_cache_limit }}
+
+ 
+## Per-thread Buffers
+sort-buffer-size                = 2M
+read-buffer-size                = 2M
+read-rnd-buffer-size            = 8M
+join-buffer-size                = 2M
+ 
+## Temp Tables
+tmp-table-size                  = {{ mysql_tmp_table_size }}
+max-heap-table-size             = {{ mysql_max_heap_table_size }}
+
+## Networking
+back-log                        = 1000
+max-connections                 = {{ mysql_max_connections }}
+max-connect-errors              = 10000
+max-allowed-packet              = {{ mysql_max_allowed_packet }}
+interactive-timeout             = 3600
+wait-timeout                    = 1800
+net-read-timeout                = 30
+net-write-timeout               = 30
+ 
+### Storage Engines
+#default-storage-engine         = InnoDB
+innodb                          = FORCE
+ 
+## MyISAM
+key-buffer-size                 = {{ mysql_key_buffer_size }}
+myisam-sort-buffer-size         = {{ mysql_myisam_sort_buffer_size }}
+
+
+## InnoDB
+innodb-lock-wait-timeout		= {{ mysql_innodb_lock_wait_timeout }}
+innodb-buffer-pool-size			= {{ mysql_innodb_buffer_pool_size }}
+innodb-log-file-size			= 100M
+innodb-log-buffer-size			= 8M
+innodb-file-per-table			= 1
+innodb-open-files				= 300
+ 
+## Replication
+server-id                       = 1
+#log-bin                        = /var/log/mysql/bin-log
+#relay-log                      = /var/log/mysql/relay-log
+relay-log-space-limit           = 16G
+expire-logs-days                = 7
+#read-only                      = 1
+#sync-binlog                    = 1
+#log-slave-updates              = 1
+#binlog-format                  = MIXED
+#auto-increment-offset          = 1
+#auto-increment-increment       = 2
+
+## Logging
+log-output                      = FILE
+slow-query-log                  = 0
+slow-query-log-file             = /var/log/mysql/{{ ansible_hostname }}-slow-log
+log-slow-slave-statements
+long-query-time                 = 2
+ 
+[mysqld_safe]
+log-error                       = /var/log/mysqld.log
+open-files-limit                = 65535
+ 
+[mysql]
+no-auto-rehash

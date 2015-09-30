@@ -1,0 +1,151 @@
+---
+# Deploy a clean install of Percona MySQL Server 5.5 or 5.6 
+# on RAX Dedicated & Cloud Servers
+- name: check if mysql-server is already installed...
+  shell: rpm -q mysql-server
+  register: mysql_installed
+  ignore_errors: yes
+  when: ansible_os_family == "RedHat"
+
+- name: mysqld service is stopped
+  service: 
+    state=stopped
+    name=mysqld
+    enabled=no
+  when: mysql_installed.rc == 0
+
+- name: remove mysql rpms if installed
+  shell: rpm -e mysql mysql-server --nodeps
+  when: mysql_installed.rc == 0
+
+- name: move mysql datadir if upgrading
+  shell: 
+    chdir=/var/lib
+    mv mysql{,.`date +%F`.bak}
+  ignore_errors: yes
+  when: mysql_installed.rc == 0
+
+- name: move ~/root/.my.cnf if upgrading
+  shell: 
+    chdir=/root/
+    removes=/root/.my.cnf
+    mv .my.cnf{,.`date +%F`.bak}
+  when: mysql_installed.rc == 0
+
+- name: /etc/my.cnf is present
+  template: 
+    src=etc/my.cnf.j2
+    dest=/etc/my.cnf
+    owner=root
+    group=root
+    mode=0644
+    backup=yes
+  notify: restart mysql
+
+- name: Percona.repo is installed
+  template: 
+    src=etc/yum.repos.d/Percona.repo.j2
+    dest=/etc/yum.repos.d/Percona.repo
+    backup=yes
+  tags:
+    - percona-repo
+
+- name: gpg key is installed
+  copy: 
+    src=etc/pki/rpm-gpg/RPM-GPG-KEY-percona
+    dest=/etc/pki/rpm-gpg/RPM-GPG-KEY-percona
+    backup=yes
+  tags:
+    - percona-repo
+
+- name: packages are present
+  yum: 
+    state=present
+    name={{ item }}
+    enablerepo=percona
+  with_items:
+    - Percona-Server-shared-{{ percona_version }}
+    - Percona-Server-client-{{ percona_version }}
+    - Percona-Server-server-{{ percona_version }}
+    - Percona-Server-shared-compat
+    - MySQL-python
+    - percona-xtrabackup
+
+- name: tmpdir is present
+  file: 
+    state=directory
+    path={{ mysql_tmpdir }}
+    owner=mysql
+    group=mysql
+    mode=0775
+
+- name: logdir is present
+  file: 
+    state=directory
+    path={{ mysql_logdir}}
+    owner=mysql
+    group=mysql
+    mode=0775
+
+- name: mysql service is started and enabled
+  service: 
+    state=started
+    name=mysql
+    enabled=yes
+
+- name: root@localhost mysql user accounts exist
+  mysql_user:
+    state=present
+    name=root
+    host=localhost
+    password={{ mysql_root_pw }}
+    priv=*.*:ALL,GRANT
+
+- name: root's mysql client is updated
+  template: 
+    src=root/.my.cnf.j2
+    dest=/root/.my.cnf
+    owner=root
+    group=root
+    mode=0600
+    backup=yes
+
+- name: root@mysql_host_ip mysql user accounts exist
+  mysql_user:
+    state=present
+    name=root
+    host={{ mysql_host_ip }}
+    password={{ mysql_root_pw }}
+    priv=*.*:ALL,GRANT
+
+- name: hardening | anonymous mysql users are absent
+  mysql_user: 
+    state=absent
+    name=
+    host={{ item }}
+  with_items:
+    - "{{ ansible_hostname }}"
+    - "{{ ansible_fqdn }}"
+    - localhost
+  tags:
+    - hardening
+
+- name: hardening | superfluous root mysql users are absent
+  mysql_user: 
+    state=absent
+    name=root
+    host={{ item }}
+  with_items:
+    - 127.0.0.1
+    - "{{ ansible_hostname }}"
+    - "{{ ansible_fqdn }}"
+    - ::1
+  tags:
+    - hardening
+
+- name: hardening | mysql test database is absent
+  mysql_db: 
+    state=absent
+    name=test
+  tags:
+    - hardening

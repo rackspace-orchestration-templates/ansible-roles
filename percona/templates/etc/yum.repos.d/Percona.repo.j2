@@ -1,0 +1,17 @@
+#  _____________________________________
+# /                                     \
+# | This file was deployed by Ansible.  Feel free to modify it as needed   |
+# \_____________________________________/
+#       \   ^__^
+#        \  (oo)\_______
+#           (__)\       )\/\
+#               ||----w |
+#               ||     ||
+# {{ ansible_managed }}
+
+[percona]
+name = CentOS $releasever - Percona
+baseurl=http://repo.percona.com/centos/$releasever/os/$basearch/
+enabled = 0
+gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-percona
+gpgcheck = 1
