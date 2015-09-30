@@ -95,8 +95,6 @@
 - name: root@localhost mysql user accounts exist
   mysql_user:
     state=present
-    login_user=root
-    login_password={{ mysql_root_pw }}
     name=root
     host=localhost
     password={{ mysql_root_pw }}
