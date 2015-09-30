@@ -6,7 +6,7 @@
     login_user=root
     login_password={{ mysql_root_pw }}
     login_host={{ mysql_host_ip }}
-    name={{ db_name }}
+    name={{ mysql_db_name }}
 
 - name: database user is present
   mysql_user: 
@@ -14,7 +14,7 @@
     login_host={{ mysql_host_ip }}
     login_user=root
     login_password={{ mysql_root_pw }}
-    name={{ db_user }}
-    password={{ db_password }}
-    priv={{ db_name }}.*:ALL
+    name={{ mysql_db_user }}
+    password={{ mysql_db_password }}
+    priv={{ mysql_db_name }}.*:ALL
     host=%
