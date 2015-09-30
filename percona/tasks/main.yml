@@ -67,7 +67,6 @@
     - Percona-Server-shared-{{ percona_version }}
     - Percona-Server-client-{{ percona_version }}
     - Percona-Server-server-{{ percona_version }}
-    - Percona-Server-shared-compat
     - MySQL-python
     - percona-xtrabackup
 
