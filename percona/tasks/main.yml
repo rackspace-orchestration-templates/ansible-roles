@@ -95,24 +95,19 @@
 - name: root@localhost mysql user accounts exist
   mysql_user:
     state=present
+    login_user=root
+    login_password={{ mysql_root_pw }}
     name=root
     host=localhost
     password={{ mysql_root_pw }}
     priv=*.*:ALL,GRANT
 
-- name: root's mysql client is updated
-  template: 
-    src=root/.my.cnf.j2
-    dest=/root/.my.cnf
-    owner=root
-    group=root
-    mode=0600
-    backup=yes
-
 - name: root@mysql_host_ip mysql user accounts exist
   mysql_user:
     state=present
     name=root
+    login_user=root
+    login_password={{ mysql_root_pw }}
     host={{ mysql_host_ip }}
     password={{ mysql_root_pw }}
     priv=*.*:ALL,GRANT
@@ -120,11 +115,14 @@
 - name: hardening | anonymous mysql users are absent
   mysql_user: 
     state=absent
+    login_user=root
+    login_password={{ mysql_root_pw }}
     name=
     host={{ item }}
   with_items:
     - "{{ ansible_hostname }}"
     - "{{ ansible_fqdn }}"
+    - "{{ mysql_host_ip }}"
     - localhost
   tags:
     - hardening
@@ -134,6 +132,8 @@
     state=absent
     name=root
     host={{ item }}
+    login_user=root
+    login_password={{ mysql_root_pw }}
   with_items:
     - 127.0.0.1
     - "{{ ansible_hostname }}"
@@ -146,5 +146,7 @@
   mysql_db: 
     state=absent
     name=test
+    login_user=root
+    login_password={{ mysql_root_pw }}
   tags:
     - hardening

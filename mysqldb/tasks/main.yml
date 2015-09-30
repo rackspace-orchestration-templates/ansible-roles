@@ -1,0 +1,20 @@
+# Create a MySQL database and user using the root account
+---
+- name: database is present
+  mysql_db:
+    state=present
+    login_user=root
+    login_password={{ mysql_root_pw }}
+    login_host={{ mysql_host_ip }}
+    name={{ db_name }}
+
+- name: database user is present
+  mysql_user: 
+    state=present
+    login_host={{ mysql_host_ip }}
+    login_user=root
+    login_password={{ mysql_root_pw }}
+    name={{ db_user }}
+    password={{ db_password }}
+    priv={{ db_name }}.*:ALL
+    host=%
