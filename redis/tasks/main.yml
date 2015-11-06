@@ -2,7 +2,7 @@
 - name: redis package is present
   yum: 
     state=present
-    name=redis28u
+    name=redis30u
 
 # http://redis.io/topics/admin
 - name: the kernel is tuned for redis

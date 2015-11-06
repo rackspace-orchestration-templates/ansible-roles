@@ -3,6 +3,8 @@
 # include the main redis config file with common settings
 include /etc/redis/redis-base.conf
 port {{ item.port }}
+unixsocket /tmp/redis{{ item.name }}.sock
+unixsocketperm 700
 pidfile /var/run/redis/redis-{{ item.name }}.pid
 logfile /var/log/redis/{{ item.name }}.log
 dir /var/lib/redis/{{ item.name }}
