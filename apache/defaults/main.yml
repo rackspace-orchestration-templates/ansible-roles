@@ -1,0 +1,56 @@
+---
+apache_default_domain: example.com
+apache_vhosts: [
+  {
+    name: '{{ apache_default_domain }}',
+    aliases: ['www.{{ apache_default_domain }}']
+  }
+]
+
+'domain': "example.com"
+'timeout': 30
+'keep_alive': "On"
+'keep_alive_timeout': 5
+'keep_alive_requests': 120
+'start_servers': 4
+'max_clients': "{{ (ansible_memtotal_mb / 2 / 15)|int }}"
+'min_spare_servers': "{{ (((ansible_memtotal_mb / 2 / 15)|int ** 0.5)|int + 2 / 2)|int }}"
+'max_spare_servers': "{{ ((ansible_memtotal_mb / 2 / 15)|int ** 0.5)|int + 2|int }}"
+'server_limit': "{{ (ansible_memtotal_mb / 2 / 15)|int }}"
+'max_requests_per_child': 1000
+'listen_backlog': "{{ (ansible_memtotal_mb / 2 / 15)|int * 2 }}"
+'active_ports': [
+                80,
+                443 ]
+'open_firewall_ports': [
+                80,
+                443 ]
+
+#Setting Prefork MPM
+'prefork_start_servers': "{{ start_servers }}"
+'prefork_min_spare_servers': "{{ min_spare_servers }}"
+'prefork_max_spare_servers': "{{ max_spare_servers }}"
+'prefork_server_limit': "{{ server_limit }}"
+'prefork_max_clients': "{{ max_clients }}"
+'prefork_max_requests_per_child': "{{ max_requests_per_child }}"
+'prefork_listen_backlog': "{{ listen_backlog }}"
+
+# Setting Worker MPM
+'worker_start_servers': 4
+'worker_max_clients': 1024
+'worker_min_spare_threads': 64
+'worker_max_spare_threads': 192
+'worker_threads_per_child': 64
+'worker_max_requests_per_child': 0
+
+
+### PHP5 VARS
+'max_execution_time': 30
+'memory_limit': "{{ansible_memtotal_mb}}"
+'error_reporting': "E_ALL & ~E_NOTICE | E_DEPRECATED"
+'register_globals': "Off"
+'post_max_size': "8M"
+'upload_max_filesize': "2M"
+'short_open_tag': "On"
+'include_path': ".:/usr/share/pear:/usr/share/php"
+'expose_php': "Off"

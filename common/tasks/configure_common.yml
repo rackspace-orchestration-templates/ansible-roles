@@ -1,0 +1,15 @@
+---
+- name: Enable NTPD
+  service:
+    name: '{{ ntp_service }}'
+    state: started
+    enabled: yes
+
+- name: Sync Hardware Clock
+  command: /sbin/hwclock --systohc
+
+- name: Restart rsyslog
+  service:
+    name: rsyslog
+    state: restarted
+    enabled: yes

@@ -1,0 +1,16 @@
+---
+- name: Enable IPTables
+  service:
+    name: iptables
+    state: started
+    enabled: yes
+
+- name: Copy IPTables Configuration
+  template:
+    src: 'Common/iptables.j2'
+    dest: '/etc/sysconfig/iptables'
+
+- name: Reload IPTables
+  service:
+    name: iptables
+    state: reloaded

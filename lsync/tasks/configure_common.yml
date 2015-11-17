@@ -1,0 +1,27 @@
+---
+- name: Copy configuration
+  template:
+    src: 'Common/lsyncd.conf.j2'
+    dest: '/etc/lsyncd.conf'
+
+- name: Create log directory
+  file:
+    path: '/var/log/lsyncd'
+    state: directory
+
+- name: Configure SSH Private Key
+  template:
+    src: 'Common/id_rsa.j2'
+    dest: '~root/.ssh/id_rsa'
+    mode: 0700
+    owner: root
+    group: root
+
+- name: Add SSH Private Key
+  shell: 'ssh-agent sh -c ssh-add'
+
+- name: Start LSyncD
+  service:
+    name: lsyncd
+    state: restarted
+    enabled: yes

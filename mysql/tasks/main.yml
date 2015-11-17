@@ -1,0 +1,12 @@
+---
+- include: install_debian.yml
+  when: ansible_os_family == 'Debian'
+
+- include: install_redhat.yml
+  when: ansible_os_family == 'RedHat'
+
+- include: configure_mysql.yml
+  when: mysql_pkg == 'mysql-server'
+
+- include: configure_mariadb.yml
+  when: mysql_pkg == 'mariadb-server'

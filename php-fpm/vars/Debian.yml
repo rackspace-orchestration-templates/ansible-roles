@@ -1,0 +1,38 @@
+---
+phpfpm_config: [
+{ src: 'Common/php-fpm.conf.j2', dest: '/etc/php-fpm.conf' },
+{ src: 'Common/www.conf.j2', dest: '{{ phpfpm_root }}/pool.d/www.conf' },
+{ src: 'php.ini.j2', dest: '/etc/php.ini' },
+{ src: 'opcache.ini.j2', dest: '{{ phpfpm_modules_config_root }}/opcache.ini' },
+{ src: 'redis.ini.j2', dest: '{{ phpfpm_modules_config_root }}/redis.ini' }
+]
+
+phpfpm_root: '/etc/php5/fpm'
+phpfpm_confdir: '/pool.d'
+phpfpm_service: 'php5-fpm'
+
+phpfpm_pkgs: [
+'libapache2-mod-php5',
+'php5',
+'php5-fpm',
+'php5-dev',
+'php5-imap',
+'php5-gd',
+'php5-mysql',
+'php5-mcrypt',
+'php5-xmlrpc'
+]
+
+phpfpm_pkgs_pecl: [
+'lzf',
+'redis',
+'memcache',
+'zendopcache-7.0.4'
+]
+
+phpfpm_modules_config_root: '/etc/php5/mods-available'
+
+phpfpm_modules_enable: [
+'mcrypt',
+'redis'
+]

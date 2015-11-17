@@ -1,0 +1,6 @@
+---
+mysql_service: mysql
+mysql_path: '/etc/mysql'
+mysql_socket: '/var/run/mysqld/mysqld.sock'
+mysql_include_dir: '/etc/mysqld/conf.d'
+mysql_log_error: '/var/log/mysql/error.log'

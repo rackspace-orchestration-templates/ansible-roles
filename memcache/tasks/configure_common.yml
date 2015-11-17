@@ -1,0 +1,11 @@
+---
+- name: Copy memcached.conf
+  template:
+    src: 'Common/memcached.conf.j2'
+    dest: '/etc/memcached.conf'
+
+- name: Restart and Enable Memcached
+  service:
+    name: memcached
+    state: restarted
+    enabled: yes

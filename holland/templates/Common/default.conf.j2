@@ -1,0 +1,11 @@
+[holland:backup]
+plugin = mysqldump
+backups-to-keep = 1
+
+[mysqldump]
+lock-method = single-transaction
+
+[mysql:client]
+user = {{ holland_mysql_user }}
+password = {{ holland_mysql_password }}
+host = {{ holland_mysql_host }}

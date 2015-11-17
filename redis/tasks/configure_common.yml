@@ -1,0 +1,62 @@
+---
+- name: Tune kernel
+  sysctl:
+    name: vm.overcommit_memory
+    value: '1'
+    reload: yes
+    state: present
+
+- name: Tune network stack
+  sysctl:
+    name: net.core.somaxconn
+    value: '3240000'
+    reload: yes
+    state: present
+
+- name: Set ulimit
+  template:
+    src: 'Common/security_redis.conf.j2'
+    dest: '/etc/security/limits.d/redis.conf'
+    backup: yes
+
+- name: Enable THP
+  lineinfile:
+    dest: '{{ redis_rclocal }}'
+    regexp: '^echo never > /sys/kernel/mm/transparent_hugepage/enabled$'
+    line: "echo never > /sys/kernel/mm/transparent_hugepage/enabled"
+
+- name: Configure /etc/redis
+  file:
+    path: /etc/redis/
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Configure redis-base.conf
+  template:
+    src: 'Common/redis-base.conf.j2'
+    dest: '/etc/redis/redis-base.conf'
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+
+- name: Create directories for Redis instances
+  file:
+    path: "/var/lib/redis/{{ item.name }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  with_items: redis_instances
+
+- name: Configure Redis instances
+  template:
+    src: 'Common/redis-instance.conf.j2'
+    dest: "/etc/redis/redis-{{ item.name }}.conf"
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  with_items: redis_instances

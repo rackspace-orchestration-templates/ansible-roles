@@ -1,0 +1,19 @@
+---
+- name: Install libselinux-python
+  yum:
+    name: libselinux-python
+    state: present
+
+- name: Configure EPEL Repository
+  yum:
+    name: epel-release
+    state: present
+ 
+- name: Install NTPD
+  yum:
+    name: ntp
+    state: present
+
+- name: Set NTP Service Fact
+  set_fact:
+    ntp_service: ntpdate

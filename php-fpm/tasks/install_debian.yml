@@ -1,0 +1,30 @@
+---
+- name: Install PHP
+  apt:
+    name: php5-cli
+    state: present
+
+- name: Install PHP5-FPM
+  apt:
+    name: php5-fpm
+    state: present
+
+- name: Include Debian Vars
+  include_vars: Debian.yml
+
+- name: Install other packages
+  apt:
+    name: '{{ item }}'
+    state: present
+  with_items: phpfpm_pkgs
+
+- name: Install PECL packages
+  shell: "yes '' | pecl install {{ item }}"
+  with_items: phpfpm_pkgs_pecl
+  register: pecl_result
+  changed_when: "not 'is already installed and is the same as the released version' in pecl_result.stdout"
+  failed_when: "'No valid packages found' in pecl_result.stdout"
+
+- name: Enable PHP modules
+  shell: 'php5enmod {{ item }}'
+  with_items: phpfpm_modules_enable

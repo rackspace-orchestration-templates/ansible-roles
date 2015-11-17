@@ -1,0 +1,8 @@
+---
+- name: Install Redis
+  apt:
+    name: redis-server
+    state: present
+
+- name: Include Debian Vars
+  include_vars: Debian.yml

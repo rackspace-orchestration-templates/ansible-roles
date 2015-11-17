@@ -1,0 +1,8 @@
+---
+- name: Install PHPMyAdmin
+  yum:
+    name: phpmyadmin
+    state: present
+
+- name: Include RedHat Vars
+  include_vars: RedHat.yml

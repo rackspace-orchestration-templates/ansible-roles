@@ -1,5 +1,0 @@
----
-- name: Configure Holland Backup
-  copy:
-    src=backupsets/default.conf
-    dest=/etc/holland/backupsets/default.conf

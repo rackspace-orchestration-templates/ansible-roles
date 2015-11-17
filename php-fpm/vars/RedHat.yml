@@ -1,0 +1,32 @@
+---
+phpfpm_config: [
+{ src: 'Common/php-fpm.conf.j2', dest: '/etc/php-fpm.conf' },
+{ src: 'Common/www.conf.j2', dest: '{{ phpfpm_root }}/www.conf' },
+{ src: 'php.ini.j2', dest: '/etc/php.ini' },
+{ src: 'opcache.ini.j2', dest: '{{ phpfpm_modules_config_root }}/opcache.ini' },
+{ src: 'redis.ini.j2', dest: '{{ phpfpm_modules_config_root }}/redis.ini' }
+]
+
+phpfpm_root: '/etc/php-fpm.d'
+phpfpm_confdir: ''
+phpfpm_service: 'php-fpm'
+
+phpfpm_pkgs: [
+"php-fpm",
+"php-devel",
+"php-imap",
+"php-pdo",
+"php-gd",
+"php-mysql",
+"php-mcrypt",
+"php-xml",
+"php-xmlrpc",
+"php-soap",
+"php-mbstring",
+"php-pecl-lzf",
+"php-pecl-redis",
+"php-pecl-memcache",
+"php-pecl-zendopcache"
+]
+
+phpfpm_modules_config_root: '/etc/php.d'

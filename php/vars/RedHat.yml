@@ -1,0 +1,27 @@
+---
+php_modules: [
+"php",
+"php-fpm",
+"php-devel",
+"php-imap",
+"php-pdo",
+"php-gd",
+"php-mysql",
+"php-mcrypt",
+"php-xml",
+"php-xmlrpc",
+"php-soap",
+"php-mbstring",
+"php-pecl-lzf",
+"php-pecl-redis",
+"php-pecl-memcache",
+"php-pecl-zendopcache"
+]
+
+php_modules_config: [
+{ src: 'php.ini.j2', dest: '/etc/php.ini' },
+{ src: 'opcache.ini.j2', dest: '{{ php_modules_config_root }}/opcache.ini' },
+{ src: 'redis.ini.j2', dest: '{{ php_modules_config_root }}/redis.ini' }
+]
+
+php_modules_config_root: '/etc/php.d'

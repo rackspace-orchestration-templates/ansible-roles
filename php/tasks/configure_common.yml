@@ -1,0 +1,12 @@
+---
+- name: Configure PHP
+  template:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+  with_items: php_modules_config
+
+- name: Restart Apache
+  service:
+    name: '{{ apache_pkg }}'
+    state: restarted
+  when: apache_pkg is defined

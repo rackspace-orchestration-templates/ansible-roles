@@ -1,0 +1,17 @@
+# IPTables Configuration File
+*filter
+:INPUT DROP [0:0]
+:FORWARD DROP [0:0]
+:OUTPUT ACCEPT [0:0]
+
+{% for rule in firewall_global_rules %}
+-A INPUT -s {{ rule.split(',')[0] }}/{{ rule.split(',')[1] }} -p {{ rule.split(',')[3] }} -m {{ rule.split(',')[3] }} --dport {{ rule.split(',')[2] }} -j ACCEPT
+{% endfor %}
+
+{% for node in firewall_nodes %}
+{% for rule in firewall_node_rules %}
+-A INPUT -s {{ node }}/{{ rule.split(',')[0] }} -p {{ rule.split(',')[2] }} -m {{ rule.split(',')[2] }} --dport {{ rule.split(',')[1] }} -j ACCEPT
+{% endfor %}
+{% endfor %}
+
+COMMIT

@@ -1,0 +1,8 @@
+description "Redis Server - {{ item.name }}"
+
+start on runlevel [23]
+stop on shutdown
+
+exec sudo -u redis /usr/bin/redis-server /etc/redis/redis-{{ item.name }}.conf --daemonize no
+
+respawn

@@ -1,0 +1,8 @@
+---
+- name: Install Nginx
+  apt:
+    name: nginx
+    state: installed
+
+- name: Include Debian Vars
+  include_vars: Debian.yml

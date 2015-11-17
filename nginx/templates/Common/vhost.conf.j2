@@ -1,0 +1,28 @@
+server {
+
+# disable access log and define error_log to critical.
+access_log off;
+error_log  logs/{{ item.name }}_error_log crit;
+
+# listen at 80 port, on any ip address.
+listen    {{ item.http_port }};
+
+# set the server name of your website
+server_name  {% for alias in item.aliases %} {{ alias }} {% endfor %};
+
+# define the root directory of your site and index files.
+        location / {
+            root   {{ item.doc_root }};
+            index  index.php index.html index.htm;
+
+  }
+
+# define the root of static files and set cache to the max 
+        location ~* .(gif|jpg|jpeg|png|ico|wmv|3gp|avi|mpg|mpeg|mp4|flv|mp3|mid|js|css|wml|swf)$ {
+        root   {{ item.doc_root }};
+                expires max;
+                add_header Pragma public;
+                add_header Cache-Control "public, must-revalidate, proxy-revalidate";
+        }
+
+}

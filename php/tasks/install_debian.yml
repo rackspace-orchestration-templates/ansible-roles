@@ -1,0 +1,20 @@
+---
+- name: Include Debian Vars
+  include_vars: Debian.yml
+
+- name: Install PHP packages
+  apt:
+    name: '{{ item }}'
+    state: present
+  with_items: php_modules
+
+- name: Install PECL packages
+  shell: "yes '' | pecl install {{ item }}"
+  with_items: php_modules_pecl
+  register: pecl_result
+  changed_when: "not 'is already installed and is the same as the released version' in pecl_result.stdout"
+  failed_when: "'No valid packages found' in pecl_result.stdout"
+
+- name: Enable PHP Modules
+  shell: "php5enmod {{ item }} "
+  with_items: php_modules_enable

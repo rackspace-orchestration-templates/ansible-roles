@@ -1,0 +1,17 @@
+---
+- name: Include RedHat Vars
+  include_vars: RedHat.yml
+
+- name: Install HTTPD
+  yum:
+    name: httpd
+    state: present
+
+- name: Install MOD_SSL
+  yum:
+    name: mod_ssl
+    state: present
+
+- name: Set apache_pkg fact
+  set_fact:
+    apache_pkg: 'httpd'

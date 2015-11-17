@@ -1,0 +1,5 @@
+---
+apache_user: apache
+apache_vhost_root: '/var/www/vhosts'
+apache_ssl_cert: '/etc/ssl/certs/snakeoil.key'
+apache_ssl_key: '/etc/ssl/certs/snakeoil.key'

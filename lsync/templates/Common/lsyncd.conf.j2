@@ -1,0 +1,20 @@
+settings {
+        logfile = "/var/log/lsyncd/lsyncd.log",
+        statusFile = "/var/log/lsyncd/lsyncd-status.log",
+        statusInterval = 20
+        }
+{% for slave in lsync_servers %}
+{% for dir in lsync_dirs %}
+sync {
+        default.rsync,
+        source = "{{ dir }}",
+        target = "{{ slave }}:{{ dir }}",
+        rsync = {
+                compress = true,
+                acls = true,
+                verbose = true,
+                rsh = "/usr/bin/ssh -p 22 -o StrictHostKeyChecking=no"
+        }
+}
+{% endfor %}
+{% endfor %}

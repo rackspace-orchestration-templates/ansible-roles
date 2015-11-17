@@ -1,0 +1,14 @@
+---
+- name: Install python-selinux
+  apt:
+    name: python-selinux
+    state: present
+
+- name: Install NTPD
+  apt:
+    name: ntp
+    state: present
+
+- name: Set NTP Service Fact
+  set_fact:
+    ntp_service: ntpd

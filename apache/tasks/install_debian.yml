@@ -1,0 +1,16 @@
+---
+- name: Include Debian Vars
+  include_vars: Debian.yml
+
+- name: Include Ubuntu 14.04 Vars
+  include_vars: Ubuntu1404.yml
+  when: ansible_distribution_version == '14.04'
+
+- name: Install apache2
+  apt:
+    name: apache2
+    state: present
+
+- name: Set apache_pkg fact
+  set_fact:
+    apache_pkg: 'apache2'

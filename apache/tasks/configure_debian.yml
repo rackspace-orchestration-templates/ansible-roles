@@ -1,0 +1,81 @@
+---
+# Only on Ubuntu 14.04 or Debian 8
+- name: Unlink MPM modules
+  command: 'a2dismod mpm_*'
+  when: ansible_distribution_major_version == '8' or ansible_distribution_version == '14.04'
+  ignore_errors: yes
+
+- name: Configure Apache2 to run on startup
+  service:
+    name: apache2
+    enabled: yes
+
+- name: Copy apache2.conf
+  template:
+    src: 'Debian/{{ apache_ver }}/apache2.conf.j2'
+    dest: '/etc/apache2/apache2.conf'
+
+- name: Create SSL Mutex directory - Apache 2.4
+  file:
+    path: /var/run/apache2/ssl_mutex
+    mode: 0755
+    state: directory
+    owner: '{{ apache_user }}'
+    group: '{{ apache_user }}'
+
+- name: Copy Module Configurations
+  template:
+    src: 'Debian/{{ apache_ver }}/mods/{{ item }}.conf.j2'
+    dest: '/etc/apach32/mods-available/{{ item }}.conf'
+    owner: root
+    group: root
+  with_items: apache_modules_config
+  when: apache_modules_config is defined
+
+- name: Enable modules
+  command: 'a2enmod {{ item }}'
+  with_items: apache_modules
+  when: apache_modules is defined
+
+- name: Remove default site
+  file:
+    path: '/etc/apache2/sites-enabled/000-default.conf'
+    state: absent
+
+- name: Configure vhosts
+  template:
+    src: 'Common/vhost.conf.j2'
+    dest: '/etc/apache2/sites-available/{{ item.name }}.conf'
+  with_items:
+    apache_vhosts
+  when: apache_vhosts is defined
+
+- name: Enable vhosts
+  file:
+    src: '/etc/apache2/sites-available/{{ item.name }}.conf'
+    path: '/etc/apache2/sites-enabled/{{ item.name }}.conf'
+    state: link
+  with_items:
+    apache_vhosts
+  when: apache_vhosts is defined
+
+- name: Set up VHOST root
+  file:
+    path: '/var/www/vhosts/'
+    mode: 0775
+    state: directory
+
+- name: Set up VHOST directories
+  file:
+    path: '/var/www/vhosts/{{ item.name }}'
+    state: directory
+    owner: '{{ apache_user }}'
+    group: '{{ apache_user }}'
+  with_items:
+    apache_vhosts
+  when: apache_vhosts is defined
+
+- name: Reload Apache Configuration
+  service:
+    name: apache2
+    state: restarted

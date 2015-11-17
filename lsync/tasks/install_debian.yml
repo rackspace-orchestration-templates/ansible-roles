@@ -1,0 +1,12 @@
+---
+- name: Install LSyncD
+  apt:
+    name: '{{ item }}'
+    state: present
+  with_items:
+  - lsyncd
+  - lua5.1
+  - liblua5.1-dev
+  - pkg-config
+  - rsync
+  - asciidoc
