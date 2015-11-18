@@ -1,5 +1,5 @@
 ---
-wordpress_docroot: '{{ nginx_vhost_root }}/{{ wordpress_domain }}'
+wordpress_docroot: '{{ nginx_vhost_root }}/{{ wordpress_domain }}/httpdocs'
 
 wordpress_db_host: localhost
 wordpress_db_name: wordpress
