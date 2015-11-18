@@ -20,7 +20,8 @@ phpfpm_pkgs: [
 'php5-gd',
 'php5-mysql',
 'php5-mcrypt',
-'php5-xmlrpc'
+'php5-xmlrpc',
+'php5-curl'
 ]
 
 phpfpm_pkgs_pecl: [
@@ -34,5 +35,6 @@ phpfpm_modules_config_root: '/etc/php5/mods-available'
 
 phpfpm_modules_enable: [
 'mcrypt',
-'redis'
+'redis',
+'curl'
 ]
