@@ -12,6 +12,6 @@ nginx_vhosts: [
     doc_root: '{{ nginx_vhost_root }}/{{ nginx_vhost_str }}/httpdocs',
     http_port: '80',
     ssl_port: '443',
-    template: 'default'
+    template: '{{ nginx_vhost_template }}'
   }
 ]
