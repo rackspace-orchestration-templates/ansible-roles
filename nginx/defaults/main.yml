@@ -2,7 +2,7 @@
 nginx_vhost_user: 'nginx'
 nginx_vhost_user_uid: 1010
 nginx_vhost_user_shell: '/bin/bash'
-nginx_vhost_root: '/var/www/vhosts/'
+nginx_vhost_root: '/var/www/vhosts'
 nginx_vhost_str: 'example.com'
 nginx_vhost_template: 'default'
 nginx_vhosts: [
