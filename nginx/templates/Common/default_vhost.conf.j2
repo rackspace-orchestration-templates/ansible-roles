@@ -24,5 +24,26 @@ server_name  {% for alias in item.aliases %} {{ alias }} {% endfor %};
                 add_header Pragma public;
                 add_header Cache-Control "public, must-revalidate, proxy-revalidate";
         }
+      location @handler {
+        rewrite / /index.php;
+    }
 
+    location ~ .php/ {
+        rewrite ^(.*.php)/ $1 last;
+    }
+
+    location ~ .php$ {
+        try_files $uri /index.php;
+        expires off;
+        fastcgi_pass unix:/var/run/php-fpm/{{ item.name }}.sock;
+        fastcgi_buffers 256 4k;
+        fastcgi_buffer_size 32k;
+        fastcgi_busy_buffers_size 256k;
+        fastcgi_read_timeout 3600s;
+#        fastcgi_param HTTPS $fastcgi_https;
+        fastcgi_param SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+        fastcgi_param MAGE_RUN_CODE default;
+        fastcgi_param MAGE_RUN_TYPE store;
+        include fastcgi_params;
+    }
 }

@@ -36,7 +36,7 @@
 
 - name: Create VHOSTs
   template:
-    src: 'Common/vhost.conf.j2'
+    src: 'Common/{{ item.template }}_vhost.conf.j2'
     dest: '/etc/nginx/conf.d/{{ item.name }}.conf'
   with_items: nginx_vhosts
   when: nginx_vhosts is defined
