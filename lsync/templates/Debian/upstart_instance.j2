@@ -1,0 +1,8 @@
+description "Lsyncd"
+
+start on runlevel [23]
+stop on shutdown
+
+exec lsyncd /etc/lsyncd.conf
+
+respawn
