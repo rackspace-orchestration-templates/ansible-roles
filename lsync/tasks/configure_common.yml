@@ -23,7 +23,7 @@
 - name: Create Upstart Service
   template:
     src: 'Debian/upstart_instance.j2'
-    dest:'/etc/init/lsyncd.conf'
+    dest: '/etc/init/lsyncd.conf'
   when: ansible_distribution == 'Ubuntu'
 
 - name: Start LSyncD
