@@ -16,6 +16,7 @@ server {
 
   location ~* ^/(admin) {
     proxy_pass http://master;
+    proxy_set_header Host {{ item.name }};
   }
 
 # define the root directory of your site and index files.
@@ -23,6 +24,7 @@ server {
     root   {{ item.doc_root }};
     index  index.php index.html index.htm;
     try_files $uri /index.php?$query_string;
+    proxy_set_header Host {{ item.name }};
     if ($arg_q ~ (node|user|admin)) {
       proxy_pass http://master;
     }
