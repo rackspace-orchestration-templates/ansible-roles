@@ -11,9 +11,9 @@
     state: link
 
 - name: Download Drupal
-  shell: 'drush dl drupal --drupal-project-rename={{ drupal_domain }} -y'
+  shell: 'drush dl drupal --drupal-project-rename=httpdocs -y'
   args:
-    chdir: '{{ apache_vhost_root }}'
+    chdir: '{{ nginx_vhost_root }}/{{ drupal_domain }}'
 
 - name: Install Drupal
   shell:
