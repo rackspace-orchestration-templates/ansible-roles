@@ -30,6 +30,6 @@
   file:
     path: '{{ drupal_docroot }}'
     state: directory
-    owner: '{{ apache_user }}'
-    group: '{{ apache_user }}'
+    owner: '{{ nginx_vhost_user }}'
+    group: '{{ nginx_vhost_user }}'
     recurse: yes
