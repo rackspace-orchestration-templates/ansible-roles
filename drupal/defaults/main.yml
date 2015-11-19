@@ -7,7 +7,7 @@ apache_vhosts: [
 ]
 
 drupal_domain: example.com
-drupal_docroot: '{{ apache_vhost_root }}/{{ drupal_domain }}'
+drupal_docroot: '{{ nginx_vhost_root }}/{{ drupal_domain }}/httpdocs'
 
 drupal_db_user: drupal
 drupal_db_password: drup@l
