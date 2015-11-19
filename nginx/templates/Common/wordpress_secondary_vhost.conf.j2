@@ -5,8 +5,8 @@ upstream master {
 server {
 
   access_log off;
-  error_log  /var/log/example.com_error_log;
-  root /var/www/vhosts/example.com/httpdocs;
+  error_log  /var/log/nginx/{{ item.name }}_error_log;
+  root {{ item.doc_root }};
 
   listen    {{ item.http_port }};
 
