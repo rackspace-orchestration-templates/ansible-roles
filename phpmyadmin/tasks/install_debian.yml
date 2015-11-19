@@ -1,6 +1,6 @@
 ---
 - name: Configure default PHPMyAdmin settings
-  shell: 'echo "phpmyadmin phpmyadmin/reconfigure-webserver multiselect apache2" | debconf-set-selections'
+  shell: 'echo "phpmyadmin phpmyadmin/reconfigure-webserver multiselect nginx" | debconf-set-selections'
 
 - name: Install PHPMyAdmin
   apt:
