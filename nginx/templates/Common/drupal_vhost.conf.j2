@@ -15,7 +15,6 @@ server {
   location / {
     root   {{ item.doc_root }};
     index  index.php index.html index.htm;
-
   }
 
   location ~* .(gif|jpg|jpeg|png|ico|wmv|3gp|avi|mpg|mpeg|mp4|flv|mp3|mid|js|css|wml|swf)$ {
@@ -30,6 +29,22 @@ server {
 
   location ~ .php/ {
     rewrite ^(.*.php)/ $1 last;
+  }
+  
+  location ~ ^/sites/.*/private/ {
+     return 403;
+  }
+
+  location ~ (^|/)\. {
+    return 403;
+  }
+
+  location @rewrite {
+    rewrite ^/(.*)$ /index.php?q=$1;
+  }
+
+  location ~ ^/sites/.*/files/styles/ { # For Drpal >= 7
+    try_files $uri @rewrite;
   }
 
   location ~ .php$ {
