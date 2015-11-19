@@ -12,7 +12,6 @@ phpfpm_confdir: '/pool.d'
 phpfpm_service: 'php5-fpm'
 
 phpfpm_pkgs: [
-'libapache2-mod-php5',
 'php5',
 'php5-fpm',
 'php5-dev',
