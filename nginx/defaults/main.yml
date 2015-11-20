@@ -5,7 +5,7 @@ nginx_vhost_user_shell: '/bin/bash'
 nginx_vhost_root: '/var/www/vhosts'
 nginx_vhost_str: 'example.com'
 nginx_vhost_template: 'default'
-nginx_vhost_phpmyadmin: false
+nginx_vhost_phpmyadmin: "false"
 nginx_vhosts: [
   {
     name: '{{ nginx_vhost_str }}',

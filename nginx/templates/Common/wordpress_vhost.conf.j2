@@ -8,7 +8,7 @@ server {
 
   server_name  {% for alias in item.aliases %} {{ alias }} {% endfor %};
 
-  {% if item.phpmyadmin %}
+  {% if item.phpmyadmin == "true" %}
   location ~* ^/phpmyadmin {
     root /usr/share;
     index index.php;
