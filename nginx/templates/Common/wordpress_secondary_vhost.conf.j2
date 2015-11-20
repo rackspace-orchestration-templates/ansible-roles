@@ -17,7 +17,7 @@ server {
     proxy_set_header Host {{ item.name }};
   }
 
-  {% if item.phpmyadmin == "true" %}
+  {% if item.phpmyadmin == "True" %}
   location ~* ^/phpmyadmin {
     proxy_pass http://master;
     proxy_set_header Host {{ item.name }};
