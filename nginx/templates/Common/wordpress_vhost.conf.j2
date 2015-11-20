@@ -50,7 +50,7 @@ server {
     access_log off; log_not_found off; expires max;
   }
   {% if item.phpmyadmin %}
-  location /phpmyadmin {
+  location ~* ^/phpmyadmin {
     root /usr/share;
     index index.php;
     location ~ ^/phpmyadmin/(.+\.php)$ {

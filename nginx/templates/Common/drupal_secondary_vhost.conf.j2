@@ -20,7 +20,7 @@ server {
   }
 
   {% if item.phpmyadmin %}
-  location /phpmyadmin {
+  location ~* ^/phpmyadmin {
     proxy_pass http://master;
     proxy_set_header Host {{ item.name }};
   }

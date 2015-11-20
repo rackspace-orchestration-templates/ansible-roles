@@ -63,7 +63,7 @@ server {
     include fastcgi_params;
   }
   {% if item.phpmyadmin %}
-  location /phpmyadmin {
+  location ~* ^/phpmyadmin {
     root /usr/share;
     index index.php;
     location ~ ^/phpmyadmin/(.+\.php)$ {
