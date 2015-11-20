@@ -19,6 +19,13 @@ server {
     proxy_set_header Host {{ item.name }};
   }
 
+  {% if item.phpmyadmin %}
+  location /phpmyadmin {
+    proxy_pass http://master;
+    proxy_set_header Host {{ item.name }};
+  }
+
+  {% endif %}
 # define the root directory of your site and index files.
   location / {
     root   {{ item.doc_root }};
@@ -75,10 +82,4 @@ server {
     include fastcgi_params;
   }
 
-  {% if item.phpmyadmin %}
-  location /phpmyadmin {
-    proxy_pass http://master;
-    proxy_set_header Host {{ item.name }};
-  }
-  {% endif %}
 }

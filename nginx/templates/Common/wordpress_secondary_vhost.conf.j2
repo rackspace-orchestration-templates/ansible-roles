@@ -17,6 +17,13 @@ server {
     proxy_set_header Host {{ item.name }};
   }
 
+  {% if item.phpmyadmin %}
+  location /phpmyadmin {
+    proxy_pass http://master;
+    proxy_set_header Host {{ item.name }};
+  }
+
+  {% endif %}
   location / {
     root   {{ item.doc_root }};
     index  index.php index.html index.htm;
@@ -57,10 +64,4 @@ server {
   location ~* ^.+\.(ogg|ogv|svg|svgz|eot|otf|woff|mp4|ttf|rss|atom|jpg|jpeg|gif|png|ico|zip|tgz|gz|rar|bz2|doc|xls|exe|ppt|tar|mid|midi|wav|bmp|rtf)$ {
     access_log off; log_not_found off; expires max;
   }
-  {% if item.phpmyadmin %}
-  location /phpmyadmin {
-    proxy_pass http://master;
-    proxy_set_header Host {{ item.name }};
-  }
-  {% endif %}
 }
