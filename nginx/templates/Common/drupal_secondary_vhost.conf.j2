@@ -74,4 +74,11 @@ server {
     fastcgi_param MAGE_RUN_TYPE store;
     include fastcgi_params;
   }
+
+  {% if item.phpmyadmin %}
+  location /phpmyadmin {
+    proxy_pass http://master;
+    proxy_set_header Host {{ item.name }};
+  }
+  {% endif %}
 }

@@ -49,4 +49,18 @@ server {
   location ~* ^.+\.(ogg|ogv|svg|svgz|eot|otf|woff|mp4|ttf|rss|atom|jpg|jpeg|gif|png|ico|zip|tgz|gz|rar|bz2|doc|xls|exe|ppt|tar|mid|midi|wav|bmp|rtf)$ {
     access_log off; log_not_found off; expires max;
   }
+  {% if item.phpmyadmin %}
+  location /phpmyadmin {
+    root /usr/share;
+    index index.php;
+    location ~ ^/phpmyadmin/(.+\.php)$ {
+      try_files $uri =404;
+      root /usr/share/;
+      fastcgi_pass unix:/var/run/php-fpm/{{ item.name }}.sock;
+      fastcgi_index index.php;
+      fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+      include /etc/nginx/fastcgi_params;
+    }
+  }
+  {% endif %}
 }
