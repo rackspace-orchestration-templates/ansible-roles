@@ -11,6 +11,21 @@ server {
 # set the server name of your website
   server_name  {% for alias in item.aliases %} {{ alias }} {% endfor %};
 
+  {% if item.phpmyadmin %}
+  location ~* ^/phpmyadmin {
+    root /usr/share;
+    index index.php;
+    location ~ ^/phpmyadmin/(.+\.php)$ {
+      try_files $uri =404;
+      root /usr/share/;
+      fastcgi_pass unix:/var/run/php-fpm/{{ item.name }}.sock;
+      fastcgi_index index.php;
+      fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+      include /etc/nginx/fastcgi_params;
+    }
+  }
+  {% endif %}
+
 # define the root directory of your site and index files.
   location / {
     root   {{ item.doc_root }};
@@ -62,18 +77,4 @@ server {
     fastcgi_param MAGE_RUN_TYPE store;
     include fastcgi_params;
   }
-  {% if item.phpmyadmin %}
-  location ~* ^/phpmyadmin {
-    root /usr/share;
-    index index.php;
-    location ~ ^/phpmyadmin/(.+\.php)$ {
-      try_files $uri =404;
-      root /usr/share/;
-      fastcgi_pass unix:/var/run/php-fpm/{{ item.name }}.sock;
-      fastcgi_index index.php;
-      fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-      include /etc/nginx/fastcgi_params;
-    }
-  }
-  {% endif %}
 }
