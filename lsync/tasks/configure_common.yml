@@ -3,6 +3,7 @@
   template:
     src: 'Common/lsyncd.conf.j2'
     dest: '/etc/lsyncd.conf'
+  when: lsync_dirs|length > 0
 
 - name: Create log directory
   file:
