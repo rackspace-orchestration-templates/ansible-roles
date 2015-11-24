@@ -5,7 +5,9 @@ nginx_vhosts: [
     aliases: ['www.{{ magento_vhost_domain }}'],
     doc_root: '{{ magento_document_root }}',
     http_port: '80',
-    ssl_port: '443'
+    ssl_port: '443',
+    template: 'magento',
+    phpmyadmin: 'False'
   }
 ]
 nginx_vhost_dir: '/etc/nginx/conf.d'

@@ -5,12 +5,6 @@
     state: directory
     mode: 0755
 
-- name: Create VHOST
-  template:
-    src: 'Common/nginx_vhost.conf.j2'
-    dest: '{{ nginx_vhost_dir }}/{{ magento_vhost_domain}}.conf'
-    backup: yes
-
 - name: Create Magento SFTP User
   user:
     name: '{{ magento_sftp_user }}'
