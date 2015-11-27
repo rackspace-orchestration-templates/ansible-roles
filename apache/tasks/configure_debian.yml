@@ -4,6 +4,8 @@
   command: 'a2dismod mpm_*'
   when: ansible_distribution_major_version == '8' or ansible_distribution_version == '14.04'
   ignore_errors: yes
+  notify:
+  - Restart Apache
 
 - name: Configure Apache2 to run on startup
   service:
@@ -14,6 +16,8 @@
   template:
     src: 'Debian/{{ apache_ver }}/apache2.conf.j2'
     dest: '/etc/apache2/apache2.conf'
+  notify:
+  - Restart Apache
 
 - name: Create SSL Mutex directory - Apache 2.4
   file:
@@ -31,16 +35,22 @@
     group: root
   with_items: apache_modules_config
   when: apache_modules_config is defined
+  notify:
+  - Restart Apache
 
 - name: Enable modules
   command: 'a2enmod {{ item }}'
   with_items: apache_modules
   when: apache_modules is defined
+  notify:
+  - Restart Apache
 
 - name: Remove default site
   file:
     path: '/etc/apache2/sites-enabled/000-default.conf'
     state: absent
+  notify:
+  - Restart Apache
 
 - name: Configure vhosts
   template:
@@ -58,6 +68,8 @@
   with_items:
     apache_vhosts
   when: apache_vhosts is defined
+  notify:
+  - Restart Apache
 
 - name: Set up VHOST root
   file:
@@ -74,8 +86,3 @@
   with_items:
     apache_vhosts
   when: apache_vhosts is defined
-
-- name: Reload Apache Configuration
-  service:
-    name: apache2
-    state: restarted

@@ -76,3 +76,8 @@
   with_subelements:
     - mysql_users
     - hosts
+
+- name: Configure LogRotate
+  template:
+    src: 'Common/mysql-logrotate.j2'
+    dest: '/etc/logrotate.d/mysql_logs'

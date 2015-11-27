@@ -8,11 +8,14 @@
   template:
     src: 'RedHat/{{ apache_ver }}/httpd.conf.j2'
     dest: '/etc/httpd/conf/httpd.conf'
+  notify:
+  - Restart Apache
 
 - name: Copy ssl.conf
   template:
     src: 'RedHat/{{ apache_ver }}/ssl.conf.j2'
     dest: '/etc/httpd/conf.d/ssl.conf'
+  notify: Restart Apache
 
 - name: Generate SSL certificate
   shell: '/etc/ssl/certs/make-dummy-cert /etc/ssl/certs/snakeoil.key'
@@ -24,8 +27,8 @@
     group: root
     mode: 0755
     state: directory
-
-- debug: var=apache_vhosts
+  notify:
+  - Restart Apache
 
 - name: Configure vhosts
   template:
@@ -34,6 +37,8 @@
   with_items:
     apache_vhosts
   when: apache_vhosts is defined
+  notify:
+  - Restart Apache
 
 - name: Set up VHOST root
   file:
@@ -50,8 +55,3 @@
   with_items:
     apache_vhosts
   when: apache_vhosts is defined
-
-- name: Reload HTTPD Configuration
-  service:
-    name: httpd
-    state: restarted

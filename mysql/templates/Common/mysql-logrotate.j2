@@ -1,0 +1,6 @@
+{{ mysql_log_slow }} {{ mysql_log_error }} {
+  missingok
+  rotate 2
+  size 125M
+  craete 644 mysql mysql
+}
