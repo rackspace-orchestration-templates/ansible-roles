@@ -1,0 +1,17 @@
+upstream nodes {
+  ip_hash;
+  {% for server in nginx_lb_nodes %}
+  server {{ server }};
+  {% endfor %}
+}
+
+server {
+  access_log off;
+  error_log /var/log/{{ item.name }}_error.log;
+  
+  listen {{ item.http_port }};
+
+  location / {
+    proxy_pass http://nodes;
+  }
+}
