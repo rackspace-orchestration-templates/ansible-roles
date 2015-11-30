@@ -1,7 +1,8 @@
 upstream nodes {
   ip_hash;
-  {% if nginx_upstream_server is defined %}server {{ nginx_upstream_server }};{% endif %}
-  {% for server in nginx_lb_nodes %}server {{ server }};{% endfor %}
+{% if nginx_upstream_server is defined %}  server {{ nginx_upstream_server }};{% endif %}
+{% for server in nginx_lb_nodes %}  server {{ server }};
+{% endfor %}
 }
 
 server {
