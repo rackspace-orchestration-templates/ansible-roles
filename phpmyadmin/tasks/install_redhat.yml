@@ -4,5 +4,11 @@
     name: phpmyadmin
     state: present
 
+- name: Create symlink for PHPMyAdmin
+  file:
+    src: '/usr/share/phpMyAdmin'
+    dest: '/usr/share/phpmadmin'
+    state: link
+
 - name: Include RedHat Vars
   include_vars: RedHat.yml
