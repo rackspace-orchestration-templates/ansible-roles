@@ -1,0 +1,10 @@
+---
+minecraft_difficulty: 2
+minecraft_spawn_monsters: true
+minecraft_hardcore: false
+minecraft_max_players: 20
+minecraft_port: 25565
+minecraft_spawn_npcs: true
+minecraft_spawn_animals: true
+minecraft_online: true
+minecraft_motd: 'A Minecraft Server'

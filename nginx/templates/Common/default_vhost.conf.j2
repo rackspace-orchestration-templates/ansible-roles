@@ -7,6 +7,9 @@ server {
 
 # listen at 80 port, on any ip address.
   listen    {{ item.http_port }};
+  listen    {{ item.ssl_port }} ssl;
+  ssl_certificate {{ nginx_ssl_cert }};
+  ssl_certificate_key {{ nginx_ssl_key }};
 
 # set the server name of your website
   server_name  {% for alias in item.aliases %} {{ alias }} {% endfor %};

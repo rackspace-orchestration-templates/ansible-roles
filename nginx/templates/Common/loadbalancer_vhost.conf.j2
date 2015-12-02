@@ -10,6 +10,9 @@ server {
   error_log /var/log/{{ item.name }}_error.log;
   
   listen {{ item.http_port }};
+  listen    {{ item.ssl_port }} ssl;
+  ssl_certificate {{ nginx_ssl_cert }};
+  ssl_certificate_key {{ nginx_ssl_key }};
 
   location / {
     proxy_pass http://nodes;

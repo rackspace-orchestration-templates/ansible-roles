@@ -1,0 +1,5 @@
+---
+- name: Install Java
+  apt:
+    name: default-jdk
+    state: present
