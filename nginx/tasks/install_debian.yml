@@ -2,7 +2,12 @@
 - name: Install Nginx
   apt:
     name: nginx
-    state: installed
+    state: present
+
+- name: Install SSL-Cert
+  apt:
+    name: ssl-cert
+    state: present
 
 - name: Include Debian Vars
   include_vars: Debian.yml
