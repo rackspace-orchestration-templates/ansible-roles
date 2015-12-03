@@ -8,6 +8,7 @@
   file:
     path: '/home/minecraft/'
     state: directory
+    owner: minecraft
 
 - name: Download Minecraft
   get_url:
@@ -18,6 +19,12 @@
   file:
     path: '/home/minecraft/eula.txt'
     state: absent
+
+- name: Copy server.properties
+  template:
+    src: 'Common/server.properties.j2'
+    dest: '/home/minecraft/server.properties'
+    owner: minecraft
 
 - name: Start Minecraft Server
   shell:
@@ -31,8 +38,4 @@
     regexp: '^eula=false$'
     replace: 'eula=true'
 
-- name: Copy server.properties
-  template:
-    src: 'Common/server.properties.j2'
-    dest: '/home/minecraft/server.properties'
 
