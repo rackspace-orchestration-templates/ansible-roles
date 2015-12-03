@@ -99,7 +99,7 @@
 - name: Copy Core Sample Files
   copy:
     src: '{{ magento_document_root }}/magento-sample-data-{{ magento_sample_content_version }}/{{ item }}'
-    dest: '{{ magento_document_root }}/'
+    dest: '{{ magento_document_root }}'
     force: yes
   with_items:
     - 'media'
