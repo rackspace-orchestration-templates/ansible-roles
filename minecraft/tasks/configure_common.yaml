@@ -38,4 +38,12 @@
     regexp: '^eula=false$'
     replace: 'eula=true'
 
+- name: Start Minecraft-Server on startup
+  service:
+    name: minecraft-server
+    enabled: yes
 
+- name: Start Minecraft-Server
+  service:
+    name: minecraft-server
+    state: started
