@@ -21,7 +21,7 @@
 
 - name: Start Minecraft Server
   shell:
-    java -jar /tmp/minecraft-server.jar
+    java -jar /home/minecraft/minecraft-server.jar
   args:
     chdir: '/home/minecraft/'
 
