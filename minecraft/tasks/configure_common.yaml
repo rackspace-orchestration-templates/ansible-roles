@@ -1,0 +1,49 @@
+---
+- name: Create Minecraft user
+  user:
+    name: minecraft
+    home: '/home/minecraft/'
+
+- name: Create Minecraft Directory
+  file:
+    path: '/home/minecraft/'
+    state: directory
+    owner: minecraft
+
+- name: Download Minecraft
+  get_url:
+    url: 'https://s3.amazonaws.com/Minecraft.Download/versions/1.8.8/minecraft_server.1.8.8.jar'
+    dest: '/home/minecraft/minecraft-server.jar'
+
+- name: Verify that EULA.txt is absent
+  file:
+    path: '/home/minecraft/eula.txt'
+    state: absent
+
+- name: Copy server.properties
+  template:
+    src: 'Common/server.properties.j2'
+    dest: '/home/minecraft/server.properties'
+    owner: minecraft
+
+- name: Start Minecraft Server
+  shell:
+    java -jar /home/minecraft/minecraft-server.jar
+  args:
+    chdir: '/home/minecraft/'
+
+- name: Accept EULA
+  replace:
+    dest: '/home/minecraft/eula.txt'
+    regexp: '^eula=false$'
+    replace: 'eula=true'
+
+- name: Start Minecraft-Server on startup
+  service:
+    name: minecraft-server
+    enabled: yes
+
+- name: Start Minecraft-Server
+  service:
+    name: minecraft-server
+    state: started

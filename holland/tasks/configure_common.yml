@@ -1,0 +1,24 @@
+---
+- name: Configure Cron Job
+  template:
+    src: 'Common/holland.j2'
+    dest: '/etc/cron.d/holland'
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Add Holland MySQL User
+  mysql_user:
+    name: '{{ holland_mysql_user }}'
+    password: '{{ holland_mysql_password }}'
+    priv: '*.*:ALL'
+    state: present
+    login_user: '{{ mysql_root_user }}'
+    login_password: '{{ mysql_root_password }}'
+    login_host: '{{ holland_mysql_host }}'
+  when: holland_create_user == 'yes'
+
+- name: Add MySQLDump Backup Job
+  template:
+    src: 'Common/default.conf.j2'
+    dest: '/etc/holland/backupsets/default.conf'

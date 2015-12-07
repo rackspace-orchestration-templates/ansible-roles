@@ -1,0 +1,9 @@
+---
+- name: Include RedHat Vars
+  include_vars: RedHat.yml
+
+- name: Install PHP packages
+  yum:
+    name: '{{ item }}'
+    state: present
+  with_items: php_modules

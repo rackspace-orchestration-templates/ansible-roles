@@ -1,0 +1,6 @@
+---
+phpmyadmin_docroot: '/var/www/vhosts/example.com/phpmyadmin/'
+phpmyadmin_user: 'root'
+phpmyadmin_pass: 'htaccess'
+phpmyadmin_host: '127.0.0.1'
+phpmyadmin_install: 'True'

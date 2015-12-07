@@ -1,0 +1,28 @@
+---
+- name: Include RedHat Vars
+  include_vars: RedHat.yml
+
+- name: Ensure MySQL is not installed
+  yum:
+    name: mariadb-server
+    state: absent
+
+- name: Install Percona Repo
+  yum:
+    name: "http://www.percona.com/downloads/percona-release/redhat/0.1-3/percona-release-0.1-3.noarch.rpm"
+    state: present
+
+- name: Set MySQL Root Pass Set Fact
+  set_fact:
+    mysql_root_password_set: no
+
+- name: Install Percona Packages
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - 'Percona-Server-shared-{{ percona_version }}'
+    - 'Percona-Server-client-{{ percona_version }}'
+    - 'Percona-Server-server-{{ percona_version }}'
+    - 'MySQL-python'
+    - 'percona-xtrabackup'

@@ -1,0 +1,29 @@
+---
+- name: Configure PHP-FPM
+  template:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+  with_items: phpfpm_config
+
+- name: Copy configuration files for Nginx vhosts
+  template:
+    src: 'Common/vhost.conf.j2'
+    dest: '{{ phpfpm_root }}/{{ phpfpm_confdir }}/{{ item.name }}.conf'
+  with_items: nginx_vhosts
+  when: nginx_vhosts is defined
+
+- name: Ensure PHP-FPM Socket Directory exists
+  file:
+    path: '/var/run/php-fpm'
+    state: directory
+
+- name: Enable and Restart PHP-FPM
+  service:
+    name: '{{ phpfpm_service }}'
+    state: restarted
+    enabled: yes
+
+- name: Restart Nginx
+  service:
+    name: nginx
+    state: restarted

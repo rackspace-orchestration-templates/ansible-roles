@@ -1,0 +1,19 @@
+---
+- name: Install PHP
+  yum:
+    name: php-cli
+    state: present
+
+- name: Install PHP-FPM
+  yum:
+    name: php-fpm
+    state: present
+
+- name: Include RedHat Vars
+  include_vars: RedHat.yml
+
+- name: Install other packages
+  yum:
+    name: '{{ item }}'
+    state: present
+  with_items: phpfpm_pkgs

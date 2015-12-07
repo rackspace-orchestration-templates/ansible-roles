@@ -1,0 +1,53 @@
+<VirtualHost *:80>
+        ServerName {{ item.name }}
+        ServerAlias {% for alias in item.aliases %} {{ alias }} {% endfor %}
+
+        DocumentRoot /var/www/vhosts/{{ item.name }}
+
+        # Force HTTPS when loading the page
+        #RewriteEngine On
+        #RewriteCond %{HTTPS} off
+        #RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI}
+
+        <Directory /var/www/vhosts/{{ item.name }}>
+                Options -Indexes +FollowSymLinks -MultiViews
+                AllowOverride All
+        </Directory>
+
+        CustomLog /var/log/{{ apache_pkg }}/{{ item.name }}-access.log combined
+        ErrorLog /var/log/{{ apache_pkg }}/{{ item.name }}-error.log
+
+        # Possible values include: debug, info, notice, warn, error, crit,
+        # alert, emerg.
+        LogLevel warn
+</VirtualHost>
+
+<VirtualHost *:443>
+        ServerName {{ item.name }}
+        ServerAlias {% for alias in item.aliases %} {{ alias }} {% endfor %}
+
+        DocumentRoot /var/www/vhosts/{{ item.name }}
+        <Directory /var/www/vhosts/{{ item.name }}>
+                Options -Indexes +FollowSymLinks -MultiViews
+                AllowOverride All
+        </Directory>
+
+        CustomLog /var/log/{{ apache_pkg }}/{{ item.name }}-ssl-access.log combined
+        ErrorLog /var/log/{{ apache_pkg }}/{{ item.name }}-ssl-error.log
+
+        # Possible values include: debug, info, notice, warn, error, crit,
+        # alert, emerg.
+        LogLevel warn
+
+        SSLEngine on
+        SSLCertificateFile   {{ apache_ssl_cert }}
+        SSLCertificateKeyFile {{ apache_ssl_key }}
+        SSLCertificateChainFile {{ apache_ssl_cert }}
+
+        <FilesMatch "\.(cgi|shtml|phtml|php)$">
+                SSLOptions +StdEnvVars
+        </FilesMatch>
+
+        BrowserMatch "MSIE [2-6]"                 nokeepalive ssl-unclean-shutdown                 downgrade-1.0 force-response-1.0
+        BrowserMatch "MSIE [17-9]" ssl-unclean-shutdown
+</VirtualHost>

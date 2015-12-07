@@ -1,0 +1,34 @@
+---
+mysql_root_user: root
+mysql_root_password: P@$$w0rd
+mysql_data_dir: '/var/lib/mysql'
+mysql_log_slow: '/var/lib/mysql/slow-log'
+mysql_log_bin: '/var/lib/mysql/bin-log'
+mysql_log_relay: '/var/lib/mysql/relay-log'
+mysql_wait_timeout: 180
+mysql_net_read_timeout: 30
+mysql_net_write_timeout: 30
+mysql_back_log: 128
+mysql_table_open_cache: 2048
+mysql_max_heap_table_size: 64M
+mysql_query_cache_size: 32M
+mysql_key_buffer_size: 64M
+mysql_innodb_log_buffer_size: 4M
+mysql_innodb_buffer_pool_size: 64M
+
+mysql_default_user: example
+mysql_default_user_password: example
+mysql_default_database: example
+
+mysql_users: [
+  {
+    name: '{{ mysql_default_user }}',
+    password: '{{ mysql_default_user_password }}',
+    privs: '{{ mysql_default_database }}.*:ALL',
+    hosts: ['%']
+  }
+]
+
+mysql_dbs: [
+  '{{ mysql_default_database }}'
+]

@@ -1,0 +1,39 @@
+---
+- name: Set Package Name
+  set_fact:
+    mysql_pkg: mariadb-server
+  when: ansible_distribution_major_version == '7'
+
+- name: Set Package Name
+  set_fact:
+    mysql_pkg: mysql-server
+  when: mysql_pkg is not defined
+
+- name: Install MySQL-Server
+  yum:
+    name: '{{ mysql_pkg }}'
+    state: present
+
+- name: Install MySQL-Python
+  yum:
+    name: MySQL-python
+    state: present
+
+- name: Load RedHat Vars
+  include_vars: MySQL/RedHat.yml
+  when: mysql_pkg == 'mysql-server'
+
+- name: Load RedHat Vars
+  include_vars: MariaDB/RedHat.yml
+  when: mysql_pkg == 'mariadb-server'
+
+- name: Edit SystemD Limits
+  template:
+    src: 'RedHat/limits.conf.j2'
+    dest: '/etc/systemd/system/{{ mysql_service }}.service.d/limits.conf'
+    mode: '0644'
+
+- name: Restart MySQL
+  service:
+    name: '{{ mysql_service }}'
+    state: restarted

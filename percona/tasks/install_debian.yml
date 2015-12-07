@@ -1,0 +1,42 @@
+---
+- name: Include Debian Vars
+  include_vars: Debian.yml
+
+- name: Remove MySQL Server
+  apt:
+    name: mysql-server
+    state: absent
+
+- name: Install Python-PyCURL
+  apt:
+    name: python-pycurl
+    state: present
+
+- name: Install Percona Repository Key
+  command: 'sudo apt-key adv --keyserver keys.gnupg.net --recv-keys 1C4CBDCDCD2EFD2A'
+
+- name: Add Percona Repo
+  apt_repository:
+    repo: "deb http://repo.percona.com/apt {{ ansible_lsb.codename }}  main"
+    state: present
+
+- name: Set initial root password
+  shell: "echo percona-server-server-5.5 percona-server-server/root_password password '{{ mysql_root_password }}' | sudo debconf-set-selections"
+
+- name: Confirm initial root password
+  shell: "echo percona-server-server-5.5 percona-server-server/root_password_again password '{{ mysql_root_password }}' | sudo debconf-set-selections"
+
+- name: Set MySQL Root Pass Set Fact
+  set_fact:
+    mysql_root_password_set: yes
+
+- name: Install Percona Packages
+  apt:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - percona-server-common-{{ percona_version }}
+    - percona-server-client-{{ percona_version }}
+    - percona-server-server-{{ percona_version }}
+    - percona-xtrabackup
+    - python-mysqldb

@@ -1,0 +1,4 @@
+---
+nginx_ssl_cert: '/etc/ssl/certs/ssl-cert-snakeoil.pem'
+nginx_ssl_key: '/etc/ssl/private/ssl-cert-snakeoil.key'
+nginx_log_dir: '/usr/share/nginx/logs'

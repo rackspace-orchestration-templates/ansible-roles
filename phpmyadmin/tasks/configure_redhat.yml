@@ -1,0 +1,12 @@
+---
+- name: Allow access from all IPs
+  replace:
+    dest: '/etc/httpd/conf.d/phpMyAdmin.conf'
+    regexp: 'ip 127.0.0.1$'
+    replace: 'all granted'
+
+- name: Reload HTTPD configuration
+  service:
+    name: httpd
+    state: reloaded
+  ignore_errors: yes

@@ -1,0 +1,37 @@
+---
+- name: Install Python-PyCURL
+  apt:
+    name: python-pycurl
+    state: present
+
+- name: Add Holland Repository Key
+  apt_key:
+    url: 'http://download.opensuse.org/repositories/home:/holland-backup/xUbuntu_{{ ansible_lsb.release }}/Release.key'
+    state: present
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Add Holland Repository Key
+  apt_key:
+    url: 'http://download.opensuse.org/repositories/home:/holland-backup/Debian_{{ ansible_distribution_major_version }}.0/Release.key'
+    state: present
+  when: ansible_distribution == 'Debian'
+
+- name: Add Holland Repository
+  apt_repository:
+    repo: 'deb http://download.opensuse.org/repositories/home:/holland-backup/xUbuntu_{{ ansible_lsb.release }}/ ./'
+    state: present
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Add Holland Repository
+  apt_repository:
+    repo: 'deb http://download.opensuse.org/repositories/home:/holland-backup/Debian_{{ ansible_distribution_major_version }}.0/ ./'
+    state: present
+  when: ansible_distribution == 'Debian'
+
+- name: Install Holland and Holland-MySQLDump
+  apt:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - holland
+    - holland-mysqldump

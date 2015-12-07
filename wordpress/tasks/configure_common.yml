@@ -1,0 +1,45 @@
+---
+- name: Download WordPress CLI
+  get_url:
+    url: 'https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar'
+    dest: '/tmp/wp-cli.phar'
+    mode: '0644'
+    validate_certs: no
+
+- name: Move WordPress CLI to /usr/local/bin
+  copy:
+    src: '/tmp/wp-cli.phar'
+    dest: '/usr/local/bin/wp'
+
+- name: Configure WordPress CLI permissions
+  command: 'chmod +x /usr/local/bin/wp'
+
+- name: WordPress CLI - Download
+  command: 'wp core download --allow-root'
+  args:
+    chdir: '{{ wordpress_docroot }}'
+    creates: '{{ wordpress_docroot }}/index.php'
+
+- name: WordPress CLI - Configure
+  command:
+    "wp core config --allow-root 
+    --dbhost='{{ wordpress_db_host }}'
+    --dbname='{{ wordpress_db_name }}'
+    --dbuser='{{ wordpress_db_user }}'
+    --dbpass='{{ wordpress_db_pass }}'
+    --path='{{ wordpress_docroot }}'"
+  args:
+    chdir: '{{ wordpress_docroot }}'
+    creates: '{{ wordpress_docroot }}/wp-config.php'
+
+- name: WordPress CLI - Install
+  command:
+    "wp core install --allow-root 
+    --url='http://{{ wordpress_domain }}'
+    --title='{{ wordpress_sitename }}'
+    --admin_user='{{ wordpress_user }}'
+    --admin_password='{{ wordpress_user_pass }}'
+    --admin_email='{{ wordpress_user_email }}'
+    --path='{{ wordpress_docroot }}'"
+  args:
+    chdir: '{{ wordpress_docroot }}'

@@ -1,0 +1,83 @@
+---
+- name: Add Include Directory
+  file:
+    path: '{{ mysql_include_dir }}'
+    state: directory
+    owner: root
+    group: root
+
+- name: Add Temp Directory
+  file:
+    path: '/var/lib/mysqltmp'
+    state: directory
+    owner: mysql
+    group: mysql
+
+- name: Copy my.cnf
+  template:
+    src: 'Common/mariadb_my.cnf.j2'
+    dest: '{{ mysql_path }}/my.cnf'
+
+- name: Remove existing InnoDB log files
+  file:
+    path: '/var/lib/mysql/{{ item }}'
+    state: absent
+  with_items:
+    - 'ib_logfile0'
+    - 'ib_logfile1'
+
+- name: Enable MySQL-Server
+  service:
+    name: '{{ mysql_service }}'
+    state: started
+    enabled: yes
+
+- name: Set MySQL Root Password
+  mysql_user:
+    name: '{{ mysql_root_user }}'
+    password: '{{ mysql_root_password }}'
+    state: present
+
+- name: Configure .my.cnf file with new credentials
+  template:
+    src: 'Common/.my.cnf.j2'
+    dest: '/root/.my.cnf'
+    owner: root
+    group: root
+    mode: 0700
+
+- name: Remove anonymous users
+  mysql_user:
+    name: ''
+    host: '{{ item }}'
+    state: absent
+  with_items:
+    - localhost
+    - 127.0.0.1
+    - '{{ ansible_hostname }}'
+
+- name: Remove 'test' database
+  mysql_db:
+    name: test
+    state: absent
+
+- name: Create MySQL Databases
+  mysql_db:
+    name: '{{ item }}'
+    state: present
+  with_items: mysql_dbs
+
+- name: Create MySQL Users
+  mysql_user:
+    name: '{{ item[0].name }}'
+    password: '{{ item[0].password }}'
+    priv: '{{ item[0].privs }}'
+    host: '{{ item[1] }}'
+  with_subelements:
+    - mysql_users
+    - hosts
+
+- name: Configure LogRotate
+  template:
+    src: 'Common/mysql-logrotate.j2'
+    dest: '/etc/logrotate.d/mariadb_logs'

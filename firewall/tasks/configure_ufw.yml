@@ -1,0 +1,35 @@
+---
+- name: Install UFW
+  apt:
+    name: ufw
+    state: present
+
+- name: Enable UFW
+  service:
+    name: ufw
+    state: started
+    enabled: yes
+
+#- name: Add Rules
+#  ufw:
+#    proto: '{{ item.proto }}'
+#    to_port: '{{ item.port }}'
+#    from_ip: '{{ item.src }}'
+#    rule: allow
+#  with_items: firewall_rules
+
+- name: Add Global Rules
+  shell: 'ufw allow from {{ item.split(",")[0] }}/{{ item.split(",")[1] }} to any port {{ item.split(",")[2] }} proto {{ item.split(",")[3] }}'
+  register: ufw_output
+  changed_when: '"Rules updated" in ufw_output.stdout'
+  failed_when: '"ERROR" in ufw_output.stdout'
+  with_items: firewall_global_rules
+
+- name: Add Node-Specific Rules
+  shell: 'ufw allow from {{ item[0] }}/{{ item[1].split(",")[0] }} to any port {{ item[1].split(",")[1] }} proto {{ item[1].split(",")[2] }}'
+  register: ufw_output
+  changed_when: '"Rules updated" in ufw_output.stdout'
+  failed_when: '"ERROR" in ufw_output.stdout'
+  with_nested:
+  - firewall_nodes
+  - firewall_node_rules

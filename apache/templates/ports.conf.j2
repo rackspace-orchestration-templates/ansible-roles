@@ -1,0 +1,16 @@
+# Generated with Ansible
+#
+# If you just change the port or add more ports here, you will likely also
+# have to change the VirtualHost statement in
+# /etc/apache2/sites-enabled/000-default
+# This is also true if you have upgraded from before 2.2.9-3 (i.e. from
+# Debian etch). See /usr/share/doc/apache2.2-common/NEWS.Debian.gz and
+# README.Debian.gz
+
+{% for port in active_ports %}
+    {% if ansible_distribution_version == '12.04' or ansible_distribution=='Debian' or ansible_os_family == 'RedHat' and ansible_distribution_major_version == '6' %}
+NameVirtualHost *:{{ port }}
+    {% endif %}
+Listen {{ port }}
+
+{% endfor %}

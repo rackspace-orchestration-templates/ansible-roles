@@ -1,0 +1,13 @@
+[Unit]
+Description=Minecraft Server
+After=network.target
+
+[Service]
+WorkingDirectory=/home/minecraft
+User=minecraft
+
+ExecStart=/usr/bin/java -Xms{{ minecraft_memory_min }} -Xmx{{ minecraft_memory_max }} -jar minecraft-server.jar nogui
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

@@ -1,29 +1,8 @@
 ---
-- name: php packages are installed
-  yum: state=present name={{ item }}
-  with_items:
-    - "php"
-    - "php-devel"
-    - "php-imap"
-    - "php-pdo"
-    - "php-gd"
-    - "php-mysql"
-    - "php-mcrypt"
-    - "php-xml"
-    - "php-xmlrpc"
-    - "php-soap"
-    - "php-mbstring"
-    - "php-pecl-lzf"
-    - "php-pecl-redis"
-    - "php-pecl-memcache"
-    - "php-pecl-zendopcache"
+- include: install_debian.yml
+  when: ansible_os_family == 'Debian'
 
-- name: php modules are configured
-  template: 
-    src={{ item.src }}
-    dest={{ item.dest }}
-    backup=yes
-  with_items:
-    - { src: 'etc/php.ini.j2', dest: '/etc/php.ini' }
-    - { src: 'etc/php.d/opcache.ini.j2', dest: '/etc/php.d/opcache.ini' }
-    - { src: 'etc/php.d/redis.ini.j2', dest: '/etc/php.d/redis.ini' }
+- include: install_redhat.yml
+  when: ansible_os_family == 'RedHat'
+
+- include: configure_common.yml

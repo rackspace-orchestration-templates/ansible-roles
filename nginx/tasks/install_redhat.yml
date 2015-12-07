@@ -1,0 +1,11 @@
+---
+- name: Install Nginx
+  yum:
+    name: nginx
+    state: present
+
+- name: Generate SSL certificate
+  shell: '/etc/ssl/certs/make-dummy-cert /etc/ssl/certs/snakeoil.key'
+
+- name: Include RedHat Vars
+  include_vars: RedHat.yml

@@ -1,28 +1,32 @@
 ---
-# Percona Server version - 55 - 56
-percona_version: 56
+mysql_users: [
+  {
+    name: 'example_user',
+    password: 's0m3p@$$',
+    privs: '*.*:ALL',
+    hosts: ['%']
+  }
+]
 
-# Global MySQL Defaults
+mysql_dbs: [
+  'somedb'
+] 
+hosts: ['%']
+mysql_root_password: 'P@$$w0rd'
+mysql_host_ip: '127.0.0.1'
+mysql_root_user: 'root'
 mysql_max_allowed_packet: 256M
 mysql_max_connections: 750
 mysql_datadir: /var/lib/mysql
 mysql_tmpdir: /var/lib/mysqltmp
 mysql_logdir: /var/lib/mysqllogs
 mysql_socket: /var/lib/mysql/mysql.sock
-
-# Query Cache
 mysql_query_cache_type: 1
 mysql_query_cache_size: 128M
 mysql_query_cache_limit: 4M
-
-# InnoDB Defaults
 mysql_innodb_lock_wait_timeout: 1800
 mysql_innodb_buffer_pool_size: 500M
-
-# MyISAM Defaults
 mysql_key_buffer_size: 512M
 mysql_myisam_sort_buffer_size: 128M
-
-# Temp tables
 mysql_tmp_table_size: 256M
 mysql_max_heap_table_size: 256M

@@ -1,3 +1,20 @@
 ---
-nginx_http_port: 80
-tcp_nodelay: on
+nginx_vhost_user: 'nginx'
+nginx_vhost_user_uid: 1010
+nginx_vhost_user_shell: '/bin/bash'
+nginx_vhost_root: '/var/www/vhosts'
+nginx_vhost_str: 'example.com'
+nginx_vhost_template: 'default'
+nginx_vhost_phpmyadmin: "false"
+nginx_lb_nodes: ['127.0.0.1']
+nginx_vhosts: [
+  {
+    name: '{{ nginx_vhost_str }}',
+    aliases: ['www.{{ nginx_vhost_str }}'],
+    doc_root: '{{ nginx_vhost_root }}/{{ nginx_vhost_str }}/httpdocs',
+    http_port: '80',
+    ssl_port: '443',
+    template: '{{ nginx_vhost_template }}',
+    phpmyadmin: '{{ nginx_vhost_phpmyadmin }}'
+  }
+]

@@ -1,0 +1,34 @@
+---
+- name: Enable firewalld
+  service:
+    name: firewalld
+    state: started
+    enabled: yes
+
+#- name: Configure Rules
+#  firewalld:
+#    port: '{{ item.port }}/{{ item.proto }}'
+#    state: enabled
+#    permanent: yes
+#    immediate: yes
+#  with_items: firewall_rules
+
+- name: Configure Global Rules
+  shell: 'firewall-cmd --add-rich-rule="rule family=\"ipv4\" source address=\"{{ item.split(",")[0] }}/{{ item.split(",")[1] }}\" port port=\"{{ item.split(",")[2] }}\" protocol=\"{{ item.split(",")[3] }}\" accept"'
+  with_items: firewall_global_rules
+
+- name: Configure Permanent Global Rules
+  shell: 'firewall-cmd --permanent --add-rich-rule="rule family=\"ipv4\" source address=\"{{ item.split(",")[0] }}/{{ item.split(",")[1] }}\" port port=\"{{ item.split(",")[2] }}\" protocol=\"{{ item.split(",")[3] }}\" accept"'
+  with_items: firewall_global_rules
+
+- name: Configure Node-Specific Rules
+  shell: 'firewall-cmd --add-rich-rule="rule family=\"ipv4\" source address=\"{{ item[0] }}/{{ item[1].split(",")[0] }}\" port port=\"{{ item[1].split(",")[1] }}\" protocol=\"{{ item[1].split(",")[2] }}\" accept"'
+  with_nested:
+  - firewall_nodes
+  - firewall_node_rules
+
+- name: Configure Permanent Node-Specific Rules
+  shell: 'firewall-cmd --permanent --add-rich-rule="rule family=\"ipv4\" source address=\"{{ item[0] }}/{{ item[1].split(",")[0] }}\" port port=\"{{ item[1].split(",")[1] }}\" protocol=\"{{ item[1].split(",")[2] }}\" accept"'
+  with_nested:
+  - firewall_nodes
+  - firewall_node_rules

@@ -1,0 +1,12 @@
+---
+- name: Install LSyncD
+  yum:
+    name: '{{ item }}'
+    state: present
+  with_items:
+  - lua
+  - lua-devel
+  - pkgconfig
+  - gcc
+  - asciidoc
+  - lsyncd

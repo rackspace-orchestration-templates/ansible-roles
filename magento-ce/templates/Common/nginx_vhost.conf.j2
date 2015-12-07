@@ -1,0 +1,69 @@
+server {
+
+    listen {{ magento_http_port }} default_server;
+#    listen 443 default ssl;
+
+#    ssl_certificate /etc/pki/tls/certs/localhost.crt;
+#    ssl_certificate_key /etc/pki/tls/private/localhost.key;
+
+    server_name {{ magento_vhost_alias }} {{ magento_vhost_domain }} "";
+    root {{ magento_document_root }};
+    access_log /var/log/nginx/{{ magento_vhost_domain }}-access.log main;
+    error_log /var/log/nginx/{{ magento_vhost_domain }}-error.log warn;
+    index index.php index.html;
+
+    location / {
+        try_files $uri $uri/ @handler;
+        expires 30d;
+    }
+
+    location ~ ^/(app|includes|lib|media/customer|media/downloadable|pkginfo|var)/ { deny all; }
+    location ~ ^/RELEASE_NOTES.txt      { return 404; }
+    location ~ ^/errors/.*\.(xml|phtml)$ { return 404; }
+    location ~ ^/media/.*\.(cfg|ini|xml)$ { return 404; }
+    location ~ ^/media/.*\.(php|pl|py|jsp|asp|htm|shtml|sh|cgi) { return 404; }
+    location ~ /\. { return 404; }
+
+    location /media/ {
+        try_files $uri uri/ /get.php;
+        expires 30d;
+    }
+
+    location ~* \.(eot|ttf|woff)$ {
+          add_header Access-Control-Allow-Origin *;
+    }
+
+    location @handler {
+        rewrite / /index.php;
+    }
+
+    location ~ .php/ {
+        rewrite ^(.*.php)/ $1 last;
+    }
+
+    location ~ .php$ {
+        try_files $uri /index.php;
+        expires off;
+        fastcgi_pass unix:/var/run/php-fpm/{{ magento_vhost_domain }}.sock;
+        fastcgi_buffers 256 4k;
+        fastcgi_buffer_size 32k;
+        fastcgi_busy_buffers_size 256k;
+        fastcgi_read_timeout 3600s;
+#        fastcgi_param HTTPS $fastcgi_https;
+        fastcgi_param SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+        fastcgi_param MAGE_RUN_CODE default;
+        fastcgi_param MAGE_RUN_TYPE store;
+        include fastcgi_params;
+    }
+
+    location ~ ^/(php-status|ping)$ {
+        access_log off;
+        allow 127.0.0.1;
+        allow {{ ansible_eth0["ipv4"]["address"] }};
+        deny all;
+        include fastcgi_params;
+        fastcgi_pass unix:/var/run/php-fpm/{{ magento_vhost_domain }}.sock;
+        include fastcgi_params;
+        fastcgi_param PATH_TRANSLATED $document_root$fastcgi_script_name;
+    }
+}

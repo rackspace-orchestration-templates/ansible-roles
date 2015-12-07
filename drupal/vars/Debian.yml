@@ -1,0 +1,9 @@
+---
+drupal_php_pkgs: [
+'php5',
+'php5-mysql',
+'php5-xmlrpc',
+'php5-gd',
+'php5-json',
+'php5-apcu'
+]

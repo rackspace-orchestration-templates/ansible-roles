@@ -1,0 +1,7 @@
+---
+holland_mysql_user: holland
+holland_mysql_password: "{{ lookup('password', '/tmp/holland_' + ansible_hostname + '-' + ansible_date_time.time) }}"
+holland_mysql_host: 'localhost'
+holland_create_user: yes
+mysql_root_user: root
+mysql_root_password: 'P@$$w0rd'

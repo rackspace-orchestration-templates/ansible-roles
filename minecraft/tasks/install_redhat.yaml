@@ -1,0 +1,10 @@
+---
+- name: Install Java
+  yum:
+    name: java-openjdk
+    state: present
+
+- name: Configure SystemD
+  template:
+    src: 'RedHat/systemd_config.j2'
+    dest: '/etc/systemd/system/minecraft-server.service'

@@ -1,126 +1,170 @@
 ---
-# WARNING
-# This role provides a fresh installation of Magento on a new virtualhost and new database.
-- name: mysql packages are present
-  yum: 
-    state=present
-    name={{ item }}
-  with_items:
-    - MySQL-python
-    - mysql
+- name: Create Document Root
+  file:
+    path: '{{ magento_document_root }}'
+    state: directory
+    mode: 0755
 
-- name: document root exists
-  file: 
-    path={{ document_root }}
-    state=directory
-    mode=0775
+- name: Create Magento SFTP User
+  user:
+    name: '{{ magento_sftp_user }}'
+    home: '{{ magento_document_root }}'
+    password: '{{ magento_sftp_password | password_hash("sha512") }}'
+    comment: '{{ magento_vhost_domain }}'
 
-- name: downloading magento
+- name: Reload Nginx
+  service:
+    name: nginx
+    state: reloaded
+
+- name: Download Magento
   get_url:
-    url="https://3fb66be59b12e2b636cf-d69d20d277a755fdadf91611975f2510.ssl.cf5.rackcdn.com/magento-{{ magento_version }}.tar.gz"
-    dest={{ document_root }}
-    owner={{ domain_sftp_user }}
-    group={{ vhost_user }}
-    
-- name: downloading sample content
+    url: 'https://3fb66be59b12e2b636cf-d69d20d277a755fdadf91611975f2510.ssl.cf5.rackcdn.com/magento-{{ magento_version }}.tar.gz'
+    dest: '{{ magento_document_root }}'
+    owner: '{{ magento_sftp_user }}'
+    group: '{{ nginx_vhost_user }}'
+    validate_certs: no
+  when: magento_install
+
+- name: Download Sample Content
   get_url:
-    url="https://3fb66be59b12e2b636cf-d69d20d277a755fdadf91611975f2510.ssl.cf5.rackcdn.com/magento-sample-data-{{ magento_sample_data_version }}.tar.gz"
-    dest={{ document_root }}
-    owner={{ domain_sftp_user }}
-    group={{ vhost_user }}
-  when: placeholder_content == True
-  
-- name: unpacking magento
-  unarchive: 
-    src={{ document_root }}/magento-{{ magento_version }}.tar.gz
-    dest={{ document_root }}
-    copy=no
-    
-- name: unpacking sample content
-  unarchive: 
-    src={{ document_root }}/magento-sample-data-{{ magento_sample_data_version }}.tar.gz
-    dest={{ document_root }}
-    copy=no
-  when: placeholder_content == True
+    url: "https://3fb66be59b12e2b636cf-d69d20d277a755fdadf91611975f2510.ssl.cf5.rackcdn.com/magento-sample-data-{{ magento_sample_content_version }}.tar.gz"
+    dest: '{{ magento_document_root }}'
+    owner: '{{ magento_sftp_user }}' 
+    group: '{{ nginx_vhost_user }}'
+    validate_certs: no
+  when: (magento_sample_content == 'True') and magento_install
 
-- name: mysql client is updated
-  template: 
-    src=root/.my.cnf.j2
-    dest=/root/.my.cnf
-    owner=root
-    group=root
-    mode=0600
+- name: Unpack Magento
+  unarchive:
+    src: '{{ magento_document_root }}/magento-{{ magento_version }}.tar.gz'
+    dest: '{{ magento_document_root }}'
+    copy: no
+  when: magento_install
 
-- name: database is present
-  mysql_db: 
-    state=present
-    login_host={{ mysql_host_ip }}
-    name={{ magento_db_name }}
+- name: Unpack Sample Content
+  unarchive:
+    src: '{{ magento_document_root }}/magento-sample-data-{{ magento_version }}.tar.gz'
+    dest: '{{ magento_document_root }}'
+    copy: no
+  when: (magento_sample_content == 'True') and magento_install
 
-- name: import sample mysql data
-  mysql_db: 
-    state=import
-    login_host={{ mysql_host_ip }}
-    name={{ magento_db_name }}
-    target={{ document_root }}/magento-sample-data-{{ magento_sample_data_version }}/magento_sample_data_for_{{ magento_sample_data_version }}.sql
-  when: placeholder_content == True
+#- name: Create Magento Database
+#  mysql_db:
+#    name: '{{ magento_db_name }}'
+#    state: present
+#    login_user: '{{ mysql_root_user }}'
+#    login_password: '{{ mysql_root_password }}'
+#    login_host: '{{ mysql_host_ip }}'
+#  when: magento_create_db and magento_install
+#
+#- name: Create Magento Database User
+#  mysql_user:
+#    name: '{{ magento_db_user }}'
+#    password: '{{ magento_db_password }}'
+#    host: '%'
+#    priv: '{{ magento_db_name }}.*:ALL'
+#    state: present
+#    login_user: '{{ mysql_root_user }}'
+#    login_password: '{{ mysql_root_password }}'
+#    login_host: '{{ mysql_host_ip }}'
+#  when: magento_create_db and magento_install
 
-- name: copy core files
-  shell: 
-    chdir={{ document_root }}
-    cp -a magento/{{ item.core }} .
-  ignore_errors: yes
+- name: Configure .my.cnf
+  template:
+    src: 'Common/.my.cnf.j2'
+    dest: '/root/.my.cnf'
+    owner: root
+    group: root
+    mode: 0600
+  when: magento_install
+
+- name: Import Sample MySQL Data
+  mysql_db:
+    name: '{{ magento_db_name }}'
+    target: '{{ magento_document_root }}/magento-sample-data-{{ magento_sample_content_version }}/magento_sample_data_for_{{ magento_sample_content_version }}.sql'
+    state: import
+    login_host: '{{ mysql_host_ip }}'
+  when: (magento_sample_content == 'True') and magento_install
+
+- name: Copy Core Files
+  shell: 'cp -R {{ magento_document_root }}/magento/{{ item }} {{ magento_document_root }}/'
+  args:
+    chdir: '{{ magento_document_root }}'
   with_items:
-    - { core: '*', sample: 'media' }
-    - { core: '.htaccess', sample: 'skin' }
+    - '*'
+    - '.htaccess'
+  when: magento_install
 
-- name: copy core sample files
-  shell: 
-    chdir={{ document_root }}
-    cp -a magento-sample-data-{{ magento_sample_data_version }}/{{ item.sample }} .
-  ignore_errors: yes
+- name: Copy Core Sample Files
+  copy:
+    src: '{{ magento_document_root }}/magento-sample-data-{{ magento_sample_content_version }}/{{ item }}'
+    dest: '{{ magento_document_root }}'
+    force: yes
   with_items:
-    - { core: '*', sample: 'media' }
-    - { core: '.htaccess', sample: 'skin' }
-  when: placeholder_content == True
+    - 'media'
+    - 'skin'
+  when: (magento_sample_content == 'True') and magento_install
 
-# TEST SCRTIPS AND TOOLS HERE
-
-- name: garbage collection
-  shell: 
-    chdir={{ document_root }}
-    rm -rf {{ item }}
-  ignore_errors: yes
-  with_items: garbage_files
-
-- name: ownership & directory permissions
-  file: 
-    state=directory
-    recurse=yes
-    path={{ document_root }}/
-    owner={{ domain_sftp_user }}
-    group={{ vhost_user }}
-    mode=0755
-
-- name: file mode permissions
-  shell: 
-    chdir={{ document_root }}
-    find . -type f -exec chmod 644 {} \;
-
-- name: installing magento...
-  shell: 
-    chdir={{ document_root }}
-    chmod 500 mage &&
-    ./mage mage-setup . &&
-    ./mage config-set preferred_state stable &&
-    ./mage install http://connect20.magentocommerce.com/community Mage_All_Latest --force &&
-    php -f install.php -- --license_agreement_accepted "yes" --locale "en_US" --timezone "{{ tz }}" --default_currency "USD" --db_host {{ mysql_host_ip }} --db_name {{ magento_db_name }} --db_user {{ magento_db_user }} --db_pass {{ magento_db_password }} --url http://{{ vhost_domain }} --skip_url_validation --use_rewrites "yes" --use_secure "no" --secure_base_url https://{{ vhost_domain }} --use_secure_admin "no" --admin_firstname {{ magento_admin_fname }} --admin_lastname {{ magento_admin_lname }} --admin_email {{ magento_admin_email }} --admin_username {{ magento_admin_user }} --admin_password {{ magento_admin_pass }} &&
-    php -f shell/indexer.php reindexall
-
-- name: restart web stack
-  service: 
-    name={{ item }}
-    state=restarted
+- name: Delete Garbage Files
+  file:
+    path: '{{ magento_document_root }}/{{ item }}'
+    state: absent
   with_items:
-    - nginx
-    - php-fpm
+    magento_garbage_files
+  when: magento_install
+
+- name: Configure Directory Ownership and Permissions
+  file:
+    path: '{{ magento_document_root }}'
+    owner: '{{ magento_sftp_user }}'
+    group: '{{ nginx_vhost_user }}'
+    mode: 0755
+    state: directory
+    recurse: yes
+  when: magento_install
+
+- name: Configure File Level Permissions
+  command: 'find . -type f -exec chmod 644 {} ";"'
+  args:
+    chdir: '{{ magento_document_root }}'
+  register: file_perm_change
+  changed_when: file_perm_change.stdout
+  when: magento_install
+
+- name: Set Mage as Executable
+  file:
+    path: '{{ magento_document_root }}/mage'
+    mode: 0500
+    state: file
+  when: magento_install
+
+- name: Run 'mage mage-setup'
+  command: '{{ magento_document_root }}/mage mage-setup .'
+  args:
+    chdir: '{{ magento_document_root }}'
+  when: magento_install
+
+- name: Set Mage Preferred_State to Stable
+  command: '{{ magento_document_root }}/mage config-set preferred_state stable'
+  args:
+    chdir: '{{ magento_document_root }}'
+  when: magento_install
+
+- name: Run Mage Install
+  command: '{{ magento_document_root }}/mage install http://connect20.magentocommerce.com/community Mage_All_Latest --force'
+  args:
+    chdir: '{{ magento_document_root }}'
+  when: magento_install
+
+- name: Run Magento Installer
+  command: 'php -f install.php -- --license_agreement_accepted "yes" --locale "en_US" --timezone "{{ tz }}" --default_currency "USD" --db_host {{ mysql_host_ip }} --db_name {{ magento_db_name }} --db_user {{ magento_db_user }} --db_pass {{ magento_db_password }} --url http://{{ magento_vhost_domain }} --skip_url_validation --use_rewrites "yes" --use_secure "no" --secure_base_url https://{{ magento_vhost_domain }} --use_secure_admin "no" --admin_firstname {{ magento_admin_fname }} --admin_lastname {{ magento_admin_lname }} --admin_email {{ magento_admin_email }} --admin_username {{ magento_admin_user }} --admin_password {{ magento_admin_pass }}'
+  args:
+    chdir: "{{ magento_document_root }}"
+  when: magento_install
+
+- name: Run Magento Reindex
+  command: 'php -f shell/indexer.php reindexall'
+  args:
+    chdir: "{{ magento_document_root }}"
+  when: magento_install

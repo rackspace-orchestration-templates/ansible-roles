@@ -1,0 +1,24 @@
+---
+#Set Apache Version based on OS version
+- name: Set apache_ver fact
+  set_fact:
+    apache_ver: 'v24'
+  when: (ansible_os_family == 'Debian' and (ansible_distribution_version == '14.04' or ansible_distribution_major_version == '8')) or (ansible_os_family == 'RedHat' and (ansible_distribution_major_version=='7'))
+- name: Set apache_ver fact
+  set_fact:
+    apache_ver: 'v22'
+  when: apache_ver is not defined
+
+- include: install_debian.yml
+  when: ansible_os_family == 'Debian'
+
+- include: install_redhat.yml
+  when: ansible_os_family == 'RedHat'
+
+- include: configure_common.yml
+
+- include: configure_debian.yml
+  when: ansible_os_family == 'Debian'
+
+- include: configure_redhat.yml
+  when: ansible_os_family == 'RedHat'

@@ -1,0 +1,62 @@
+---
+- name: Configure NGINX group
+  group:
+    name: 'nginx'
+
+- name: Configure vhost user
+  user:
+    name: '{{ nginx_vhost_user }}'
+    uid: '{{ nginx_vhost_user_uid }}'
+    group: 'nginx'
+    shell: '{{ nginx_vhost_user_shell }}'
+    non_unique: yes
+
+- name: Copy configuration
+  template:
+    src: 'Common/nginx.conf.j2'
+    dest: '/etc/nginx/nginx.conf'
+    backup: yes
+
+- name: Configure default vhost
+  template:
+    src: 'Common/default.conf.j2'
+    dest: '/etc/nginx/conf.d/default.conf'
+    backup: yes
+
+- name: Adjust ulimit
+  template:
+    src: 'Common/ulimit_nginx.conf.j2'
+    dest: '/etc/security/limits.d/nginx.conf'
+
+- name: Create VHOST Document Root
+  file:
+    path: '{{ nginx_vhost_root }}'
+    state: directory
+    mode: 0755
+
+- name: Create VHOSTs
+  template:
+    src: 'Common/{{ item.template }}_vhost.conf.j2'
+    dest: '/etc/nginx/conf.d/{{ item.name }}.conf'
+  with_items: nginx_vhosts
+  when: nginx_vhosts is defined
+
+- name: Create VHOST subdirectories
+  file:
+    path: '{{ item.doc_root }}'
+    state: directory
+    mode: 0755
+    owner: '{{ nginx_vhost_user }}'
+    group: nginx
+  with_items: nginx_vhosts
+  when: nginx_vhosts is defined
+
+- name: Create Log Directory
+  file:
+    path: '{{ nginx_log_dir }}'
+    state: directory
+
+- name: Restart Nginx
+  service:
+    name: nginx
+    state: restarted

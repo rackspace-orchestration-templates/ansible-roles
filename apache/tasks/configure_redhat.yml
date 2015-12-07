@@ -1,0 +1,57 @@
+---
+- name: Configure HTTPD to run on startup
+  service:
+    name: httpd
+    enabled: yes
+
+- name: Copy httpd.conf
+  template:
+    src: 'RedHat/{{ apache_ver }}/httpd.conf.j2'
+    dest: '/etc/httpd/conf/httpd.conf'
+  notify:
+  - Restart Apache
+
+- name: Copy ssl.conf
+  template:
+    src: 'RedHat/{{ apache_ver }}/ssl.conf.j2'
+    dest: '/etc/httpd/conf.d/ssl.conf'
+  notify: Restart Apache
+
+- name: Generate SSL certificate
+  shell: '/etc/ssl/certs/make-dummy-cert /etc/ssl/certs/snakeoil.key'
+
+- name: Create vhost.d directory
+  file:
+    path: '/etc/httpd/vhost.d'
+    owner: root
+    group: root
+    mode: 0755
+    state: directory
+  notify:
+  - Restart Apache
+
+- name: Configure vhosts
+  template:
+    src: 'Common/vhost.conf.j2'
+    dest: '/etc/httpd/vhost.d/{{ item.name }}.conf'
+  with_items:
+    apache_vhosts
+  when: apache_vhosts is defined
+  notify:
+  - Restart Apache
+
+- name: Set up VHOST root
+  file:
+    name: '/var/www/vhosts/'
+    mode: 0775
+    state: directory
+
+- name: Set up VHOST directories
+  file:
+    name: '/var/www/vhosts/{{ item.name }}'
+    state: directory
+    owner: '{{ apache_user }}'
+    group: '{{ apache_user }}'
+  with_items:
+    apache_vhosts
+  when: apache_vhosts is defined

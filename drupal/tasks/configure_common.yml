@@ -1,0 +1,35 @@
+---
+- name: Install Drush
+  shell: 'composer global require drush/drush:7.*'
+  environment:
+    COMPOSER_HOME: '/usr/share/composer'
+
+- name: Link Drush to /usr/local/bin/drush
+  file:
+    src: '/usr/share/composer/vendor/drush/drush/drush'
+    path: '/usr/local/bin/drush'
+    state: link
+
+- name: Download Drupal
+  shell: 'drush dl drupal --drupal-project-rename=httpdocs -y'
+  args:
+    chdir: '{{ nginx_vhost_root }}/{{ drupal_domain }}'
+
+- name: Install Drupal
+  shell:
+    "drush --yes site-install standard
+    --db-url='mysql://{{ drupal_db_user }}:{{ drupal_db_password }}@{{ drupal_db_host }}/{{ drupal_db_name}}'
+    --site-name={{ drupal_domain }}
+    --account-name={{ drupal_user }}
+    --account-pass={{ drupal_password }}
+    --clean-url=0"
+  args:
+    chdir: '{{ drupal_docroot }}'
+
+- name: Enforce permissions
+  file:
+    path: '{{ drupal_docroot }}'
+    state: directory
+    owner: '{{ nginx_vhost_user }}'
+    group: '{{ nginx_vhost_user }}'
+    recurse: yes

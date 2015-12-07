@@ -1,0 +1,18 @@
+---
+apache_vhosts: [
+  {
+    name: 'example.com',
+    aliases: ['www.example.com']
+  }
+]
+
+drupal_domain: example.com
+drupal_docroot: '{{ nginx_vhost_root }}/{{ drupal_domain }}/httpdocs'
+
+drupal_db_user: drupal
+drupal_db_password: drup@l
+drupal_db_host: localhost
+drupal_db_name: drupal
+
+drupal_user: drupal
+drupal_password: Drup@l

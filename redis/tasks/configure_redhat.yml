@@ -1,0 +1,13 @@
+---
+- name: Configure init.d scripts - DEBIAN
+  template:
+    src: 'RedHat/redis-instance.service.j2'
+    dest: '/usr/lib/systemd/system/redis-{{ item.name }}.service'
+  with_items: redis_instances
+
+- name: Start Redis instances
+  service:
+    name: "redis-{{ item.name }}"
+    state: started
+    enabled: yes
+  with_items: redis_instances

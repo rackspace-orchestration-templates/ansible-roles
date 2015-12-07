@@ -1,0 +1,8 @@
+---
+- name: Install Redis
+  yum:
+    name: redis
+    state: present
+
+- name: Include RedHat Vars
+  include_vars: RedHat.yml

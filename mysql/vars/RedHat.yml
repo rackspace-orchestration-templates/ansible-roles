@@ -1,0 +1,6 @@
+---
+mysql_service: 'mariadb'
+mysql_path: '/etc'
+mysql_socket: '/var/lib/mysql/mysql.sock'
+mysql_include_dir: '/etc/sysconfig/mysqld-config'
+mysql_log_error: '/var/log/mysqld.log'

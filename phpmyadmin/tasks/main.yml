@@ -1,0 +1,13 @@
+---
+- include: install_debian.yml
+  when: (ansible_os_family == 'Debian') and (phpmyadmin_install == 'True')
+
+- include: install_redhat.yml
+  when: (ansible_os_family == 'RedHat') and (phpmyadmin_install == 'True')
+
+- include: configure_redhat.yml
+  when: (ansible_os_family == 'RedHat') and (phpmyadmin_install == 'True')
+
+- include: configure_common.yml
+  when: phpmyadmin_install == 'True'
+

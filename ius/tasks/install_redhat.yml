@@ -1,0 +1,4 @@
+---
+- name: Install IUS repository
+  yum:
+    name: 'https://rhel{{ ansible_distribution_major_version }}.iuscommunity.org/ius-release.rpm'

@@ -1,0 +1,14 @@
+---
+- name: Install PHPMyAdmin
+  yum:
+    name: phpmyadmin
+    state: present
+
+- name: Create symlink for PHPMyAdmin
+  file:
+    src: '/usr/share/phpMyAdmin'
+    dest: '/usr/share/phpmyadmin'
+    state: link
+
+- name: Include RedHat Vars
+  include_vars: RedHat.yml

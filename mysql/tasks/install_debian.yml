@@ -1,0 +1,18 @@
+---
+- name: Set Package Name
+  set_fact:
+    mysql_pkg: mysql-server
+  when: mysql_pkg is not defined
+
+- name: Install MySQL-Server
+  apt:
+    name: mysql-server
+    state: present
+
+- name: Install Python-MySQLDB
+  apt:
+    name: python-mysqldb
+    state: present
+
+- name: Load Debian Vars
+  include_vars: MySQL/Debian.yml

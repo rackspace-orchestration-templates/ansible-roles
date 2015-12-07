@@ -1,0 +1,21 @@
+upstream nodes {
+  ip_hash;
+{% if nginx_upstream_server is defined %}  server {{ nginx_upstream_server }};{% endif %}
+{% for server in nginx_lb_nodes %}  server {{ server }};
+{% endfor %}
+}
+
+server {
+  access_log off;
+  error_log /var/log/{{ item.name }}_error.log;
+  
+  listen {{ item.http_port }};
+  listen    {{ item.ssl_port }} ssl;
+  ssl_certificate {{ nginx_ssl_cert }};
+  ssl_certificate_key {{ nginx_ssl_key }};
+
+  location / {
+    proxy_pass http://nodes;
+    proxy_set_header Host {{ item.name }};
+  }
+}

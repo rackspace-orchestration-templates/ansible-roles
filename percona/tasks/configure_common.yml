@@ -1,0 +1,94 @@
+---
+- name: Ensure /etc/my.cnf file is present
+  template:
+    src: Common/my.cnf.j2
+    dest: /etc/my.cnf
+
+- name: Ensure tempdir is present
+  file:
+    path: "{{ mysql_tmpdir }}"
+    state: directory
+    owner: mysql
+    group: mysql
+    mode: 0775
+
+- name: Ensure logdir is present
+  file:
+    path: "{{ mysql_logdir }}"
+    state: directory
+    owner: mysql
+    group: mysql
+    mode: 0775
+
+- name: Enable Percona (mysql) service
+  service:
+    name: mysql
+    state: started
+    enabled: yes
+
+- name: Create root@localhost user
+  mysql_user:
+    name: '{{ mysql_root_user }}'
+    host: 'localhost'
+    password: "{{ mysql_root_password }}"
+    priv: "*.*:ALL,GRANT"
+    state: present
+  when: not mysql_root_password_set
+
+- name: Remove root@IP user
+  mysql_user:
+    name: '{{ mysql_root_user }}'
+    host: "{{ item }}"
+    state: absent
+    login_user: '{{ mysql_root_user }}'
+    login_password: '{{ mysql_root_password }}'
+  with_items:
+    - 127.0.0.1
+    - "{{ ansible_hostname }}"
+    - ::1
+
+- name: Create '.my.cnf'
+  template:
+    src: Common/.my.cnf.j2
+    dest: /root/.my.cnf
+
+- name: Remove anonymous users
+  mysql_user:
+    name: ''
+    state: absent
+    host: "{{ item }}"
+    login_user: '{{ mysql_root_user }}'
+    login_password: '{{ mysql_root_password }}'
+  with_items:
+    - 127.0.0.1
+    - "{{ ansible_hostname }}"
+    - "{{ ansible_fqdn }}"
+    - ::1
+    - 'localhost'
+
+- name: Remove test database
+  mysql_db:
+    name: test
+    state: absent
+    login_user: '{{ mysql_root_user }}'
+    login_password: '{{ mysql_root_password }}'
+
+- name: Create databases
+  mysql_db:
+    name: '{{ item }}'
+    state: present
+    login_user: '{{ mysql_root_user }}'
+    login_password: '{{ mysql_root_password }}'
+  with_items: mysql_dbs
+
+- name: Create users
+  mysql_user:
+    name: '{{ item[0].name }}'
+    password: '{{ item[0].password }}'
+    priv: '{{ item[0].privs }}'
+    host: '{{ item[1] }}'
+    login_user: '{{ mysql_root_user }}'
+    login_password: '{{ mysql_root_password }}'
+  with_subelements:
+    - mysql_users
+    - hosts
