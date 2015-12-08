@@ -11,7 +11,9 @@
 
 [{{ item.name }}]
 
-listen = /var/run/php-fpm/{{ item.name }}.sock
+#listen = /var/run/php-fpm/{{ item.name }}.sock
+listen = 127.0.0.1:80{{ item.http_port }}
+
 
 listen.allowed_clients = 127.0.0.1
 listen.owner = {{ nginx_vhost_user }}

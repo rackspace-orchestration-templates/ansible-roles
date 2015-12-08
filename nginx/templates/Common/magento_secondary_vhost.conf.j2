@@ -55,7 +55,8 @@ server {
   location ~ .php$ {
     try_files $uri /index.php;
     expires off;
-    fastcgi_pass unix:/var/run/php-fpm/{{ magento_vhost_domain }}.sock;
+#    fastcgi_pass unix:/var/run/php-fpm/{{ magento_vhost_domain }}.sock;
+    fastcgi_pass 127.0.0.1:80{{ item.http_port }};
     fastcgi_buffers 256 4k;
     fastcgi_buffer_size 32k;
     fastcgi_busy_buffers_size 256k;
