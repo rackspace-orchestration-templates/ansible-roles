@@ -9,5 +9,10 @@
   service:
     name: "redis-{{ item.name }}"
     state: started
+  with_items: redis_instances
+
+- name: Enable Redis instances
+  service:
+    name: "redis-{{ item.name }}"
     enabled: yes
   with_items: redis_instances
