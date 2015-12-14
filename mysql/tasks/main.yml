@@ -10,3 +10,9 @@
 
 - include: configure_mariadb.yml
   when: mysql_pkg == 'mariadb-server'
+
+- include: configure_master.yml
+  when: mysql_role == 'master'
+
+- include: configure_slave.yml
+  when: mysql_role == 'slave'

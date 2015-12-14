@@ -1,0 +1,8 @@
+---
+- name: Grant Replication permissions to all Slave nodes
+  mysql_user:
+    name: '{{ mysql_slave_user }}'
+    password: '{{ mysql_slave_password }}'
+    priv: '*.*:"REPLICATION SLAVE"'
+    host: '{{ item }}'
+  with_items: mysql_slave_nodes

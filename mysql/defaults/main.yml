@@ -20,6 +20,8 @@ mysql_default_user: example
 mysql_default_user_password: example
 mysql_default_database: example
 
+mysql_role: 'master'
+
 mysql_users: [
   {
     name: '{{ mysql_default_user }}',
@@ -32,3 +34,8 @@ mysql_users: [
 mysql_dbs: [
   '{{ mysql_default_database }}'
 ]
+
+mysql_slave_nodes: []
+mysql_slave_user: 'mysql_slave'
+mysql_slave_password: 'p@$$w0rd'
+mysql_slave_master: '127.0.0.1'

@@ -1,0 +1,15 @@
+---
+- name: Stop MySQL Replication
+  mysql_replication:
+    mode: stopslave
+
+- name: Set MySQL Replication Master
+  mysql_replication:
+    mode: changemaster
+    master_host: '{{ mysql_slave_master }}'
+    master_user: '{{ mysql_slave_user }}'
+    master_password: '{{ mysql_slave_password }}'
+
+- name: Start MySQL Replication
+  mysql_replication:
+    mode: startslave
