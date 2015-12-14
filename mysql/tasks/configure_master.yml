@@ -3,6 +3,6 @@
   mysql_user:
     name: '{{ mysql_slave_user }}'
     password: '{{ mysql_slave_password }}'
-    priv: '*.*:"REPLICATION SLAVE"'
+    priv: '*.*:REPLICATION SLAVE'
     host: '{{ item }}'
   with_items: mysql_slave_nodes

@@ -30,7 +30,12 @@ tmpdir = /tmp
 socket = {{ mysql_socket }}
 skip-external-locking = 1
 log_error = {{ mysql_log_error }}
-
+bind-addr = 0.0.0.0
+{% if mysql_role == 'master' %}
+sync_binlog = 1
+binlog-format = mixed
+log-bin = mysql-bin
+{% endif %}
 ## This prevents using host-based authentication. That means users must be
 ## created using an ip-address (ie 'myuser'@'192.168.100.1') or must make
 ## use of the % wildcard (ie 'myuser'@'%'). The benefit to not using
