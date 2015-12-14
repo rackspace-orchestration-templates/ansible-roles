@@ -1,4 +1,5 @@
 ---
+minecraft_gamemode: 0
 minecraft_difficulty: 2
 minecraft_spawn_monsters: true
 minecraft_hardcore: false
@@ -8,5 +9,5 @@ minecraft_spawn_npcs: true
 minecraft_spawn_animals: true
 minecraft_online: true
 minecraft_motd: 'A Minecraft Server'
-minecraft_memory_max: '1024M'
-minecraft_memory_min: '1024M'
+minecraft_memory_max: '{{ ansible_memtotal_mb - 512 }}M'
+minecraft_memory_min: '256M'
