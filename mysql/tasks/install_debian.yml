@@ -24,14 +24,8 @@
     state: link
   when: ansible_distribution == "Ubuntu"
 
-- name: Stop AppArmor (Ubuntu)
+- name: Reload AppArmor Config (Ubuntu)
   service:
     name: apparmor
-    state: stopped
-  when: ansible_distribution == "Ubuntu"
-
-- name: Start AppArmor (Ubuntu)
-  service:
-    name: apparmor
-    state: started
+    state: reloaded
   when: ansible_distribution == "Ubuntu"
