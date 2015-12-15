@@ -172,7 +172,7 @@ innodb-file-per-table = 1
 
 ### Replication
 ## Set this to the Server's instance ID in replication environments
-server-id = 1
+server-id = {{ mysql_node_id }}
 
 #log-bin = {{ mysql_log_bin }}
 #relay-log = {{ mysql_log_relay }}
