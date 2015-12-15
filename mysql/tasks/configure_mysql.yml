@@ -32,6 +32,11 @@
     state: started
     enabled: yes
 
+- name: Restart MySQL-Server
+  service:
+    name: '{{ mysql_server }}'
+    state: restarted
+
 - name: Set MySQL Root Password
   mysql_user:
     name: '{{ mysql_root_user }}'
