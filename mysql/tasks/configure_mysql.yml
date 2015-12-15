@@ -34,7 +34,7 @@
 
 - name: Restart MySQL-Server
   service:
-    name: '{{ mysql_server }}'
+    name: '{{ mysql_service }}'
     state: restarted
 
 - name: Set MySQL Root Password
