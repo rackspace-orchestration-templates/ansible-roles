@@ -40,4 +40,4 @@ mysql_slave_user: 'mysql_slave'
 mysql_slave_password: 'p@$$w0rd'
 mysql_slave_master: '127.0.0.1'
 mysql_node_index: -1
-mysql_node_id: '{{ mysql_node_index + 2 }}'
+mysql_node_id: '{{ mysql_node_index|int + 2 }}'
