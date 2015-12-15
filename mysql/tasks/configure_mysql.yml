@@ -71,6 +71,7 @@
     name: '{{ item }}'
     state: present
   with_items: mysql_dbs
+  when: mysql_role == 'master'
 
 - name: Create MySQL Users
   mysql_user:
@@ -81,6 +82,7 @@
   with_subelements:
     - mysql_users
     - hosts
+  when: mysql_role == 'master'
 
 - name: Configure LogRotate
   template:
