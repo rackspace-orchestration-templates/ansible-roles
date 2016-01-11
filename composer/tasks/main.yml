@@ -8,6 +8,8 @@
   shell: 'cat /tmp/composer | php'
   args:
     chdir: '/tmp'
+  environment:
+    HOME: '/root'
 
 - name: Move Composer to /usr/local/bin
   copy:
