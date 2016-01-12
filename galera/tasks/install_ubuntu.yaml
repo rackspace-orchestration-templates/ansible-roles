@@ -1,0 +1,6 @@
+---
+- name: Add Repository Key
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: '0xcbcb082a1bb943db'
+
