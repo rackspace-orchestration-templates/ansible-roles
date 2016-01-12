@@ -51,5 +51,5 @@ magento_sample_content_version: 2.0.0
 magento_sample_content: no
 
 magento_install: yes
-magento_session: file
+magento_session: files
 magento_admin_url: admin

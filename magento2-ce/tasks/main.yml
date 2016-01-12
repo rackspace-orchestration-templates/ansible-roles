@@ -97,7 +97,7 @@
     chdir: "{{ magento_document_root }}"
 
 - name: Configure File Level Permissions
-  command: 'find . -type f -exec chmod 744 {} ";"'
+  command: 'find . -type f -exec chmod 774 {} ";"'
   args:
     chdir: '{{ magento_document_root }}'
   register: file_perm_change
@@ -108,4 +108,13 @@
   args:
     chdir: '{{ magento_document_root }}'
   register: file_perm_change
-  changed_when: file_perm_change.stdout
+  changed_when: file_perm_change.stdou
+
+- name: Configure Directory Ownership and Permissions
+  file:
+    path: '{{ magento_document_root }}'
+    owner: '{{ magento_sftp_user }}'
+    group: '{{ nginx_vhost_user }}'
+    mode: 0755
+    state: directory
+    recurse: yes
