@@ -95,3 +95,17 @@
   command: 'bin/magento setup:static-content:deploy'
   args:
     chdir: "{{ magento_document_root }}"
+
+- name: Configure File Level Permissions
+  command: 'find . -type f -exec chmod 744 {} ";"'
+  args:
+    chdir: '{{ magento_document_root }}'
+  register: file_perm_change
+  changed_when: file_perm_change.stdout
+
+- name: Configure File Level Ownership
+  command: 'find . -type f -exec chown nginx {} ";"'
+  args:
+    chdir: '{{ magento_document_root }}'
+  register: file_perm_change
+  changed_when: file_perm_change.stdout
