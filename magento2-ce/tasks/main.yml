@@ -103,18 +103,11 @@
   register: file_perm_change
   changed_when: file_perm_change.stdout
 
-- name: Configure File Level Ownership
-  command: 'find . -type f -exec chown nginx {} ";"'
-  args:
-    chdir: '{{ magento_document_root }}'
-  register: file_perm_change
-  changed_when: file_perm_change.stdou
-
 - name: Configure Directory Ownership and Permissions
   file:
     path: '{{ magento_document_root }}'
     owner: '{{ magento_sftp_user }}'
     group: '{{ nginx_vhost_user }}'
-    mode: 0755
+    mode: 0774
     state: directory
     recurse: yes
