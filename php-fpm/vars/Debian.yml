@@ -20,7 +20,8 @@ phpfpm_pkgs: [
 'php5-mysql',
 'php5-mcrypt',
 'php5-xmlrpc',
-'php5-curl'
+'php5-curl',
+'php5-intl'
 ]
 
 phpfpm_pkgs_pecl: [
