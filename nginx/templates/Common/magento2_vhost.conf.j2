@@ -11,12 +11,12 @@ upstream fastcgi_backend {
 }
 
 server {
-   listen {{ magento_http_port }} default_server;
+   listen {{ item.http_port }} default_server;
    listen    {{ item.ssl_port }} ssl;
    ssl_certificate {{ nginx_ssl_cert }};
    ssl_certificate_key {{ nginx_ssl_key }};
 
-   set $MAGE_ROOT {{ magento_document_root }};
+   set $MAGE_ROOT {{ item.doc_root }};
    set $MAGE_MODE default; # or production or developer
    root $MAGE_ROOT/pub;
    
