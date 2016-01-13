@@ -26,10 +26,14 @@
     - 'ib_logfile0'
     - 'ib_logfile1'
 
-- name: Enable MySQL-Server
+- name: Start MySQL-Server
   service:
     name: '{{ mysql_service }}'
     state: started
+
+- name: Enable MySQL-Server
+  service:
+    name: '{{ mysql_service }}'
     enabled: yes
 
 - name: Restart MySQL-Server
