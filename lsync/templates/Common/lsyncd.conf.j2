@@ -13,7 +13,8 @@ sync {
                 compress = true,
                 acls = true,
                 verbose = true,
-                rsh = "/usr/bin/ssh -p 22 -o StrictHostKeyChecking=no"
+                rsh = "/usr/bin/ssh -p 22 -o StrictHostKeyChecking=no",
+                _extra = {"-a"}
         }
 }
 {% endfor %}

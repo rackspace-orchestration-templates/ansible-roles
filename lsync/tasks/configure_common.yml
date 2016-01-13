@@ -27,6 +27,22 @@
     dest: '/etc/init/lsyncd.conf'
   when: ansible_distribution == 'Ubuntu'
 
+- name: Get current number of inotify watches
+  shell:
+    'cat /proc/sys/fs/inotify/max_user_watches'
+  register: inotify_output
+
+- name: Increase number of inotify watchers
+  shell:
+    'echo "fs.inotify.max_user_watches=65535" >> /etc/sysctl.conf'
+  when: inotify_output.stdout == 65535
+  register: inotify_change
+
+- name: Reload sysctl
+  shell:
+    'sysctl -p /etc/sysctl.conf'
+  when: inotify_change.changed
+
 - name: Start LSyncD
   service:
     name: lsyncd
