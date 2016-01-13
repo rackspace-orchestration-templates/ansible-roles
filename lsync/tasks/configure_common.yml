@@ -35,7 +35,7 @@
 - name: Increase number of inotify watchers
   shell:
     'echo "fs.inotify.max_user_watches=65535" >> /etc/sysctl.conf'
-  when: inotify_output.stdout == 65535
+  when: inotify_output.stdout != 65535
   register: inotify_change
 
 - name: Reload sysctl
