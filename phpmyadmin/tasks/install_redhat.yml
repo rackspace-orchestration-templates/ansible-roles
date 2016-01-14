@@ -12,9 +12,9 @@
 
 - name: Import phpmyadmin data
   mysql_db:
-    login_host: '{{ wordpress_db_host }}'
-    login_user: '{{ wordpress_db_user }}'
-    login_password: '{{ wordpress_db_pass }}'
+    login_host: '{{ phpmyadmin_host }}'
+    login_user: '{{ phpmyadmin_user }}'
+    login_password: '{{ phpmyadmin_pass }}'
     name: 'phpmyadmin'
     state: import
     target: '/usr/share/doc/phpmyadmin/examples/create_tables.sql'
