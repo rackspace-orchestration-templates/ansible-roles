@@ -10,7 +10,8 @@
 - name: Extract 'create_table' script
   command:
     'gunzip /usr/share/doc/phpmyadmin/examples/create_tables.sql.gz'
-  creates: '/usr/share/doc/phpmyadmin/examples/create_tables.sql'
+  args:
+    creates: '/usr/share/doc/phpmyadmin/examples/create_tables.sql'
 
 - name: Import phpmyadmin data
   mysql_db:
