@@ -7,5 +7,18 @@
     name: phpmyadmin
     state: present
 
+- name: Extract 'create_table' script
+  unarchive:
+    src: '/usr/share/doc/phpmyadmin/examples/create_tables.sql.gz'
+    dest: '/tmp/'
+
+- name: Import phpmyadmin data
+  mysql_db:
+    login_host: '{ wordpress_db_host }'
+    login_user: '{ wordpress_db_user }'
+    login_password: '{ wordpress_db_pass }'
+    state: import
+    target: '/tmp/create_tables.sql'
+
 - name: Include Debian Vars
   include_vars: Debian.yml
