@@ -10,5 +10,14 @@
     dest: '/usr/share/phpmyadmin'
     state: link
 
+- name: Import phpmyadmin data
+  mysql_db:
+    login_host: '{{ wordpress_db_host }}'
+    login_user: '{{ wordpress_db_user }}'
+    login_password: '{{ wordpress_db_pass }}'
+    name: 'phpmyadmin'
+    state: import
+    target: '/usr/share/doc/phpmyadmin/examples/create_tables.sql'
+
 - name: Include RedHat Vars
   include_vars: RedHat.yml
