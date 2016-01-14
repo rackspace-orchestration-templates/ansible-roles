@@ -14,11 +14,12 @@
 
 - name: Import phpmyadmin data
   mysql_db:
-    login_host: '{ wordpress_db_host }'
-    login_user: '{ wordpress_db_user }'
-    login_password: '{ wordpress_db_pass }'
+    login_host: '{{ wordpress_db_host }}'
+    login_user: '{{ wordpress_db_user }}'
+    login_password: '{{ wordpress_db_pass }}'
+    name: 'phpmyadmin'
     state: import
-    target: '/tmp/create_tables.sql'
+    target: '/usr/share/doc/phpmyadmin/examples/create_tables.sql'
 
 - name: Include Debian Vars
   include_vars: Debian.yml
