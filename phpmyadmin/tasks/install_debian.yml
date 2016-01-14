@@ -8,9 +8,9 @@
     state: present
 
 - name: Extract 'create_table' script
-  unarchive:
-    src: '/usr/share/doc/phpmyadmin/examples/create_tables.sql.gz'
-    dest: '/tmp/'
+  command:
+    'gunzip /usr/share/doc/phpmyadmin/examples/create_tables.sql.gz'
+  creates: '/usr/share/doc/phpmyadmin/examples/create_tables.sql'
 
 - name: Import phpmyadmin data
   mysql_db:
