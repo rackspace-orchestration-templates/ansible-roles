@@ -1,7 +1,7 @@
 ---
 - name: Copy config.js
   template:
-    src: 'Common/config.js.j2'
+    src: 'Common/config.j2'
     dest: '{{ ghost_dir }}/config.js'
 
 - name: Start Ghost
