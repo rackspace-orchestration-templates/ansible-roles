@@ -1,0 +1,28 @@
+---
+- name: Add Jenkins repository key
+  apt_key:
+    url: 'https://jenkins-ci.org/debian/jenkins-ci.org.key'
+    state: present
+
+- name: Add Jenkins repository
+  apt_repository:
+    repo: 'deb http://pkg.jenkins-ci.org/debian binary/'
+    state: present
+
+- name: Install Java
+  apt:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - 'openjdk-7-jre'
+    - 'openjdk-7-jdk'
+
+- name: Install Jenkins
+  apt:
+    name: jenkins
+    state: present
+
+- name: Copy /etc/default/jenkins
+  template:
+    src: 'Debian/jenkins.j2'
+    dest: '/etc/default/jenkins'
