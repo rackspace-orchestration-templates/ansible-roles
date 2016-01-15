@@ -14,3 +14,8 @@
   apt:
     name: npm
     state: present
+
+- name: Install Unzip
+  apt:
+    name: unzip
+    state: present

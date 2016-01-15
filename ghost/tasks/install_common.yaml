@@ -15,9 +15,14 @@
     state: directory
 
 - name: Extract Ghost
-  unzip:
+  unarchive:
     src: '/tmp/ghost.zip'
     dest: '{{ ghost_dir }}'
+    owner: '{{ ghost_user }}'
+
+- name: Set Permissions
+  command:
+    'chown -R {{ ghost_user }} {{ ghost_dir }}'
 
 - name: Install Ghost
   command:
