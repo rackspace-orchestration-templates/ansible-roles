@@ -1,0 +1,81 @@
+server {
+
+  access_log off;
+  error_log  /var/log/{{ item.name }}_error_log;
+  root {{ item.doc_root }};
+
+  listen    {{ item.http_port }};
+  listen    {{ item.ssl_port }} ssl;
+  ssl_certificate {{ nginx_ssl_cert }};
+  ssl_certificate_key {{ nginx_ssl_key }};
+
+  {% if item.phpmyadmin == "True" %}
+  location ~* ^/phpmyadmin {
+    root /usr/share;
+    index index.php;
+    location ~ ^/phpmyadmin/(.+\.php)$ {
+      try_files $uri =404;
+      root /usr/share/;
+#      fastcgi_pass unix:/var/run/php-fpm/{{ item.name }}.sock;
+      fastcgi_pass 127.0.0.1:80{{ item.http_port }};
+
+      fastcgi_index index.php;
+      fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+      include /etc/nginx/fastcgi_params;
+    }
+  }
+  {% endif %}
+  location ~ .php$ {
+    try_files $uri /index.php;
+    expires off;
+#   fastcgi_pass unix:/var/run/php-fpm/{{ item.name }}.sock;
+    fastcgi_pass 127.0.0.1:80{{ item.http_port }};
+    fastcgi_buffers 256 4k;
+    fastcgi_buffer_size 32k;
+    fastcgi_busy_buffers_size 256k;
+    fastcgi_read_timeout 3600s;
+#      fastcgi_param HTTPS $fastcgi_https;
+    fastcgi_param SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+    fastcgi_param MAGE_RUN_CODE default;
+    fastcgi_param MAGE_RUN_TYPE store;
+    include fastcgi_params;
+ }
+
+  location ~ ^/(img/|css/|lib/|vendor/|fonts/|robots.txt|humans.txt) {
+    root {{ ghost_dir }}/core/client/assets;
+    access_log off;
+    expires max;
+  }
+
+  location ~ ^/(shared/|built/) {
+    root {{ ghost_dir }}/core;
+    access_log off;
+    expires max;
+  }
+
+  location ~ ^/(favicon.ico) {
+    root {{ ghost_dir }}/core/shared;
+    access_log off;
+    expires max;
+  }
+
+  location ~ ^/(content/images/) {
+    root {{ ghost_dir }};
+    access_log off;
+    expires max;
+  }
+
+  location / {
+    proxy_redirect     off;
+    proxy_set_header   X-Real-IP            $remote_addr;
+    proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;
+    proxy_set_header   X-Forwarded-Proto $scheme;
+    proxy_set_header   Host                   $http_host;
+    proxy_set_header   X-NginX-Proxy    true;
+    proxy_set_header   Connection "";
+    proxy_http_version 1.1;
+    server_tokens off;
+    proxy_buffering on;
+    proxy_pass             http://{{ ghost_ip }}:{{ ghost_port }}/
+  }
+}

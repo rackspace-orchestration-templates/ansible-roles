@@ -1,0 +1,12 @@
+---
+ghost_dir: '/var/www/ghost'
+ghost_user: ghost
+
+ghost_url: example.com
+ghost_db_host: localhost
+ghost_db_user: ghost
+ghost_db_name: ghost
+ghost_db_pass: 'Pa$$w0rd'
+
+ghost_port: 81
+ghost_ip: 'localhost'

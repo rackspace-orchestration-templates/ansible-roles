@@ -1,0 +1,15 @@
+---
+- name: Copy config.js
+  template:
+    src: 'Common/config.js.j2'
+    dest: '{{ ghost_dir }}/config.js'
+
+- name: Start Ghost
+  service:
+    name: ghost
+    state: started
+
+- name: Enable Ghost
+  service:
+    name: ghost
+    enabled: yes

@@ -1,0 +1,36 @@
+// # Ghost Configuration
+// Setup your Ghost install for various [environments](http://support.ghost.org/config/#about-environments).
+
+// Ghost runs in `development` mode by default. Full documentation can be found at http://support.ghost.org/config/
+
+var path = require('path'),
+    config;
+
+config = {
+    // ### Production
+    // When running Ghost in the wild, use the production environment.
+    // Configure your URL and mail settings here
+    production: {
+        url: 'http://{{ ghost_url }}',
+        mail: {},
+        database: {
+            client: 'mysql',
+            connection: {
+                host     : '{{ ghost_db_host }}',
+                user     : '{{ ghost_db_user }}',
+                password : '{{ ghost_db_pass }}',
+                database : '{{ ghost_db_name }}',
+                charset  : 'utf8'
+            },
+            debug: false
+        },
+
+        server: {
+            host: '{{ ghost_ip }}',
+            port: '{{ ghost_port }}'
+        }
+    }
+};
+
+module.exports = config;
+

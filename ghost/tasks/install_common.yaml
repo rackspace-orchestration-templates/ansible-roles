@@ -1,0 +1,26 @@
+---
+- name: Create Ghost User
+  user:
+    name: '{{ ghost_user }}'
+    state: present
+
+- name: Download Ghost
+  get_url:
+    url: "https://ghost.org/zip/ghost-latest.zip"
+    dest: "/tmp/ghost.zip"
+
+- name: Create Ghost Directory
+  file:
+    path: '{{ ghost_dir }}'
+    state: directory
+
+- name: Extract Ghost
+  unzip:
+    src: '/tmp/ghost.zip'
+    dest: '{{ ghost_dir }}'
+
+- name: Install Ghost
+  command:
+    'npm install --production'
+  args:
+    chdir: '{{ ghost_dir }}'
