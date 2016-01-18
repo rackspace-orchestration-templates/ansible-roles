@@ -1,15 +1,19 @@
 ---
+mysql_default_user: example
+mysql_default_user_password: example
+mysql_default_database: example
+
 mysql_users: [
   {
-    name: 'example_user',
-    password: 's0m3p@$$',
-    privs: '*.*:ALL',
+    name: '{{ mysql_default_user }}',
+    password: '{{ mysql_default_user_password }}',
+    privs: '{{ mysql_default_database }}.*:ALL',
     hosts: ['%']
   }
 ]
 
 mysql_dbs: [
-  'somedb'
+  '{{ mysql_default_database }}'
 ] 
 hosts: ['%']
 mysql_root_password: 'P@$$w0rd'
