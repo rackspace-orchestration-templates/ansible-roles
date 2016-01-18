@@ -1,0 +1,8 @@
+---
+jenkins_java_path: '/usr/lib/jvm/java-7-openjdk-amd64/bin/java'
+jenkins_java_options: ""
+jenkins_home_path: '/var/lib/jenkins'
+jenkins_ip: "0.0.0.0"
+jenkins_port: "8080"
+
+jenkins_cli: '/var/cache/jenkins/war/WEB-INF/jenkins-cli.jar'

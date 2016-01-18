@@ -1,4 +1,12 @@
 ---
+- name: Install PyCurl
+  apt:
+    name: python-pycurl
+    state: present
+
+- name: Include Debian Vars
+  include: vars/Debian.yml
+
 - name: Add Jenkins repository key
   apt_key:
     url: 'https://jenkins-ci.org/debian/jenkins-ci.org.key'

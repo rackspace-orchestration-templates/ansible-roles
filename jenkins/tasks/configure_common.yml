@@ -1,0 +1,5 @@
+---
+- name: Install Jenkins Plugins
+  shell:
+    'java -jar {{ jenkins_cli }} -s {{ jenkins_url }} install-plugin {{ jenkins_plugin_url }}/{{ item }}/'
+  with_items: jenkins_plugins

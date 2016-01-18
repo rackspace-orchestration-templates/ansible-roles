@@ -7,3 +7,28 @@ jenkins_log_path: ""
 jenkins_ip: ""
 jenkins_port: ""
 jenkins_args: ""
+
+jenkins_plugins: ["credentials",
+"ssh-credentials",
+"scm-api",
+"multiple-scms",
+"git-client",
+"git",
+"github-api",
+"github",
+"ghprb",
+"jquery",
+"backup",
+"mailer",
+"javadoc",
+"maven-plugin",
+"violations",
+"dashboard-view",
+"buildgraph-view",
+"parameterized-trigger",
+"build-pipeline-plugin",
+"simple-theme-plugin",
+"swarm"]
+
+jenkins_plugins_url: 'http://maven.jenkins-ci.org/content/repositories/releases/org/jenkins-ci/plugins'
+jenkins_url: 'http://{{ jenkins_ip }}:{{ jenkins_port }}'
