@@ -1,4 +1,8 @@
 ---
+- name: Wait for Jenkins to initialize
+  wait_for:
+    timeout: 30
+
 - name: Install Jenkins Plugins
   shell:
     'java -jar {{ jenkins_cli }} -s {{ jenkins_url }} install-plugin {{ item }}'

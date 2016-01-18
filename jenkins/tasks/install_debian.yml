@@ -35,3 +35,13 @@
   template:
     src: 'Debian/jenkins.j2'
     dest: '/etc/default/jenkins'
+
+- name: Restart Jenkins
+  service:
+    name: jenkins
+    state: restarted
+
+- name: Enable Jenkins
+  service:
+    name: jenkins
+    enabled: yes
