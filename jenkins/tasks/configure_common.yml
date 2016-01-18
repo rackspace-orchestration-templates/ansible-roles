@@ -1,5 +1,14 @@
 ---
 - name: Install Jenkins Plugins
   shell:
-    'java -jar {{ jenkins_cli }} -s {{ jenkins_url }} install-plugin {{ jenkins_plugin_url }}/{{ item }}/'
+    'java -jar {{ jenkins_cli }} -s {{ jenkins_url }} install-plugin {{ item }}'
   with_items: jenkins_plugins
+
+- name: Restart Jenkins
+  service:
+    name: jenkins
+    state: restarted
+
+- name: Wait for Jenkins to initialize
+  wait_for:
+    timeout: 30

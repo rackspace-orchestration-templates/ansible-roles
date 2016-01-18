@@ -31,4 +31,4 @@ jenkins_plugins: ["credentials",
 "swarm"]
 
 jenkins_plugins_url: 'http://maven.jenkins-ci.org/content/repositories/releases/org/jenkins-ci/plugins'
-jenkins_url: 'http://{{ jenkins_ip }}:{{ jenkins_port }}'
+jenkins_url: 'http://localhost:{{ jenkins_port }}'
