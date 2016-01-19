@@ -1,0 +1,33 @@
+---
+- name: Install Java
+  apt:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - 'openjdk-7-jre'
+    - 'openjdk-7-jdk'
+
+- name: Create Jenkins User
+  user:
+    name: jenkins
+    state: present
+    home: '/home/jenkins'
+
+- name: Download Swarm Client
+  get_url:
+    url: '{{ jenkins_swarm_client }}'
+    dest: '/home/jenkins/swarm.jar'
+
+- name: Configure Jenkins-Slave service
+  template:
+    src: 'Debian/upstart_config.j2'
+    dest: '/etc/init/jenkins-slave.conf'
+
+- name: Reload Upstart Configuration
+  shell:
+    initctl reload-configuration
+
+- name: Start Jenkins-Slave
+  service:
+    name: 'jenkins-slave'
+    status: started

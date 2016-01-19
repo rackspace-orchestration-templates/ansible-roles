@@ -1,5 +1,9 @@
 ---
-- include: install_debian.yml
-  when: ansible_os_family == 'Debian'
+- include: install_master_debian.yml
+  when: (ansible_os_family == 'Debian') and (jenkins_role == 'master')
 
-- include: configure_common.yml
+- include: configure_master_common.yml
+  when: (jenkins_role == 'master')
+
+- include: install_slave_debian.yml
+  when: (ansible_os_family == 'Debian') and (jenkins_role == 'slave')
