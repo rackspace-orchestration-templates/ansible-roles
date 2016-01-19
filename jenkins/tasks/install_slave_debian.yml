@@ -30,4 +30,4 @@
 - name: Start Jenkins-Slave
   service:
     name: 'jenkins-slave'
-    status: started
+    state: started
