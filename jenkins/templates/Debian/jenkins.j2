@@ -43,7 +43,7 @@ JENKINS_LOG={{ jenkins_log_path }}/$NAME.log
 MAXOPENFILES=8192
 
 # address bound to HTTP connector (default 0.0.0.0)
-HTTP_LISTEN_ADDRESS="{{ jenkins_ip }}"
+HTTP_LISTEN_ADDRESS="0.0.0.0"
 
 # port for HTTP connector (default 8080; disable with -1)
 HTTP_PORT={{ jenkins_port }}
