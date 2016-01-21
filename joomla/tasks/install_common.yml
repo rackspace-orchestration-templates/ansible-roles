@@ -1,0 +1,48 @@
+---
+- name: Download Joomla
+  get_url:
+    url: '{{ joomla_download }}'
+    dest: '/tmp/joomla.zip'
+
+- name: Extract Joomla
+  unarchive:
+    src: '/tmp/joomla.zip'
+    dest: '{{ joomla_path }}'
+    owner: '{{ nginx_vhost_user }}'
+    group: '{{ nginx_vhost_user }}'
+
+- name: Configure Joomla
+  template:
+    src: 'Common/configuration.php.j2'
+    dest: '{{ joomla_path }}/configuration.php'
+    owner: '{{ nginx_vhost_user }}'
+    group: '{{ nginx_vhost_user }}'
+
+- name: Configure database prefix
+  replace:
+    dest: '{{ joomla_path }}/installation/sql/mysql/joomla.sql'
+    regexp: '#__'
+    replace: '{{ joomla_db_prefix }}'
+
+- name: Import database structure
+  mysql_db:
+    name: '{{ joomla_db_name }}'
+    target: '{{ joomla_path }}/installation/sql/mysql/joomla.sql'
+    state: import
+    login_host: '{{ joomla_db_host }}'
+    login_password: '{{ joomla_db_password }}'
+    login_user: '{{ joomla_db_user }}'
+
+- name: Configure Admin user
+  template:
+    src: 'Common/admin.sql.j2'
+    dest: '{{ joomla_path }}/installation/admin.sql'
+
+- name: Add Admin user
+  mysql_db:
+    name: '{{ joomla_db_name }}'
+    target: '{{ joomla_path }}/installation/admin.sql'
+    state: import
+    login_host: '{{ joomla_db_host }}'
+    login_password: '{{ joomla_db_password }}'
+    login_user: '{{ joomla_db_user }}'
