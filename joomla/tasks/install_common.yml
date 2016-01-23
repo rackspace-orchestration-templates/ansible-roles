@@ -46,3 +46,8 @@
     login_host: '{{ joomla_db_host }}'
     login_password: '{{ joomla_db_password }}'
     login_user: '{{ joomla_db_user }}'
+
+- name: Remove installation directory
+  file:
+    path: '{{ joomla_path }}/installation'
+    state: absent

@@ -21,7 +21,7 @@
   get_url:
     url: 'https://3fb66be59b12e2b636cf-d69d20d277a755fdadf91611975f2510.ssl.cf5.rackcdn.com/magento-{{ magento_version }}.tar.gz'
     dest: '{{ magento_document_root }}'
-    owner: '{{ magento_sftp_user }}'
+    owner: '{{ nginx_vhost_user }}'
     group: '{{ nginx_vhost_user }}'
     validate_certs: no
   when: magento_install
@@ -30,7 +30,7 @@
   get_url:
     url: "https://3fb66be59b12e2b636cf-d69d20d277a755fdadf91611975f2510.ssl.cf5.rackcdn.com/magento-sample-data-{{ magento_sample_content_version }}.tar.gz"
     dest: '{{ magento_document_root }}'
-    owner: '{{ magento_sftp_user }}' 
+    owner: '{{ nginx_vhost_user }}' 
     group: '{{ nginx_vhost_user }}'
     validate_certs: no
   when: (magento_sample_content == 'True') and magento_install
@@ -117,7 +117,7 @@
 - name: Configure Directory Ownership and Permissions
   file:
     path: '{{ magento_document_root }}'
-    owner: '{{ magento_sftp_user }}'
+    owner: '{{ nginx_vhost_user '
     group: '{{ nginx_vhost_user }}'
     mode: 0755
     state: directory
