@@ -117,7 +117,7 @@
 - name: Configure Directory Ownership and Permissions
   file:
     path: '{{ magento_document_root }}'
-    owner: '{{ nginx_vhost_user '
+    owner: '{{ nginx_vhost_user }}'
     group: '{{ nginx_vhost_user }}'
     mode: 0755
     state: directory
