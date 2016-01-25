@@ -4,7 +4,7 @@ upstream master {
 
 server {
 
-  listen {{ magento_http_port }} default_server;
+  listen {{ item.http_port }} default_server;
   listen    {{ item.ssl_port }} ssl;
   ssl_certificate {{ nginx_ssl_cert }};
   ssl_certificate_key {{ nginx_ssl_key }};
@@ -12,10 +12,10 @@ server {
 #  ssl_certificate /etc/pki/tls/certs/localhost.crt;
 #  ssl_certificate_key /etc/pki/tls/private/localhost.key;
 
-  server_name {{ magento_vhost_alias }} {{ magento_vhost_domain }} "";
-  root {{ magento_document_root }};
-  access_log /var/log/nginx/{{ magento_vhost_domain }}-access.log main;
-  error_log /var/log/nginx/{{ magento_vhost_domain }}-error.log warn;
+  server_name {% for alias in item.aliases %} {{ alias }} {% endfor %} {{ item.name }} "";
+  root {{ item.doc_root }};
+  access_log /var/log/nginx/{{ item.name }}-access.log main;
+  error_log /var/log/nginx/{{ item.name }}-error.log warn;
   index index.php index.html;
 
   location ~* ^/admin {
@@ -55,7 +55,7 @@ server {
   location ~ .php$ {
     try_files $uri /index.php;
     expires off;
-#    fastcgi_pass unix:/var/run/php-fpm/{{ magento_vhost_domain }}.sock;
+#    fastcgi_pass unix:/var/run/php-fpm/{{ item.name }}.sock;
     fastcgi_pass 127.0.0.1:80{{ item.http_port }};
     fastcgi_buffers 256 4k;
     fastcgi_buffer_size 32k;
@@ -74,7 +74,7 @@ server {
     allow {{ ansible_eth0["ipv4"]["address"] }};
     deny all;
     include fastcgi_params;
-    fastcgi_pass unix:/var/run/php-fpm/{{ magento_vhost_domain }}.sock;
+    fastcgi_pass unix:/var/run/php-fpm/{{ item.name }}.sock;
     include fastcgi_params;
     fastcgi_param PATH_TRANSLATED $document_root$fastcgi_script_name;
   }
