@@ -41,22 +41,23 @@
     group: '{{ magento_sftp_user }}'
     mode: 0600
 
-- name: Download 'Magento Sample Version' file
-  get_url:
-    url: '{{ magento_download_path }}sample_content_version.txt'
-    dest: '{{ magento_document_root }}'
+#- name: Download 'Magento Sample Version' file
+#  get_url:
+#    url: '{{ magento_download_path }}sample_content_version.txt'
+#    dest: '{{ magento_document_root }}'
 
-- name: Get Sample Data Version
-  command:
-    'cat sample_content_version.txt'
-  args:
-    chdir: '{{ magento_document_root }}'
-  register: magento_sample_content_version
+#- name: Get Sample Data Version
+#  command:
+#    'cat sample_content_version.txt'
+#  args:
+#    chdir: '{{ magento_document_root }}'
+#  register: magento_sample_content_version
 
 - name: Import Sample MySQL Data
   mysql_db:
     name: '{{ magento_db_name }}'
-    target: '{{ magento_document_root}}/magento-sample-data-{{ magento_sample_content_version.stdout }}/magento_sample_data_for_{{ magento_sample_content_version.stdout }}.sql'
+#    target: '{{ magento_document_root}}/magento-sample-data-{{ magento_sample_content_version.stdout }}/magento_sample_data_for_{{ magento_sample_content_version.stdout }}.sql'
+    target: '{{ magento_document_root}}/magento-sample-data-{{ magento_sample_content_version }}/magento_sample_data_for_{{ magento_sample_content_version }}.sql'
     state: import
     login_host: '{{ mysql_host_ip }}'
     login_user: '{{ magento_db_user }}'
@@ -74,7 +75,8 @@
 
 - name: Copy Core Sample Files
   copy:
-    src: '{{ magento_document_root }}/magento-sample-data-{{ magento_sample_content_version.stdout }}/{{ item }}'
+#    src: '{{ magento_document_root }}/magento-sample-data-{{ magento_sample_content_version.stdout }}/{{ item }}'
+    src: '{{ magento_document_root }}/magento-sample-data-{{ magento_sample_content_version }}/{{ item }}'
     dest: '{{ magento_document_root }}'
     force: yes
   with_items:
