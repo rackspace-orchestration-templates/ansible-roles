@@ -145,6 +145,7 @@
 
 - name: Create Cron Job
   cron:
+    name: "Magento Cron Script"
     user: '{{ magento_sftp_user }}'
     minute: "*/5"
     job: '/bin/sh {{ magento_document_root }}/cron.sh >/dev/null 2>&1'
