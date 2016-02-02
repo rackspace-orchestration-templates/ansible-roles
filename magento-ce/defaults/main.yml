@@ -17,7 +17,7 @@ nginx_vhosts: [
     doc_root: '{{ magento_document_root }}',
     http_port: '80',
     ssl_port: '443',
-    template: '{[ magento_vhost_template ]}',
+    template: '{{ magento_vhost_template }}',
     phpmyadmin: 'False',
     phpfpm_user: '{{ magento_sftp_user }}',
     phpfpm_user_id: '{{ magento_sftp_user_id }}'
@@ -58,8 +58,6 @@ magento_garbage_files:
 - RELEASE_NOTES.txt
 - LICENSE*
 
-magento_version: 1.9.1.0
-magento_sample_content_version: 1.9.1.0
 magento_sample_content: no
 
 magento_install: yes
