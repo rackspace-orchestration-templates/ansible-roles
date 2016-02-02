@@ -1,5 +1,7 @@
 ---
 nginx_vhost_user: 'nginx'
+nginx_vhost_phpfpm_user: '{{ nginx_vhost_user }}'
+nginx_vhost_phpfpm_userid: 1011
 nginx_vhost_user_uid: 1010
 nginx_vhost_user_shell: '/bin/bash'
 nginx_vhost_root: '/var/www/vhosts'
@@ -15,6 +17,8 @@ nginx_vhosts: [
     http_port: '80',
     ssl_port: '443',
     template: '{{ nginx_vhost_template }}',
-    phpmyadmin: '{{ nginx_vhost_phpmyadmin }}'
+    phpmyadmin: '{{ nginx_vhost_phpmyadmin }}',
+    phpfpm_user: '{{ nginx_vhost_phpfpm_user }}',
+    phpfpm_user_id: '{{ nginx_vhost_phpfpm_userid }}'
   }
 ]

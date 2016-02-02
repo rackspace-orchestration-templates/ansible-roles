@@ -5,6 +5,14 @@
     dest: '{{ item.dest }}'
   with_items: phpfpm_config
 
+- name: Verify all necessary users exist
+  user:
+    name: '{{ item.phpfpm_user }}'
+    uid: '{{ item.phpfpm_user_id }}'
+    state: present
+  with_items: nginx_vhosts
+  when: nginx_vhosts is defined
+
 - name: Copy configuration files for Nginx vhosts
   template:
     src: 'Common/vhost.conf.j2'

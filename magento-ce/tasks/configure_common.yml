@@ -1,0 +1,17 @@
+---
+- name: Ensure Magento User exists
+  user:
+    name: '{{ magento_sftp_user }}'
+    uid: '{{ magento_sftp_user_id }}'
+    home: '{{ magento_sftp_user_home }}'
+    password: '{{ magento_sftp_password }}'
+    update_password: always
+    state: present
+
+- name: Ensure Document Root Exists
+  file:
+    path: '{{ magento_document_root }}'
+    state: directory
+    mode: 0755
+    owner: '{{ magento_sftp_user }}'
+    group: '{{ nginx_vhost_user }}'
