@@ -9,7 +9,8 @@
     name: '{{ magento_sftp_user }}'
     uid: '{{ magento_sftp_user_id }}'
     home: '{{ magento_sftp_user_home }}'
-    password: '{{ magento_sftp_password }}'
+    password: '{{ magento_sftp_password|password_hash("sha512") }}'
+    shell: '/bin/bash'
     update_password: always
     state: present
 
@@ -25,3 +26,8 @@
     mode: 0755
     owner: '{{ magento_sftp_user }}'
     group: '{{ nginx_vhost_user }}'
+
+- name: Configure LogRotate
+  template:
+    src: 'Common/logrotate.j2'
+    dest: '/etc/logrotate.d/magento'

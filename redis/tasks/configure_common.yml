@@ -9,7 +9,7 @@
 - name: Tune network stack
   sysctl:
     name: net.core.somaxconn
-    value: '3240000'
+    value: '65535'
     reload: yes
     state: present
 
@@ -46,10 +46,17 @@
   file:
     path: "/var/lib/redis/{{ item.name }}"
     state: directory
-    owner: root
-    group: root
+    owner: redis
+    group: redis
     mode: 0755
   with_items: redis_instances
+
+- name: Set proper permissions on /var/lib/redis
+  file:
+    path: "/var/lib/redis"
+    state: directory
+    owner: redis
+    group: redis
 
 - name: Configure Redis instances
   template:

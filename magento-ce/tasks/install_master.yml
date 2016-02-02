@@ -142,3 +142,10 @@
     chdir: '{{ magento_document_root }}'
   register: file_perm_change
   changed_when: file_perm_change.stdout
+
+- name: Create Cron Job
+  cron:
+    user: '{{ magento_sftp_user }}'
+    minute: "*/5"
+    job: '/bin/sh {{ magento_document_root }}/cron.sh >/dev/null 2>&1'
+    state: present
