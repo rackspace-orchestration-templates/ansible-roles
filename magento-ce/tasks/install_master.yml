@@ -151,9 +151,29 @@
     job: '/bin/sh {{ magento_document_root }}/cron.sh >/dev/null 2>&1'
     state: present
 
-- name: Create local.xml
-  template:
-    src: 'Common/redis-local.xml.j2'
+- name: Add comment regarding "cache.xml" to local.xml
+  lineinfile:
     dest: '{{ magento_document_root }}/app/etc/local.xml'
+    line: '<!— sessions and cache are in Redis. See ./cache.xml for config —>'
+    insertafter: 'session_save'
+    state: present
+
+- name: Remove "session_save" from local.xml
+  lineinfile:
+    dest: '{{ magento_document_root }}/app/etc/local.xml'
+    regexp: 'session_save'
+    state: absent
+
+- name: Create cache.xml
+  template:
+    src: 'Common/cache.xml.j2'
+    dest: '{{ magento_document_root }}/app/etc/local.xml'
+    owner: '{{ magento_sftp_user }}'
+    group: '{{ nginx_vhost_user }}'
+
+- name: Create remote_addr_headers.xml
+  template:
+    src: 'Common/remote_addr_headers.xml.j2'
+    dest: '{{ magento_document_root }}/app/etc/remote_addr_headers.xml'
     owner: '{{ magento_sftp_user }}'
     group: '{{ nginx_vhost_user }}'
