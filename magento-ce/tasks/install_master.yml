@@ -151,6 +151,13 @@
     job: '/bin/sh {{ magento_document_root }}/cron.sh >/dev/null 2>&1'
     state: present
 
+- name: Enable Cm_RedisSession
+  template:
+    src: 'Common/Cm_RedisSession.xml.j2'
+    dest: '{{ magento_document_root }}/app/etc/modules/Cm_RedisSession.xml'
+    owner: '{{ magento_sftp_user }}'
+    group: '{{ nginx_vhost_user }}'
+
 - name: Add comment regarding "cache.xml" to local.xml
   lineinfile:
     dest: '{{ magento_document_root }}/app/etc/local.xml'
