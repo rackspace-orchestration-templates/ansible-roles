@@ -150,3 +150,10 @@
     minute: "*/5"
     job: '/bin/sh {{ magento_document_root }}/cron.sh >/dev/null 2>&1'
     state: present
+
+- name: Create local.xml
+  template:
+    src: 'Common/redis-local.xml.j2'
+    dest: '{{ magento_document_root }}/app/etc/local.xml'
+    owner: '{{ magento_sftp_user }}'
+    group: '{{ nginx_vhost_user }}'
