@@ -161,7 +161,7 @@
 - name: Add comment regarding "cache.xml" to local.xml
   lineinfile:
     dest: '{{ magento_document_root }}/app/etc/local.xml'
-    line: '<!— sessions and cache are in Redis. See ./cache.xml for config —>'
+    line: '<!-- sessions and cache are in Redis. See ./cache.xml for config -->'
     insertafter: 'session_save'
     state: present
 
