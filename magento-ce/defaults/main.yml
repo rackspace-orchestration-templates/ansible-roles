@@ -52,13 +52,15 @@ magento_create_db: yes
 
 magento_garbage_files:
 - magento
-- magento-sample-data-{{ magento_sample_content_version }}
+- magento-sample-data-{{ magento_sample_content_version.stdout }}
 - "magento-{{ magento_version }}.tar.gz"
-- "magento-sample-data-{{ magento_sample_content_version }}.tar.gz"
+- "magento-sample-data-{{ magento_sample_content_version.stdout }}.tar.gz"
 - index.php.sample
 - php.ini.sample
 - RELEASE_NOTES.txt
 - LICENSE*
+- '{{ magento_file_name }}'
+- '{{ magento_sample_file_name }}'
 
 magento_sample_content: no
 
