@@ -40,3 +40,4 @@ php_admin_flag[zlib.output_compression] = On
 php_admin_flag[log_errors] = on
 php_admin_value[error_log] = /var/log/php-fpm/{{ item.name }}-error.log
 php_admin_value[memory_limit] = 512M
+php_flag[expose_php] = off
