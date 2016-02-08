@@ -1,4 +1,7 @@
 ---
+- name: Include Debian Vars
+  include_vars: Debian.yaml
+
 - name: Install required packages
   apt:
     name: '{{ item }}'

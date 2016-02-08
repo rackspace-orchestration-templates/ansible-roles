@@ -1,3 +1,5 @@
 external_url "https://{{ gitlab_url }}"
 gitlab_rails['initial_root_password'] = "{{ gitlab_admin_password }}"
 nginx['custom_nginx_config'] = "include /var/opt/gitlab/nginx/conf/gitlab-http-redirect.conf;"
+nginx['ssl_certificate'] = "{{ gitlab_ssl_cert }}"
+nginx['ssl_certificate_key'] = "{{ gitlab_ssl_key }}"

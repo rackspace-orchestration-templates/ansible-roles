@@ -1,5 +1,2 @@
-gitlab_url: 'example.com'
-gitlab_admin_password: 'password'
-
 gitlab_ssl_cert: '/etc/ssl/certs/ssl-cert-snakeoil.pem'
 gitlab_ssl_key: '/etc/ssl/private/ssl-cert-snakeoil.key'

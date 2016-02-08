@@ -4,6 +4,11 @@
     src: 'Common/gitlab.rb.j2'
     dest: '/etc/gitlab/gitlab.rb'
 
+- name: Ensure '/var/opt/gitlab/nginx/conf' directory exists
+  file:
+    path: '/var/opt/gitlab/nginx/conf/'
+    state: directory
+
 - name: Set up Nginx redirect
   template:
     src: 'Common/gitlab-http-redirect.conf.j2'
