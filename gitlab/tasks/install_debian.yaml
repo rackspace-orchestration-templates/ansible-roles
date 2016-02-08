@@ -15,7 +15,6 @@
 
 - name: Add GitLab Repository
   apt_repository:
-    filename: gitlab-latest
     repo: 'deb https://packages.gitlab.com/gitlab/gitlab-ce/ubuntu/ trusty main'
     state: present
 
@@ -23,3 +22,4 @@
   apt:
     name: gitlab-ce
     state: present
+    force: yes
