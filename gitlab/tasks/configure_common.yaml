@@ -17,3 +17,10 @@
 - name: Configure GitLab
   command:
     'gitlab-ctl reconfigure'
+
+- name: Configure Backups
+  cron:
+    job: 'gitlab-rake gitlab:backup:create'
+    hour: '0'
+    name: 'GitLab Backup'
+    state: present
