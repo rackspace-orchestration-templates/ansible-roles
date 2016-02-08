@@ -1,0 +1,14 @@
+---
+- name: Create /etc/gitlab/gitlab.rb
+  template:
+    src: 'Common/gitlab.rb.j2'
+    dest: '/etc/gitlab/gitlab.rb'
+
+- name: Set up Nginx redirect
+  template:
+    src: 'Common/gitlab-http-redirect.conf.j2'
+    dest: '/var/opt/gitlab/nginx/conf/gitlab-http-redirect.conf'
+
+- name: Configure GitLab
+  command:
+    'gitlab-ctl reconfigure'
