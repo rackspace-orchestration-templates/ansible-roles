@@ -59,8 +59,8 @@
   changed_when: file_perm_change.stdout
 
 - name: Configure File and Directory Ownership
-  command: 'chown -R {{ nginx_vhost_user }}:{{ nginx_vhost_user }} {{ magento_document_root }}'
+  command: 'chown -R {{ nginx_vhost_user }}:{{ nginx_vhost_user }} {{ wordpress_docroot }}'
   args:
-    chdir: '{{ magento_document_root }}'
+    chdir: '{{ wordpress_docroot }}'
   register: file_perm_change
   changed_when: file_perm_change.stdout
