@@ -22,7 +22,7 @@
 
 - name: WordPress CLI - Configure
   command:
-    "wp core config --allow-root 
+    "wp core config --allow-root
     --dbhost='{{ wordpress_db_host }}'
     --dbname='{{ wordpress_db_name }}'
     --dbuser='{{ wordpress_db_user }}'
@@ -34,7 +34,7 @@
 
 - name: WordPress CLI - Install
   command:
-    "wp core install --allow-root 
+    "wp core install --allow-root
     --url='http://{{ wordpress_domain }}'
     --title='{{ wordpress_sitename }}'
     --admin_user='{{ wordpress_user }}'
@@ -43,3 +43,24 @@
     --path='{{ wordpress_docroot }}'"
   args:
     chdir: '{{ wordpress_docroot }}'
+
+- name: Configure File Level Permissions
+  command: 'find . -type f -exec chmod 644 {} ";"'
+  args:
+    chdir: '{{ wordpress_docroot }}'
+  register: file_perm_change
+  changed_when: file_perm_change.stdout
+
+- name: Configure Directory Level Permissions
+  command: 'find . -type d -exec chmod 755 {} ";"'
+  args:
+    chdir: '{{ wordpress_docroot  }}'
+  register: file_perm_change
+  changed_when: file_perm_change.stdout
+
+- name: Configure File and Directory Ownership
+  command: 'chown -R {{ nginx_vhost_user }}:{{ nginx_vhost_user }} {{ magento_document_root }}'
+  args:
+    chdir: '{{ magento_document_root }}'
+  register: file_perm_change
+  changed_when: file_perm_change.stdout
