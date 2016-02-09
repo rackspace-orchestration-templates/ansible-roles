@@ -28,3 +28,5 @@ galera_master_ip: '127.0.0.1'
 galera_ip: '127.0.0.1'
 
 galera_nodes: []
+
+galera_version: '10.1'

@@ -2,7 +2,7 @@
 - name: Set Root Password
   mysql_user:
     name: root
-    password: {{ galera_root_password }}
+    password: '{{ galera_root_password }}'
 
 - name: Configure .my.cnf
   template:
@@ -12,7 +12,7 @@
 - name: Set Debian Sys Maint Password
   mysql_user:
     name: debian-sys-maint
-    password: {{ galera_debian_maint_pass }}
+    password: '{{ galera_debian_maint_pass }}'
 
 - name: Configure 'debian.cnf'
   template:
@@ -34,3 +34,9 @@
     name: mysql
     state: started
     args: '--wsrep-new-cluster'
+  when: galera_role == 'master'
+
+- name: Start Galera (Secondary)
+  service:
+    name: mysql
+    state: started
