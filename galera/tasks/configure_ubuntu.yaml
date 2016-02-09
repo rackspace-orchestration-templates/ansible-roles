@@ -1,4 +1,9 @@
 ---
+- name: Start MySQL
+  service:
+    name: mysql
+    state: started
+
 - name: Set Root Password
   mysql_user:
     name: root
