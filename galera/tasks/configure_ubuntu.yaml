@@ -1,0 +1,36 @@
+---
+- name: Set Root Password
+  mysql_user:
+    name: root
+    password: {{ galera_root_password }}
+
+- name: Configure .my.cnf
+  template:
+    src: 'Common/.my.cnf.j2'
+    dest: '/root/.my.cnf'
+
+- name: Set Debian Sys Maint Password
+  mysql_user:
+    name: debian-sys-maint
+    password: {{ galera_debian_maint_pass }}
+
+- name: Configure 'debian.cnf'
+  template:
+    src: 'Debian/debian.cnf.j2'
+    dest: '/etc/mysql/debian.cnf'
+
+- name: Stop MySQL
+  service:
+    name: mysql
+    state: stopped
+
+- name: Configure 'my.cnf'
+  template:
+    src: 'Common/my.cnf.j2'
+    dest: '/etc/mysql/my.cnf'
+
+- name: Start Galera (Master)
+  service:
+    name: mysql
+    state: started
+    args: '--wsrep-new-cluster'

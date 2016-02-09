@@ -1,6 +1,22 @@
 ---
+- name: Add GPG Key
+  apt:
+    name: python-software-properties
+    state: present
+
 - name: Add Repository Key
   apt_key:
     keyserver: keyserver.ubuntu.com
     id: '0xcbcb082a1bb943db'
 
+- name: Add Repository
+  apt_repository:
+    repo: "deb http://mirror.jmu.edu/pub/mariadb/repo/{{ galera_version }}/ubuntu trusty main"
+    state: present
+
+- name: Install Galera
+  apt:
+    name: '{{ item }}'
+    state: present
+  with_items:
+  - mariadb-server
