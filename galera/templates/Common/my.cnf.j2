@@ -158,7 +158,7 @@ innodb_flush_method	= O_DIRECT
 # Mandatory settings
 wsrep_on=ON
 wsrep_provider={{ galera_provider }}
-wsrep_cluster_address=gcomm://{% foreach node in galera_node %}{{ node }},{% endfor %}{{ galera_master_ip }}
+wsrep_cluster_address=gcomm://{% for node in galera_nodes %}{{ node }},{% endfor %}{{ galera_master_ip }}
 binlog_format=row
 default_storage_engine=InnoDB
 innodb_autoinc_lock_mode=2
