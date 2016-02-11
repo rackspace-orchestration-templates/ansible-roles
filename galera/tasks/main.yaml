@@ -4,3 +4,6 @@
 
 - include: configure_ubuntu.yaml
   when: ansible_distribution == "Ubuntu"
+
+- include: configure_master.yaml
+  when: galera_role == 'master'
