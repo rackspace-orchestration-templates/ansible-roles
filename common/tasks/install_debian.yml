@@ -4,6 +4,11 @@
     name: python-selinux
     state: present
 
+- name: Install Vim
+  apt:
+    name: vim
+    state: present
+
 - name: Install NTPD
   apt:
     name: ntp

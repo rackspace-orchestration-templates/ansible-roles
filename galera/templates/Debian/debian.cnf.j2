@@ -1,0 +1,11 @@
+[client]
+host     = localhost
+user     = debian-sys-maint
+password = {{ galera_debian_maint_pass }}
+socket   = /var/run/mysqld/mysqld.sock
+[mysql_upgrade]
+host     = 10.208.36.13
+user     = debian-sys-maint
+password = {{ galera_debian_maint_pass }}
+socket   = /var/run/mysqld/mysqld.sock
+basedir  = /usr
