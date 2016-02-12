@@ -1,3 +1,6 @@
+upstream master {
+  server {{ nginx_upstream_server }};
+}
 server {
 
 # disable access log and define error_log to critical.
