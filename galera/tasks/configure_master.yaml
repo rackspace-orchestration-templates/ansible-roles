@@ -12,5 +12,5 @@
     priv: '{{ item[0].privs }}'
     host: '{{ item[1] }}'
   with_subelements:
-    - mysql_users
+    - galera_users
     - hosts
