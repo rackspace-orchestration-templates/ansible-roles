@@ -15,6 +15,11 @@
     password: '{{ galera_root_password }}'
   when: not galera_configured.stat.exists
 
+- name: Configure .my.cnf
+  template:
+    src: 'Common/.my.cnf.j2'
+    dest: '/root/.my.cnf'
+
 - name: Set Debian Sys Maint Password
   mysql_user:
     name: debian-sys-maint
@@ -25,11 +30,6 @@
   file:
     path: '/etc/mysql/.configured'
     state: touch
-
-- name: Configure .my.cnf
-  template:
-    src: 'Common/.my.cnf.j2'
-    dest: '/root/.my.cnf'
 
 - name: Configure 'debian.cnf'
   template:
