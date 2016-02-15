@@ -13,13 +13,13 @@
   mysql_user:
     name: root
     password: '{{ galera_root_password }}'
-  when: not galera_configured.exists
+  when: not galera_configured.stat.exists
 
 - name: Set Debian Sys Maint Password
   mysql_user:
     name: debian-sys-maint
     password: '{{ galera_debian_maint_pass }}'
-  when: not galera_configured.exists
+  when: not galera_configured.stat.exists
 
 - name: Create .configured file
   file:
