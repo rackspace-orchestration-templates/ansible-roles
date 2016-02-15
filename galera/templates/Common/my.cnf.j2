@@ -162,8 +162,8 @@ wsrep_cluster_address=gcomm://{% for node in galera_nodes %}{{ node }},{% endfor
 binlog_format=row
 default_storage_engine=InnoDB
 innodb_autoinc_lock_mode=2
-#wsrep_node_address={{ galera_ip }}
-#wsrep_sst_receive_address={{ galera_ip }}
+wsrep_node_address={{ galera_ip }}
+wsrep_sst_receive_address={{ galera_ip }}
 # Allow server to accept connections on all interfaces.
 #
 bind-address={{ galera_ip }}

@@ -25,7 +25,7 @@ galera_dbs: [
 ]
 
 galera_master_ip: '127.0.0.1'
-galera_ip: '127.0.0.1'
+galera_ip: '{{ ansible_eth1.ipv4.address }}'
 
 galera_nodes: []
 
