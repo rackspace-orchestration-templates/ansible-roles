@@ -1,4 +1,24 @@
 ---
+- name: Copy /etc/default/jenkins
+  template:
+    src: 'Common/jenkins.j2'
+    dest: '/etc/default/jenkins'
+
+- name: Set Jenkins URL
+  template:
+    src: 'Common/jenkins.model.JenkinsLocationConfiguration.xml.j2'
+    dest: '/var/lib/jenkins/jenkins.model.JenkinsLocationConfiguration.xml'
+
+- name: Restart Jenkins
+  service:
+    name: jenkins
+    state: restarted
+
+- name: Enable Jenkins
+  service:
+    name: jenkins
+    enabled: yes
+
 - name: Wait for Jenkins to initialize
   wait_for:
     timeout: 30

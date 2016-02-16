@@ -30,23 +30,3 @@
   apt:
     name: jenkins
     state: present
-
-- name: Copy /etc/default/jenkins
-  template:
-    src: 'Debian/jenkins.j2'
-    dest: '/etc/default/jenkins'
-
-- name: Set Jenkins URL
-  template:
-    src: 'Debian/jenkins.model.JenkinsLocationConfiguration.xml.j2'
-    dest: '/var/lib/jenkins/jenkins.model.JenkinsLocationConfiguration.xml'
-
-- name: Restart Jenkins
-  service:
-    name: jenkins
-    state: restarted
-
-- name: Enable Jenkins
-  service:
-    name: jenkins
-    enabled: yes
