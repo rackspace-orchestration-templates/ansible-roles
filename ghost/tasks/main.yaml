@@ -7,10 +7,10 @@
 
 - include: install_common.yaml
 
-- include: configure_debian.yml
+- include: configure_debian.yaml
   when: ansible_os_family == 'Debian'
 
-- include: configure_redhat.yml
+- include: configure_redhat.yaml
   when: ansible_os_family == 'RedHat'
 
-- include: configure_common.yml
+- include: configure_common.yaml
