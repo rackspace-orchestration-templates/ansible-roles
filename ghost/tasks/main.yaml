@@ -2,9 +2,15 @@
 - include: install_debian.yaml
   when: ansible_os_family == 'Debian'
 
+- include: install_redhat.yaml
+  when: ansible_os_family == 'RedHat'
+
 - include: install_common.yaml
 
 - include: configure_debian.yml
   when: ansible_os_family == 'Debian'
+
+- include: configure_redhat.yml
+  when: ansible_os_family == 'RedHat'
 
 - include: configure_common.yml
