@@ -1,0 +1,21 @@
+[Unit]
+Description=Ghost
+After=network.target
+
+[Service]
+Type=simple
+PIDFile=/run/ghost.pid
+WorkingDirectory={{ ghost_dir }}
+User={{ ghost_user }}
+
+ExecStart=/usr/bin/npm start --production
+ExecStop=/usr/bin/npm stop
+Restart=on-failure
+
+StandardError=null
+StandardOutput=null
+
+SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target

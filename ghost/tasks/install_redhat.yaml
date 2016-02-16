@@ -1,0 +1,15 @@
+---
+- name: Install NodeJS
+  yum:
+    name: nodejs
+    state: present
+
+- name: Install NPM
+  yum:
+    name: npm
+    state: present
+
+- name: Install Unzip
+  yum:
+    name: unzip
+    state: present
