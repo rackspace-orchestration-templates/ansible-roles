@@ -28,8 +28,3 @@
   yum:
     name: jenkins
     state: present
-
-- name: Copy /etc/default/jenkins
-  template:
-    src: 'Debian/jenkins.j2'
-    dest: '/etc/default/jenkins'
