@@ -14,4 +14,10 @@
 {% endfor %}
 {% endfor %}
 
+{% if firewall_node_allow_all or firewall_node_allow_all == 'True' %}
+{% for node in firewall_nodes %}
+-A INPUT -s {{ node }}/32 -j ACCEPT
+{% endfor %}
+{% endif %}
+
 COMMIT

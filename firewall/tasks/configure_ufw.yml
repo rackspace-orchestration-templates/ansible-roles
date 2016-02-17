@@ -33,3 +33,11 @@
   with_nested:
   - firewall_nodes
   - firewall_node_rules
+
+- name: Allow All Traffic From Nodes
+  shell: 'ufw allow from {{ item }}'
+  register: ufw_output
+  changed_when: '"Rules updated" in ufw_output.stdout'
+  failed_when: '"ERROR" in ufw_output.stdout'
+  with_items: firewall_nodes
+  when: firewall_node_allow_all or firewall_node_allow_all == 'True'
