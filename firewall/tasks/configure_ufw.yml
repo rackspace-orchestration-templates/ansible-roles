@@ -18,6 +18,9 @@
 #    rule: allow
 #  with_items: firewall_rules
 
+- name: Enable UFW
+  shell: 'ufw enable'
+
 - name: Add Global Rules
   shell: 'ufw allow from {{ item.split(",")[0] }}/{{ item.split(",")[1] }} to any port {{ item.split(",")[2] }} proto {{ item.split(",")[3] }}'
   register: ufw_output
