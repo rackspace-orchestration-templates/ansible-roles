@@ -1,0 +1,13 @@
+[Unit]
+Description=Minecraft Server
+After=network.target
+
+[Service]
+WorkingDirectory=/home/jenkins
+User=jenkins
+
+ExecStart=/usr/bin/java -jar swarm.jar -autoDiscoveryAddress {{ jenkins_ip }}
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
