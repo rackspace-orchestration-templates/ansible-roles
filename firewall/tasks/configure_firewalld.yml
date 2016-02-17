@@ -32,3 +32,15 @@
   with_nested:
   - firewall_nodes
   - firewall_node_rules
+
+- name: Allow All Traffic From Nodes
+  shell: 'firewall-cmd --add-rich-rule="rule family=\"ipv4\" source address=\"{{ item[0] }}/{{ item[1].split(",")[0] }}\" accept"'
+  with_nested:
+  - firewall_nodes
+  when: firewall_node_allow_all or firewall_node_allow_all == 'True'
+
+- name: Allow All Traffic From Nodes - Permanent
+  shell: 'firewall-cmd --permanent --add-rich-rule="rule family=\"ipv4\" source address=\"{{ item[0] }}/{{ item[1].split(",")[0] }}\" accept"'
+  with_nested:
+  - firewall_nodes
+  when: firewall_node_allow_all or firewall_node_allow_all == 'True'
