@@ -17,7 +17,7 @@
     - ansible_os_family == 'Debian'
     - jenkins_role == 'slave'
 
-  - include: install_slave_redhat.yml
-    when:
-      - ansible_os_family == 'RedHat'
-      - jenkins_role == 'slave'
+- include: install_slave_redhat.yml
+  when:
+    - ansible_os_family == 'RedHat'
+    - jenkins_role == 'slave'
