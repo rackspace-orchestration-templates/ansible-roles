@@ -15,7 +15,7 @@
   set_fact:
     magento_role: 'custom'
     magento_sample_content: 'no'
-  when: magento_reach_dropdown == 'Don't install the Magento code –  I will upload an existing site (see instructions when Stack is complete)'
+  when: magento_reach_dropdown == 'Don't install the Magento code.  I will upload an existing site (see instructions when Stack is complete)'
 
 - include: configure_common.yml
 
