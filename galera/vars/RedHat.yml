@@ -1,2 +1,4 @@
 ---
 galera_mycnf_path: '/etc/my.cnf'
+
+galera_provider: '/usr/lib64/galera/libgalera_smm.so'
