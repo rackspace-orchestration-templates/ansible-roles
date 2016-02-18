@@ -11,6 +11,6 @@
   with_items:
   - mariadb-server
   - mariadb
-  - python-mysqldb
+  - MySQL-python
 
 - include_vars: RedHat.yml

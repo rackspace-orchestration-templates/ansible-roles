@@ -2,6 +2,9 @@
 - include: install_ubuntu.yml
   when: ansible_distribution == "Ubuntu"
 
+- include: install_redhat.yml
+  when: ansible_os_family == 'RedHat'
+
 - include: configure_common.yml
 
 - include: configure_master.yml
