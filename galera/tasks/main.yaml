@@ -1,9 +1,8 @@
 ---
-- include: install_ubuntu.yaml
+- include: install_ubuntu.yml
   when: ansible_distribution == "Ubuntu"
 
-- include: configure_ubuntu.yaml
-  when: ansible_distribution == "Ubuntu"
+- include: configure_common.yml
 
-- include: configure_master.yaml
+- include: configure_master.yml
   when: galera_role == 'master'

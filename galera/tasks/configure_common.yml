@@ -24,7 +24,9 @@
   mysql_user:
     name: debian-sys-maint
     password: '{{ galera_debian_maint_pass }}'
-  when: not galera_configured.stat.exists
+  when:
+    - not galera_configured.stat.exists
+    - ansible_os_family == 'Debian'
 
 - name: Create .configured file
   file:
@@ -35,6 +37,8 @@
   template:
     src: 'Debian/debian.cnf.j2'
     dest: '/etc/mysql/debian.cnf'
+  when:
+    - ansible_os_family == 'Debian'
 
 - name: Stop MySQL
   service:
@@ -44,7 +48,7 @@
 - name: Configure 'my.cnf'
   template:
     src: 'Common/my.cnf.j2'
-    dest: '/etc/mysql/my.cnf'
+    dest: '{{ galera_mycnf_path }}'
 
 - name: Start Galera (Master)
   service:
