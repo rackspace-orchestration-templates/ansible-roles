@@ -60,11 +60,16 @@
     src: 'Common/my.cnf.j2'
     dest: '{{ galera_mycnf_path }}'
 
+# - name: Start Galera (Master)
+#   service:
+#     name: mysql
+#     state: started
+#     args: '--wsrep-new-cluster'
+#   when: galera_role == 'master'
+
 - name: Start Galera (Master)
-  service:
-    name: mysql
-    state: started
-    args: '--wsrep-new-cluster'
+  command:
+    'service mysql start --wsrep-new-cluster'
   when: galera_role == 'master'
 
 - name: Start Galera (Secondary)
