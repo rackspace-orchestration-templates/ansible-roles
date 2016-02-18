@@ -9,6 +9,11 @@
     path: '/etc/mysql'
     state: directory
 
+- name: Ensure /etc/mysql/conf.d/ exists
+  file:
+    path: '/etc/mysql/conf.d'
+    state: directory
+
 - name: Check if .configured is set
   stat:
     path: '/etc/mysql/.configured'
