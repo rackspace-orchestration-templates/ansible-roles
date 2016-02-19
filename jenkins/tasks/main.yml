@@ -1,9 +1,23 @@
 ---
 - include: install_master_debian.yml
-  when: (ansible_os_family == 'Debian') and (jenkins_role == 'master')
+  when:
+    - ansible_os_family == 'Debian'
+    - jenkins_role == 'master'
+
+- include: install_master_redhat.yml
+  when:
+    - ansible_os_family == 'RedHat'
+    - jenkins_role == 'master'
 
 - include: configure_master_common.yml
-  when: (jenkins_role == 'master')
+  when: jenkins_role == 'master'
 
 - include: install_slave_debian.yml
-  when: (ansible_os_family == 'Debian') and (jenkins_role == 'slave')
+  when:
+    - ansible_os_family == 'Debian'
+    - jenkins_role == 'slave'
+
+- include: install_slave_redhat.yml
+  when:
+    - ansible_os_family == 'RedHat'
+    - jenkins_role == 'slave'

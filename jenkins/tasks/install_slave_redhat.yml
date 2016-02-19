@@ -1,0 +1,28 @@
+---
+- name: Install Java
+  yum:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - 'java-1.7.0-openjdk'
+
+- name: Create Jenkins User
+  user:
+    name: jenkins
+    state: present
+    home: '/home/jenkins'
+
+- name: Download Swarm Client
+  get_url:
+    url: '{{ jenkins_swarm_client }}'
+    dest: '/home/jenkins/swarm.jar'
+
+- name: Configure Jenkins-Slave service
+  template:
+    src: 'RedHat/slave_systemd_config.j2'
+    dest: '/etc/systemd/system/jenkins-slave.service'
+
+- name: Start Jenkins-Slave
+  service:
+    name: 'jenkins-slave'
+    state: started

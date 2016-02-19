@@ -22,7 +22,7 @@ server {
     proxy_set_header Host {{ item.name }};
   }
 
-  {% if item.phpmyadmin == "True" %}
+  {% if item.phpmyadmin or item.phpmyadmin == 'True' %}
   location ~* ^/phpmyadmin {
     proxy_pass http://master;
     proxy_set_header Host {{ item.name }};
@@ -53,7 +53,7 @@ server {
   location ~ .php/ {
     rewrite ^(.*.php)/ $1 last;
   }
-  
+
   location ~ ^/sites/.*/private/ {
      return 403;
   }

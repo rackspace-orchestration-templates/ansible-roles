@@ -14,7 +14,7 @@ server {
 # set the server name of your website
   server_name  {% for alias in item.aliases %} {{ alias }} {% endfor %};
 
-  {% if item.phpmyadmin == "True" %}
+  {% if item.phpmyadmin or item.phpmyadmin == 'True' %}
   location ~* ^/phpmyadmin {
     root /usr/share;
     index index.php;
@@ -50,7 +50,7 @@ server {
   location ~ .php/ {
     rewrite ^(.*.php)/ $1 last;
   }
-  
+
   location ~ ^/sites/.*/private/ {
      return 403;
   }

@@ -2,3 +2,4 @@
 firewall_global_rules: ["0.0.0.0,0,80,tcp","0.0.0.0,0,443,tcp","0.0.0.0,0,22,tcp"]
 firewall_nodes: ["127.0.0.1"]
 firewall_node_rules: ["32,3306,tcp"]
+firewall_node_allow_all: True

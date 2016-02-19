@@ -1,3 +1,6 @@
+upstream master {
+  server {{ nginx_upstream_server }};
+}
 server {
 
 # disable access log and define error_log to critical.
@@ -14,7 +17,7 @@ server {
 # set the server name of your website
   server_name  {% for alias in item.aliases %} {{ alias }} {% endfor %};
 
-  {% if item.phpmyadmin == "True" %}
+  {% if item.phpmyadmin or item.phpmyadmin == 'True' %}
   location ~* ^/phpmyadmin {
     proxy_pass http://master;
     proxy_set_header Host {{ item.name }};

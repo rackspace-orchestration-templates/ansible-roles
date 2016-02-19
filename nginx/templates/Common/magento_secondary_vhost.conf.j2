@@ -18,6 +18,11 @@ server {
   error_log /var/log/nginx/{{ item.name }}-error.log warn;
   index index.php index.html;
 
+  # Magento dashboard to Master server
+  proxy_set_header Host {{ item.name }};
+  if ($cookie_adminhtml) {
+    proxy_pass http://master;
+  }
   location ~* ^/admin {
     proxy_pass http://master;
     proxy_set_header Host {{ item.name }};

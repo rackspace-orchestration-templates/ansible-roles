@@ -11,7 +11,7 @@ server {
   server_name   server_name  {% for alias in item.aliases %} {{ alias }} {% endfor %} {{ item.name }};
   server_name_in_redirect off;
 
-  {% if item.phpmyadmin == "True" %}
+  {% if item.phpmyadmin or item.phpmyadmin == 'True' %}
   location ~* ^/phpmyadmin {
     root /usr/share;
     index index.php;

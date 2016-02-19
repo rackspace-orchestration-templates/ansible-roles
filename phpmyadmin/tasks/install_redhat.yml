@@ -17,7 +17,7 @@
     login_password: '{{ phpmyadmin_pass }}'
     name: 'phpmyadmin'
     state: import
-    target: '/usr/share/doc/phpmyadmin/examples/create_tables.sql'
+    target: '/usr/share/phpMyAdmin/sql/create_tables.sql'
 
 - name: Include RedHat Vars
   include_vars: RedHat.yml

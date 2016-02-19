@@ -9,7 +9,7 @@ server {
   ssl_certificate {{ nginx_ssl_cert }};
   ssl_certificate_key {{ nginx_ssl_key }};
 
-  {% if item.phpmyadmin == "True" %}
+  {% if item.phpmyadmin or item.phpmyadmin == 'True' %}
   location ~* ^/phpmyadmin {
     root /usr/share;
     index index.php;
