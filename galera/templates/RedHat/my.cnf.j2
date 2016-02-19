@@ -20,8 +20,10 @@ wsrep_on=ON
 wsrep_provider={{ galera_provider }}
 {% if galera_nodes|length == 1 %}
 wsrep_cluster_address=gcomm://{% for node in galera_nodes %}{{ node }}{% endfor %}
+
 {% else %}
 wsrep_cluster_address=gcomm://{% for node in galera_nodes %}{{ node }},{% endfor %}
+
 {% endif %}
 binlog_format=row
 default_storage_engine=InnoDB
