@@ -1,4 +1,6 @@
 ---
+magento_reach_dropdown: ""
+
 magento_redis_host: '127.0.0.1'
 magento_role: 'master'
 magento_vhost_template: 'magento'
