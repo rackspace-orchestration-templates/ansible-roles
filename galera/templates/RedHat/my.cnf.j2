@@ -19,10 +19,10 @@
 wsrep_on=ON
 wsrep_provider={{ galera_provider }}
 {% if galera_nodes|length == 1 %}
-wsrep_cluster_address=gcomm://{% for node in galera_nodes %}{{ node }}{% endfor %}{% if galera_role != "master" %},{{ galera_master }}{% endif %}
+wsrep_cluster_address=gcomm://{% for node in galera_nodes %}{{ node }}{% endfor %}{% if galera_role != "master" %},{{ galera_master_ip }}{% endif %}
 
 {% else %}
-wsrep_cluster_address=gcomm://{% for node in galera_nodes %}{{ node }},{% endfor %}{% if galera_role != "master" %}{{ galera_master }}{% endif %}
+wsrep_cluster_address=gcomm://{% for node in galera_nodes %}{{ node }},{% endfor %}{% if galera_role != "master" %}{{ galera_master_ip }}{% endif %}
 
 {% endif %}
 binlog_format=row
