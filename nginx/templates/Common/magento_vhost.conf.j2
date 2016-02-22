@@ -1,8 +1,8 @@
 upstream main {
-  server 127.0.0.1:80{{ item.http_port }}
+  server 127.0.0.1:80{{ item.http_port }};
 }
 upstream admin {
-  server 127.0.0.1:80{{ item.http_port + 1}}
+  server 127.0.0.1:80{{ item.http_port + 1 }};
 }
 map $http_cookie $phpfpm_upstream {
   default main;
