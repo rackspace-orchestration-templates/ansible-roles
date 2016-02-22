@@ -20,8 +20,8 @@ nginx_vhosts: [
     name: '{{ magento_vhost_domain }}',
     aliases: ['www.{{ magento_vhost_domain }}'],
     doc_root: '{{ magento_document_root }}',
-    http_port: '80',
-    ssl_port: '443',
+    http_port: 80,
+    ssl_port: 443,
     template: '{{ magento_vhost_template }}',
     phpmyadmin: 'False',
     phpfpm_user: '{{ magento_sftp_user }}',
@@ -41,7 +41,7 @@ phpfpm_vhosts: [
     phpfpm_user_id: '{{ magento_sftp_user_id }}'
   },
   {
-    name: '{{ magento_vhost_domain }}',
+    name: '{{ magento_vhost_domain }}-admin',
     aliases: ['www.{{ magento_vhost_domain }}'],
     doc_root: '{{ magento_document_root }}',
     http_port: '81',

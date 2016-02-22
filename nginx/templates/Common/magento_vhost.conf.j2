@@ -1,6 +1,16 @@
+upstream main {
+  server 127.0.0.1:80{{ item.http_port }}
+}
+upstream admin {
+  server 127.0.0.1:80{{ item.http_port + 1}}
+}
+map $http_cookie $phpfpm_upstream {
+  default main;
+  ~adminhtml admin;
+}
 server {
 
-  listen {{ magento_http_port }} default_server;
+  listen {{ item.http_port }} default_server;
   listen    {{ item.ssl_port }} ssl;
   ssl_certificate {{ nginx_ssl_cert }};
   ssl_certificate_key {{ nginx_ssl_key }};
@@ -17,14 +27,7 @@ server {
 
   index index.php index.html;
 
-  location ~* ^/admin {
-    fastcgi_pass 127.0.0.1:80{{ item.http_port + 1 }};
-  }
-
   location / {
-    if ($cookie_adminhtml) {
-      fastcgi_pass 127.0.0.1:80{{ item.http_port + 1 }};
-    }
     try_files $uri $uri/ @handler;
     expires 30d;
   }
@@ -57,7 +60,7 @@ server {
     try_files $uri /index.php;
     expires off;
 #        fastcgi_pass unix:/var/run/php-fpm/{{ magento_vhost_domain }}.sock;
-    fastcgi_pass 127.0.0.1:80{{ item.http_port }};
+    fastcgi_pass $phpfpm_upstream;
     fastcgi_buffers 256 4k;
     fastcgi_buffer_size 32k;
     fastcgi_busy_buffers_size 256k;
@@ -75,7 +78,7 @@ server {
     allow {{ ansible_eth0["ipv4"]["address"] }};
     deny all;
     include fastcgi_params;
-    fastcgi_pass unix:/var/run/php-fpm/{{ magento_vhost_domain }}.sock;
+    fastcgi_pass $phpfpm_upstream;
     include fastcgi_params;
     fastcgi_param PATH_TRANSLATED $document_root$fastcgi_script_name;
   }
