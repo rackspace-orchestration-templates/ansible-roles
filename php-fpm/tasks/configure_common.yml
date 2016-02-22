@@ -17,8 +17,8 @@
   template:
     src: 'Common/vhost.conf.j2'
     dest: '{{ phpfpm_root }}/{{ phpfpm_confdir }}/{{ item.name }}.conf'
-  with_items: nginx_vhosts
-  when: nginx_vhosts is defined
+  with_items: phpfpm_vhosts
+  when: phpfpm_vhosts is defined
 
 - name: Ensure PHP-FPM Socket Directory exists
   file:

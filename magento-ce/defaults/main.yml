@@ -28,6 +28,30 @@ nginx_vhosts: [
     phpfpm_user_id: '{{ magento_sftp_user_id }}'
   }
 ]
+phpfpm_vhosts: [
+  {
+    name: '{{ magento_vhost_domain }}',
+    aliases: ['www.{{ magento_vhost_domain }}'],
+    doc_root: '{{ magento_document_root }}',
+    http_port: '80',
+    ssl_port: '443',
+    template: '{{ magento_vhost_template }}',
+    phpmyadmin: 'False',
+    phpfpm_user: '{{ magento_sftp_user }}',
+    phpfpm_user_id: '{{ magento_sftp_user_id }}'
+  },
+  {
+    name: '{{ magento_vhost_domain }}',
+    aliases: ['www.{{ magento_vhost_domain }}'],
+    doc_root: '{{ magento_document_root }}',
+    http_port: '81',
+    ssl_port: '444',
+    template: '{{ magento_vhost_template }}',
+    phpmyadmin: 'False',
+    phpfpm_user: '{{ magento_sftp_user }}',
+    phpfpm_user_id: '{{ magento_sftp_user_id }}'
+  }
+]
 
 nginx_vhost_dir: '/etc/nginx/conf.d'
 magento_vhost_alias: ''

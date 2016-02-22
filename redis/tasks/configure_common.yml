@@ -67,3 +67,8 @@
     mode: 0644
     backup: yes
   with_items: redis_instances
+
+- name: Stop Default Redis Instance
+  service:
+    name: redis-server
+    state: stopped

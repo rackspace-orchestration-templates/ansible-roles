@@ -82,7 +82,7 @@ server {
     allow {{ ansible_eth0["ipv4"]["address"] }};
     deny all;
     include fastcgi_params;
-    fastcgi_pass unix:/var/run/php-fpm/{{ item.name }}.sock;
+    fastcgi_pass 127.0.0.1:80{{ item.http_port }};
     include fastcgi_params;
     fastcgi_param PATH_TRANSLATED $document_root$fastcgi_script_name;
   }
