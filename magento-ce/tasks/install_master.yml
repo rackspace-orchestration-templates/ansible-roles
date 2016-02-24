@@ -41,6 +41,14 @@
     group: '{{ magento_sftp_user }}'
     mode: 0600
 
+- name: Configure '.my.cnf'
+  template:
+    src: 'Common/.my.cnf.j2'
+    dest: '/root/.my.cnf'
+    owner: 'root'
+    group: 'root'
+    mode: 0600
+
 - name: Download 'Magento Sample Version' file
   get_url:
     url: '{{ magento_download_path }}sample_content_version.txt'
