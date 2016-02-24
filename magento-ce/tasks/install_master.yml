@@ -178,6 +178,14 @@
     owner: '{{ magento_sftp_user }}'
     group: '{{ nginx_vhost_user }}'
 
+- name: Create backup cache.xml
+  template:
+    src: 'Common/cache.xml.j2'
+    dest: '{{ magento_sftp_user_home }}/cache.xml'
+    owner: 'root'
+    group: 'root'
+    mode: 0644
+
 - name: Create remote_addr_headers.xml
   template:
     src: 'Common/remote_addr_headers.xml.j2'
