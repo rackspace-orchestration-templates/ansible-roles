@@ -69,6 +69,7 @@ KeepAliveTimeout {{ keep_alive_timeout }}
 ## Server-Pool Size Regulation (MPM specific)
 ##
 
+Include conf.modules.d/*.conf
 # prefork MPM
 # StartServers: number of server processes to start
 # MinSpareServers: minimum number of server processes which are kept spare
@@ -114,7 +115,6 @@ KeepAliveTimeout {{ keep_alive_timeout }}
 # Example:
 # LoadModule foo_module modules/mod_foo.so
 #
-Include conf.modules.d/*.conf
 
 #
 # If you wish httpd to run as a different user or group, you must run
