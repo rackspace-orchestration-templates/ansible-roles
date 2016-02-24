@@ -28,3 +28,9 @@
 - name: Enable PHP modules
   shell: 'php5enmod {{ item }}'
   with_items: phpfpm_modules_enable
+
+- name: Enable PHP modules
+  copy:
+    src: '/etc/php5/mods-available/{{ item }}.ini'
+    dest: '/etc/php5/fpm/conf.d/{{ item }}.ini'
+  with_items: phpfpm_modules_enable
