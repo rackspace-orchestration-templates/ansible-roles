@@ -27,6 +27,11 @@
   include_vars: MariaDB/RedHat.yml
   when: mysql_pkg == 'mariadb-server'
 
+- name: Ensure SystemD directory exists
+  file:
+    path: '/etc/systemd/system/{{ mysql_service }}.service.d'
+    state: directory
+
 - name: Edit SystemD Limits
   template:
     src: 'RedHat/limits.conf.j2'
