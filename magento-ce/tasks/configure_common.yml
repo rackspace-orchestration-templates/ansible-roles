@@ -1,0 +1,33 @@
+---
+- name: Stop PHP-FPM service
+  service:
+    name: '{{ phpfpm_service }}'
+    state: stopped
+
+- name: Ensure Magento User exists
+  user:
+    name: '{{ magento_sftp_user }}'
+    uid: '{{ magento_sftp_user_id }}'
+    home: '{{ magento_sftp_user_home }}'
+    password: '{{ magento_sftp_password|password_hash("sha512") }}'
+    shell: '/bin/bash'
+    update_password: always
+    state: present
+
+- name: Start PHP-FPM service
+  service:
+    name: '{{ phpfpm_service }}'
+    state: started
+
+- name: Ensure Document Root Exists
+  file:
+    path: '{{ magento_document_root }}'
+    state: directory
+    mode: 0755
+    owner: '{{ magento_sftp_user }}'
+    group: '{{ nginx_vhost_user }}'
+
+- name: Configure LogRotate
+  template:
+    src: 'Common/logrotate.j2'
+    dest: '/etc/logrotate.d/magento'

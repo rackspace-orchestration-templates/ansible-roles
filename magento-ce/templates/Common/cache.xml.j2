@@ -1,0 +1,43 @@
+<config>
+    <global>
+        <session_save><![CDATA[db]]></session_save>
+        <redis_session>
+            <host>{{ magento_redis_host }}</host>
+            <port>6380</port>
+            <password></password>
+            <timeout>2.5</timeout>
+            <persistent></persistent>
+            <db>1</db>
+            <compression_threshold>2048</compression_threshold>
+            <compression_lib>gzip</compression_lib>
+            <log_level>1</log_level>
+            <disable_locking>1</disable_locking>   
+            <max_concurrency>12</max_concurrency>
+            <break_after_frontend>10</break_after_frontend>
+            <break_after_adminhtml>30</break_after_adminhtml>
+            <bot_lifetime>7200</bot_lifetime>
+        </redis_session>
+
+
+        <cache>
+            <backend>Cm_Cache_Backend_Redis</backend>
+            <backend_options>
+                <server>{{ magento_redis_host }}</server> <!-- or absolute path to unix socket -->
+                <port>6379</port>
+                <persistent></persistent> 
+                <database>0</database> 
+                <password></password> 
+                <force_standalone>0</force_standalone>  
+                <connect_retries>1</connect_retries>    
+                <read_timeout>10</read_timeout>         
+                <automatic_cleaning_factor>0</automatic_cleaning_factor>
+                <compress_data>1</compress_data> 
+                <compress_tags>1</compress_tags>  
+                <compress_threshold>20480</compress_threshold> 
+                <compression_lib>gzip</compression_lib>
+                <use_lua>0</use_lua> 
+             </backend_options>
+        </cache>
+
+    </global>
+</config>

@@ -1,21 +1,65 @@
 ---
+magento_reach_dropdown: ""
+
+magento_redis_host: '127.0.0.1'
+magento_role: 'master'
+magento_vhost_template: 'magento'
+magento_sftp_user: magento
+magento_sftp_user_id: 1011
+magento_sftp_password: M@g3nt0
+magento_sftp_user_home: '/var/www/vhosts/{{ magento_vhost_domain }}'
+
+lsync_exclude: ['{{ magento_sft_user_home }}/var/log/', '{{ magento_document_root }}/var/cache/']
+
+magento_download_path: 'https://3fb66be59b12e2b636cf-d69d20d277a755fdadf91611975f2510.ssl.cf5.rackcdn.com/'
+magento_file_name: 'magento-latest.tar.gz'
+magento_sample_file_name: 'magento-latest-sample.tar.gz'
+
 nginx_vhosts: [
+  {
+    name: '{{ magento_vhost_domain }}',
+    aliases: ['www.{{ magento_vhost_domain }}'],
+    doc_root: '{{ magento_document_root }}',
+    http_port: 80,
+    ssl_port: 443,
+    template: '{{ magento_vhost_template }}',
+    phpmyadmin: 'False',
+    phpfpm_user: '{{ magento_sftp_user }}',
+    phpfpm_user_id: '{{ magento_sftp_user_id }}'
+  }
+]
+phpfpm_vhosts: [
   {
     name: '{{ magento_vhost_domain }}',
     aliases: ['www.{{ magento_vhost_domain }}'],
     doc_root: '{{ magento_document_root }}',
     http_port: '80',
     ssl_port: '443',
-    template: 'magento',
-    phpmyadmin: 'False'
+    template: '{{ magento_vhost_template }}',
+    phpmyadmin: 'False',
+    phpfpm_user: '{{ magento_sftp_user }}',
+    phpfpm_user_id: '{{ magento_sftp_user_id }}'
+  },
+  {
+    name: '{{ magento_vhost_domain }}-admin',
+    aliases: ['www.{{ magento_vhost_domain }}'],
+    doc_root: '{{ magento_document_root }}',
+    http_port: '81',
+    ssl_port: '444',
+    template: '{{ magento_vhost_template }}',
+    phpmyadmin: 'False',
+    phpfpm_user: '{{ magento_sftp_user }}',
+    phpfpm_user_id: '{{ magento_sftp_user_id }}'
   }
 ]
+
 nginx_vhost_dir: '/etc/nginx/conf.d'
 magento_vhost_alias: ''
 tz: 'America/Chicago'
 nginx_vhost_user: nginx
 magento_http_port: 80
 magento_document_root: '/var/www/vhosts/{{ magento_vhost_domain }}/httpdocs'
+
 magento_vhost_domain: 'example.com'
 magento_admin_user: magento
 magento_admin_pass: P@$$w0rd1
@@ -27,9 +71,6 @@ magento_db_user: magento
 magento_db_name: magento
 magento_db_password: M@g3nt0
 
-magento_sftp_user: magento
-magento_sftp_password: M@g3nt0
-
 mysql_root_user: root
 mysql_root_password: P@$$w0rd
 mysql_host_ip: 'localhost'
@@ -38,16 +79,16 @@ magento_create_db: yes
 
 magento_garbage_files:
 - magento
-- magento-sample-data-{{ magento_sample_content_version }}
+- magento-sample-data-{{ magento_sample_content_version.stdout }}
 - "magento-{{ magento_version }}.tar.gz"
-- "magento-sample-data-{{ magento_sample_content_version }}.tar.gz"
+- "magento-sample-data-{{ magento_sample_content_version.stdout }}.tar.gz"
 - index.php.sample
 - php.ini.sample
 - RELEASE_NOTES.txt
 - LICENSE*
+- '{{ magento_file_name }}'
+- '{{ magento_sample_file_name }}'
 
-magento_version: 1.9.1.0
-magento_sample_content_version: 1.9.1.0
 magento_sample_content: no
 
 magento_install: yes

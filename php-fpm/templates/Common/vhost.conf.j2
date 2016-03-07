@@ -16,12 +16,12 @@ listen = 127.0.0.1:80{{ item.http_port }}
 
 
 listen.allowed_clients = 127.0.0.1
-listen.owner = {{ nginx_vhost_user }}
+listen.owner = {{ item.phpfpm_user }}
 listen.group = nginx
 listen.mode = 0660
 
 group = nginx
-user = {{ nginx_vhost_user }}
+user = {{ item.phpfpm_user}}
 
 pm = dynamic
 pm.start_servers = {{ phpfpm_start_servers }}
@@ -40,3 +40,4 @@ php_admin_flag[zlib.output_compression] = On
 php_admin_flag[log_errors] = on
 php_admin_value[error_log] = /var/log/php-fpm/{{ item.name }}-error.log
 php_admin_value[memory_limit] = 512M
+php_flag[expose_php] = off

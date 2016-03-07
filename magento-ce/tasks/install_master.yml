@@ -1,0 +1,202 @@
+---
+- name: Download Magento
+  get_url:
+    url: '{{ magento_download_path }}{{ magento_file_name }}'
+    dest: '{{ magento_document_root }}'
+    owner: '{{ magento_sftp_user }}'
+    group: '{{ nginx_vhost_user }}'
+    validate_certs: no
+
+- name: Download Sample Content
+  get_url:
+    url: '{{ magento_download_path }}{{ magento_sample_file_name }}'
+    dest: '{{ magento_document_root }}'
+    owner: '{{ magento_sftp_user }}'
+    group: '{{ nginx_vhost_user }}'
+    validate_certs: no
+  when: magento_sample_content == 'True'
+
+- name: Unpack Magento
+  unarchive:
+    src: '{{ magento_document_root }}/{{ magento_file_name }}'
+    dest: '{{ magento_document_root }}'
+    copy: no
+    owner: '{{ magento_sftp_user }}'
+    group: '{{ nginx_vhost_user }}'
+
+- name: Unpack Sample Content
+  unarchive:
+    src: '{{ magento_document_root }}/{{ magento_sample_file_name }}'
+    dest: '{{ magento_document_root }}'
+    copy: no
+    owner: '{{ magento_sftp_user }}'
+    group: '{{ nginx_vhost_user }}'
+  when: magento_sample_content == 'True'
+
+- name: Configure '.my.cnf'
+  template:
+    src: 'Common/.my.cnf.j2'
+    dest: '{{ magento_sftp_user_home }}/.my.cnf'
+    owner: '{{ magento_sftp_user }}'
+    group: '{{ magento_sftp_user }}'
+    mode: 0600
+
+- name: Configure '.my.cnf'
+  template:
+    src: 'Common/.my.cnf.j2'
+    dest: '/root/.my.cnf'
+    owner: 'root'
+    group: 'root'
+    mode: 0600
+
+- name: Download 'Magento Sample Version' file
+  get_url:
+    url: '{{ magento_download_path }}sample_content_version.txt'
+    dest: '{{ magento_document_root }}'
+
+- name: Get Sample Data Version
+  command:
+    'cat sample_content_version.txt'
+  args:
+    chdir: '{{ magento_document_root }}'
+  register: magento_sample_content_version
+
+- name: Import Sample MySQL Data
+  mysql_db:
+    name: '{{ magento_db_name }}'
+    target: '{{ magento_document_root}}/magento-sample-data-{{ magento_sample_content_version.stdout }}/magento_sample_data_for_{{ magento_sample_content_version.stdout }}.sql'
+#    target: '{{ magento_document_root}}/magento-sample-data-{{ magento_sample_content_version }}/magento_sample_data_for_{{ magento_sample_content_version }}.sql'
+    state: import
+    login_host: '{{ mysql_host_ip }}'
+    login_user: '{{ magento_db_user }}'
+    login_password: '{{ magento_db_password }}'
+  when: magento_sample_content == 'True'
+
+- name: Copy Core Files
+  shell:
+    'cp -R {{ magento_document_root }}/magento/{{ item }} {{ magento_document_root }}/'
+  args:
+    chdir: '{{ magento_document_root }}'
+  with_items:
+    - '*'
+    - '.htaccess'
+
+- name: Copy Core Sample Files
+  copy:
+    src: '{{ magento_document_root }}/magento-sample-data-{{ magento_sample_content_version.stdout }}/{{ item }}'
+#    src: '{{ magento_document_root }}/magento-sample-data-{{ magento_sample_content_version }}/{{ item }}'
+    dest: '{{ magento_document_root }}'
+    force: yes
+  with_items:
+    - 'media'
+    - 'skin'
+  when: magento_sample_content == 'True'
+
+- name: Delete Garbage Files
+  file:
+    path: '{{ magento_document_root }}/{{ item }}'
+    state: absent
+  with_items:
+    magento_garbage_files
+
+- name: Set Mage as Executable
+  file:
+    path: '{{ magento_document_root }}/mage'
+    mode: 0500
+    state: file
+
+- name: Run 'mage mage-setup'
+  command: '{{ magento_document_root }}/mage mage-setup .'
+  args:
+    chdir: '{{ magento_document_root }}'
+
+- name: Set Mage Preferred_State to Stable
+  command: '{{ magento_document_root }}/mage config-set preferred_state stable'
+  args:
+    chdir: '{{ magento_document_root }}'
+
+- name: Run Mage Install
+  command: '{{ magento_document_root }}/mage install http://connect20.magentocommerce.com/community Mage_All_Latest --force'
+  args:
+    chdir: '{{ magento_document_root }}'
+
+- name: Run Magento Installer
+  command: 'php -f install.php -- --license_agreement_accepted "yes" --locale "en_US" --timezone "{{ tz }}" --default_currency "USD" --db_host {{ mysql_host_ip }} --db_name {{ magento_db_name }} --db_user {{ magento_db_user }} --db_pass {{ magento_db_password }} --url http://{{ magento_vhost_domain }} --skip_url_validation --use_rewrites "yes" --use_secure "no" --secure_base_url https://{{ magento_vhost_domain }} --use_secure_admin "no" --admin_firstname {{ magento_admin_fname }} --admin_lastname {{ magento_admin_lname }} --admin_email {{ magento_admin_email }} --admin_username {{ magento_admin_user }} --admin_password {{ magento_admin_pass }}'
+  args:
+    chdir: "{{ magento_document_root }}"
+
+- name: Run Magento Reindex
+  command: 'php -f shell/indexer.php reindexall'
+  args:
+    chdir: "{{ magento_document_root }}"
+
+- name: Configure File Level Permissions
+  command: 'find . -type f -exec chmod 644 {} ";"'
+  args:
+    chdir: '{{ magento_document_root }}'
+  register: file_perm_change
+  changed_when: file_perm_change.stdout
+
+- name: Configure Directory Level Permissions
+  command: 'find . -type d -exec chmod 755 {} ";"'
+  args:
+    chdir: '{{ magento_document_root }}'
+  register: file_perm_change
+  changed_when: file_perm_change.stdout
+
+- name: Configure File and Directory Ownership
+  command: 'chown -R {{ magento_sftp_user }}:{{ nginx_vhost_user }} {{ magento_document_root }}'
+  args:
+    chdir: '{{ magento_document_root }}'
+  register: file_perm_change
+  changed_when: file_perm_change.stdout
+
+- name: Create Cron Job
+  cron:
+    name: "Magento Cron Script"
+    user: '{{ magento_sftp_user }}'
+    minute: "*/5"
+    job: '/bin/sh {{ magento_document_root }}/cron.sh >/dev/null 2>&1'
+    state: present
+
+- name: Enable Cm_RedisSession
+  template:
+    src: 'Common/Cm_RedisSession.xml.j2'
+    dest: '{{ magento_document_root }}/app/etc/modules/Cm_RedisSession.xml'
+    owner: '{{ magento_sftp_user }}'
+    group: '{{ nginx_vhost_user }}'
+
+- name: Add comment regarding "cache.xml" to local.xml
+  lineinfile:
+    dest: '{{ magento_document_root }}/app/etc/local.xml'
+    line: '<!-- sessions and cache are in Redis. See ./cache.xml for config -->'
+    insertafter: 'session_save'
+    state: present
+
+- name: Remove "session_save" from local.xml
+  lineinfile:
+    dest: '{{ magento_document_root }}/app/etc/local.xml'
+    regexp: 'session_save'
+    state: absent
+
+- name: Create cache.xml
+  template:
+    src: 'Common/cache.xml.j2'
+    dest: '{{ magento_document_root }}/app/etc/cache.xml'
+    owner: '{{ magento_sftp_user }}'
+    group: '{{ nginx_vhost_user }}'
+
+- name: Create backup cache.xml
+  template:
+    src: 'Common/cache.xml.j2'
+    dest: '{{ magento_sftp_user_home }}/cache.xml'
+    owner: 'root'
+    group: 'root'
+    mode: 0644
+
+- name: Create remote_addr_headers.xml
+  template:
+    src: 'Common/remote_addr_headers.xml.j2'
+    dest: '{{ magento_document_root }}/app/etc/remote_addr_headers.xml'
+    owner: '{{ magento_sftp_user }}'
+    group: '{{ nginx_vhost_user }}'

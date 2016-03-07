@@ -16,16 +16,19 @@ server {
   root {{ item.doc_root }};
   access_log /var/log/nginx/{{ item.name }}-access.log main;
   error_log /var/log/nginx/{{ item.name }}-error.log warn;
+
+  server_tokens off;
+
   index index.php index.html;
 
   # Magento dashboard to Master server
-  proxy_set_header Host {{ item.name }};
   location ~* ^/admin {
     proxy_pass http://master;
     proxy_set_header Host {{ item.name }};
   }
 
   location / {
+    proxy_set_header Host {{ item.name }};
     if ($cookie_adminhtml) {
       proxy_pass http://master;
     }
@@ -79,7 +82,7 @@ server {
     allow {{ ansible_eth0["ipv4"]["address"] }};
     deny all;
     include fastcgi_params;
-    fastcgi_pass unix:/var/run/php-fpm/{{ item.name }}.sock;
+    fastcgi_pass 127.0.0.1:80{{ item.http_port }};
     include fastcgi_params;
     fastcgi_param PATH_TRANSLATED $document_root$fastcgi_script_name;
   }

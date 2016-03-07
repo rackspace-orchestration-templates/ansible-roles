@@ -1,0 +1,26 @@
+---
+- name: Set facts for Master without Sample Content
+  set_fact:
+    magento_role: 'master'
+    magento_sample_content: 'no'
+  when: magento_reach_dropdown == 'Fresh install of the latest Magento CE 1.9.x release'
+
+- name: Set facts for Master with Sample Content
+  set_fact:
+    magento_role: 'master'
+    magento_sample_content: 'True'
+  when: magento_reach_dropdown == 'Fresh install of the latest Magento CE 1.9.x release (including sample data)'
+
+- name: Set facts for Custom Code
+  set_fact:
+    magento_role: 'custom'
+    magento_sample_content: 'no'
+  when: magento_reach_dropdown == 'Don\'t install Magento. I will upload an existing Magento site (see instructions)'
+
+- include: configure_common.yml
+
+- include: install_master.yml
+  when: magento_role == 'master'
+
+- include: install_custom.yml
+  when: magento_role == 'custom'

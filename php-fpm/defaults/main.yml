@@ -4,3 +4,5 @@ phpfpm_min_spare_servers: 20
 phpfpm_max_spare_servers: 30
 phpfpm_max_children: 50
 phpfpm_max_requests: 500
+
+phpfpm_vhosts: '{{ nginx_vhosts }}'

@@ -1,4 +1,9 @@
 ---
+- name: Create /etc/lsyncd.exclude
+  template:
+    src: 'Common/lsyncd.exclude.j2'
+    dest: '/etc/lsyncd.exclude'
+
 - name: Copy configuration
   template:
     src: 'Common/lsyncd.conf.j2'

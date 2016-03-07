@@ -5,23 +5,48 @@
     dest: '{{ item.dest }}'
   with_items: phpfpm_config
 
+- name: Verify all necessary users exist
+  user:
+    name: '{{ item.phpfpm_user }}'
+    uid: '{{ item.phpfpm_user_id }}'
+    state: present
+  with_items: nginx_vhosts
+  when: nginx_vhosts is defined
+
 - name: Copy configuration files for Nginx vhosts
   template:
     src: 'Common/vhost.conf.j2'
     dest: '{{ phpfpm_root }}/{{ phpfpm_confdir }}/{{ item.name }}.conf'
-  with_items: nginx_vhosts
-  when: nginx_vhosts is defined
+  with_items: phpfpm_vhosts
+  when: phpfpm_vhosts is defined
 
 - name: Ensure PHP-FPM Socket Directory exists
   file:
     path: '/var/run/php-fpm'
     state: directory
 
-- name: Enable and Restart PHP-FPM
+- name: Ensure PHP-FPM Log Directory exists
+  file:
+    path: '/var/log/php-fpm'
+    owner: 'root'
+    group: '{{ nginx_vhost_user }}'
+    state: directory
+    mode: 0775
+
+- name: Configure LogRotate
+  template:
+    src: 'Common/logrotate.j2'
+    dest: '/etc/logrotate.d/php-fpm'
+
+- name: Enable PHP-FPM
+  service:
+    name: '{{ phpfpm_service }}'
+    enabled: yes
+
+- name: Restart PHP-FPM
   service:
     name: '{{ phpfpm_service }}'
     state: restarted
-    enabled: yes
 
 - name: Restart Nginx
   service:

@@ -22,13 +22,12 @@ phpfpm_pkgs: [
 'php5-xmlrpc',
 'php5-curl',
 'php5-intl',
-'php5-redis'
+'php5-redis',
+'php5-memcache'
 ]
 
 phpfpm_pkgs_pecl: [
 'lzf',
-'redis',
-'memcache',
 'zendopcache-7.0.4'
 ]
 
@@ -37,5 +36,6 @@ phpfpm_modules_config_root: '/etc/php5/mods-available'
 phpfpm_modules_enable: [
 'mcrypt',
 'redis',
-'curl'
+'curl',
+'memcache'
 ]

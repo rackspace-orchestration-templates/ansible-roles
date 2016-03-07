@@ -1,0 +1,66 @@
+---
+- name: Configure '.my.cnf'
+  template:
+    src: 'Common/.my.cnf.j2'
+    dest: '{{ magento_sftp_user_home }}/.my.cnf'
+    owner: '{{ magento_sftp_user }}'
+    group: '{{ magento_sftp_user }}'
+    mode: 0600
+
+- name: Configure File Level Permissions
+  command: 'find . -type f -exec chmod 644 {} ";"'
+  args:
+    chdir: '{{ magento_document_root }}'
+  register: file_perm_change
+  changed_when: file_perm_change.stdout
+
+- name: Configure Directory Level Permissions
+  command: 'find . -type d -exec chmod 755 {} ";"'
+  args:
+    chdir: '{{ magento_document_root }}'
+  register: file_perm_change
+  changed_when: file_perm_change.stdout
+
+- name: Configure File and Directory Ownership
+  command: 'chown -R {{ magento_sftp_user }}:{{ nginx_vhost_user }} {{ magento_document_root }}'
+  args:
+    chdir: '{{ magento_document_root }}'
+  register: file_perm_change
+  changed_when: file_perm_change.stdout
+
+- name: Create Cron Job
+  cron:
+    name: "Magento Cron Script"
+    user: '{{ magento_sftp_user }}'
+    minute: "*/5"
+    job: '/bin/sh {{ magento_document_root }}/cron.sh >/dev/null 2>&1'
+    state: present
+
+- name: Ensure /app/etc/ exists
+  file:
+    path: '{{ magento_document_root }}/app/etc'
+    state: directory
+    owner: '{{ magento_sftp_user }}'
+    group: '{{ nginx_vhost_user }}'
+
+- name: Create cache.xml
+  template:
+    src: 'Common/cache.xml.j2'
+    dest: '{{ magento_document_root }}/app/etc/cache.xml'
+    owner: '{{ magento_sftp_user }}'
+    group: '{{ nginx_vhost_user }}'
+
+- name: Create backup cache.xml
+  template:
+    src: 'Common/cache.xml.j2'
+    dest: '{{ magento_sftp_user_home }}/cache.xml'
+    owner: 'root'
+    group: 'root'
+    mode: 0644
+
+- name: Create remote_addr_headers.xml
+  template:
+    src: 'Common/remote_addr_headers.xml.j2'
+    dest: '{{ magento_document_root }}/app/etc/remote_addr_headers.xml'
+    owner: '{{ magento_sftp_user }}'
+    group: '{{ nginx_vhost_user }}'
