@@ -1,0 +1,25 @@
+---
+parse_user: 'parse'
+parse_password: 'p@$$w0rd'
+parse_npm_pkgs: ['parse-server', 'pm2']
+
+nginx_vhost_str: 'example.com'
+nginx_vhost_template: 'parse'
+
+parse_mongodb_user: 'parse'
+parse_mongodb_host: 'localhost'
+parse_mongodb_port: '27017'
+parse_mongodb_password: 'p@$$w0rd'
+parse_mongodb_database: 'parseDb'
+
+parse_cloud_code_main": "/home/parse/cloud/main.js"
+parse_database_uri": "mongodb://{{ parse_mongodb_port }}:{{ nginx_mongodb_password }}@{{ parse_mongodb_host}}:{{ parse_mongodb_port }}/{{ parse_mongodb_database }}"
+parse_application_id": "your_application_id"
+parse_master_key": "your_master_key"
+parse_collection_prefix": ""
+parse_client_key": ""
+parse_rest_api_key": ""
+parse_dotnet_key": ""
+parse_javascript_key": ""
+parse_file_key": ""
+parse_facebook_app_ids": ""

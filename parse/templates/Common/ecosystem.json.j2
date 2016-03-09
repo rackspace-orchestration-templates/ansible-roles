@@ -1,0 +1,22 @@
+{
+  "apps" : [{
+    "name"        : "parse-wrapper",
+    "script"      : "/usr/local/bin/parse-server",
+    "watch"       : true,
+    "merge_logs"  : true,
+    "cwd"         : "/home/{{ parse_user }}",
+    "env": {
+      "PARSE_SERVER_CLOUD_CODE_MAIN": "{{ php_cloud_code_main }}",
+      "PARSE_SERVER_DATABASE_URI": "{{ parse_database_uri }}",
+      "PARSE_SERVER_APPLICATION_ID": "{{ parse_application_id }}",
+      "PARSE_SERVER_MASTER_KEY": "{{ parse_master_key }}",
+      "PARSE_SERVER_COLLECTION_PREFIX": "{{ parse_collection_prefix }}",
+      "PARSE_SERVER_CLIENT_KEY": "{{ parse_client_key }}",
+      "PARSE_SERVER_REST_API_KEY": "{{ parse_rest_api_key }}",
+      "PARSE_SERVER_DOTNET_KEY": "{{ parse_dotnet_key }}",
+      "PARSE_SERVER_JAVASCRIPT_KEY": "{{ parse_javascript_key }}",
+      "PARSE_SERVER_FILE_KEY": "{{ parse_file_key }}",
+      "PARSE_SERVER_FACEBOOK_APP_IDS": "{{ parse_facebook_app_ids }}",
+    }
+  }]
+}

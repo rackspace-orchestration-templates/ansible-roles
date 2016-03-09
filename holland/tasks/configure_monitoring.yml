@@ -1,0 +1,11 @@
+---
+- name: Ensure Plugins Directory Exists
+  file:
+    path: '/usr/lib/rackspace-monitoring-agent/plugins/'
+    state: directory
+
+- name: Download Monitoring Script
+  get_url:
+    url: 'https://raw.github.rackspace.com/ManagedCloud/mckick/master/cookbooks/holland/files/default/holland_monitor.py'
+    dest: '/usr/lib/rackspace-monitoring-agent/plugins/holland_monitor.py'
+    mode: 0755
