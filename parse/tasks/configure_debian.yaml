@@ -1,0 +1,40 @@
+- name: Create 'parse' user
+  user:
+    name: '{{ parse_user }}'
+    system: yes
+    createhome: yes
+    password: '{{ parse_password }}'
+
+- name: Create 'cloud' directory for code
+  file:
+    path: '/home/{{ parse_user }}/cloud'
+    state: directory
+    owner: '{{ parse_user }}'
+
+- name: Create test code (main.js)
+  template:
+    src: 'Common/main.js.j2'
+    dest: '/home/{{ parse_user }}/cloud/main.js'
+    owner: '{{ parse_user }}'
+
+- name: Create 'ecosystem.json'
+  template:
+    src: 'Common/ecosystem.json.j2'
+    dest: '/home/{{ parse_user }}/ecosystem.json'
+    owner: '{{ parse_user }}'
+
+- name: Start pm2
+  become: yes
+  become_user: '{{ parse_user }}'
+  shell:
+    'pm2 start ~/ecosystem.json'
+
+- name: Save pm2
+  become: yes
+  become_user: '{{ parse_user }}'
+  shell:
+    'pm2 save'
+
+- name: Run 'parse-server' via PM2 on startup
+  shell:
+    'pm2 startup ubuntu -u {{ parse_user }} --hp /home/{{ parse_user }}'
