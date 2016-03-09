@@ -5,10 +5,10 @@
     state: present
 
 - name: Install NPM packages
-  apt:
-    name: '{{ item }}'
+  shell:
+    'npm install -g {{ item }}'
     state: present
-  with_items: parse_npm_pkgs
+  with_items: '{{ parse_npm_pkgs }}'
 
 - name: Create 'node' symlink
   file:
