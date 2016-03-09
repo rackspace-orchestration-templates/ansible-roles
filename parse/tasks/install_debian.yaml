@@ -9,3 +9,9 @@
     name: '{{ item }}'
     state: present
   with_items: parse_npm_pkgs
+
+- name: Create 'node' symlink
+  file:
+    src: '/usr/bin/nodejs'
+    dest: '/usr/bin/node'
+    state: link
