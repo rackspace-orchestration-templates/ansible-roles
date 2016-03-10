@@ -20,7 +20,7 @@
 - name: Create Git key
   template:
     src: 'Common/git_key.key.j2'
-    dest: '/root/git_key.git'
+    dest: '/root/git_key.key'
     mode: 0600
     owner: root
     group: root
