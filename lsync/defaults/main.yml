@@ -1,4 +1,4 @@
 ---
 lsync_dirs: ['/var/www/vhosts']
 lsync_servers: ['127.0.0.1']
-lsync_exclude: []
+lsync_exclude: ['.ssh/']
