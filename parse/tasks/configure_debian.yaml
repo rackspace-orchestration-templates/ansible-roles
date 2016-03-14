@@ -3,7 +3,7 @@
     name: '{{ parse_user }}'
     system: yes
     createhome: yes
-    password: '{{ parse_password }}'
+    password: '{{ parse_password|password_hash("sha512") }}'
 
 - name: Create 'cloud' directory for code
   file:
@@ -39,7 +39,6 @@
     update: yes
     dest: '/home/{{ parse_user }}/custom_code'
   when:
-    - parse_git_key != ""
     - parse_git_repo != ""
   register: parse_repo_updated
 

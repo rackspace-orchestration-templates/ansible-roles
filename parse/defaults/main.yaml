@@ -1,7 +1,16 @@
 ---
 parse_user: 'parse'
 parse_password: 'p@$$w0rd'
-parse_npm_pkgs: ['parse-server', 'pm2']
+parse_npm_pkgs: [
+'parse-server',
+'pm2',
+'mailgun-js',
+'mandrill-api',
+'sendgrid',
+'stripe',
+'twilio',
+'underscore'
+]
 
 nginx_vhost_str: 'example.com'
 nginx_vhost_template: 'parse'
