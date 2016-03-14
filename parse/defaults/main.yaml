@@ -26,3 +26,4 @@ parse_facebook_app_ids: ""
 
 parse_git_key: 'Insert deploy key here'
 parse_git_repo: 'https://github.com/ParsePlatform/AnyBlog.git'
+parse_git_version: 'HEAD'

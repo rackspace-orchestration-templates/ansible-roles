@@ -35,6 +35,7 @@
     force: yes
     key_file: '/root/git_key.key'
     repo: '{{ parse_git_repo }}'
+    version: '{{ parse_git_version }}'
     update: yes
     dest: '/home/{{ parse_user }}/custom_code'
   when:
@@ -52,6 +53,7 @@
     src: 'Common/ecosystem.json.j2'
     dest: '/home/{{ parse_user }}/ecosystem.json'
     owner: '{{ parse_user }}'
+    force: no
 
 - name: Start pm2
   become: yes
