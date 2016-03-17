@@ -1,0 +1,73 @@
+- name: Create 'parse' user
+  user:
+    name: '{{ parse_user }}'
+    system: yes
+    createhome: yes
+    password: '{{ parse_password|password_hash("sha512") }}'
+
+- name: Create 'cloud' directory for code
+  file:
+    path: '/home/{{ parse_user }}/cloud'
+    state: directory
+    owner: '{{ parse_user }}'
+
+# - name: Create test code (main.js)
+#   template:
+#     src: 'Common/main.js.j2'
+#     dest: '/home/{{ parse_user }}/cloud/main.js'
+#     owner: '{{ parse_user }}'
+
+- name: Create Git key
+  template:
+    src: 'Common/git_key.key.j2'
+    dest: '/root/git_key.key'
+    mode: 0600
+    owner: root
+    group: root
+  when:
+    - parse_git_key != ""
+    - parse_git_repo != ""
+
+- name: Clone Git repository
+  git:
+    accept_hostkey: yes
+    clone: yes
+    force: yes
+    key_file: '/root/git_key.key'
+    repo: '{{ parse_git_repo }}'
+    version: '{{ parse_git_version }}'
+    update: yes
+    dest: '/home/{{ parse_user }}/custom_code'
+  when:
+    - parse_git_repo != ""
+  register: parse_repo_updated
+
+- name: Copy code from Git repo
+  shell:
+    'cp -R /home/{{ parse_user }}/custom_code/* /home/{{ parse_user }}/'
+  when: parse_repo_updated.changed
+
+- name: Create 'ecosystem.json'
+  template:
+    src: 'Common/ecosystem.json.j2'
+    dest: '/home/{{ parse_user }}/ecosystem.json'
+    owner: '{{ parse_user }}'
+    force: no
+
+- name: Start pm2
+  become: yes
+  become_user: '{{ parse_user }}'
+  shell:
+    'pm2 start ~/ecosystem.json'
+
+- name: Save pm2
+  become: yes
+  become_user: '{{ parse_user }}'
+  shell:
+    'pm2 save'
+
+- name: Run 'parse-server' via PM2 on startup
+  become: yes
+  become_user: 'root'
+  shell:
+    'pm2 startup ubuntu -u {{ parse_user }} --hp /home/{{ parse_user }}'

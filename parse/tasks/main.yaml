@@ -1,0 +1,6 @@
+---
+- include: install_debian.yaml
+  when: ansible_os_family == 'Debian'
+
+- include: 'configure_debian.yaml'
+  when: ansible_os_family == 'Debian'

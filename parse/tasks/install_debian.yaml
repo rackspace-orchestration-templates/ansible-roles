@@ -1,0 +1,16 @@
+---
+- name: Install NPM
+  apt:
+    name: npm
+    state: present
+
+- name: Install NPM packages
+  shell:
+    'npm install -g {{ item }}'
+  with_items: '{{ parse_npm_pkgs }}'
+
+- name: Create 'node' symlink
+  file:
+    src: '/usr/bin/nodejs'
+    dest: '/usr/bin/node'
+    state: link
