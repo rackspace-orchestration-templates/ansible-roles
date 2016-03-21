@@ -19,6 +19,8 @@
   file:
     path: '/data/db'
     state: directory
+    owner: 'mongodb'
+    group: 'mongodb'
 
 - name: Install MongoDB
   apt:
