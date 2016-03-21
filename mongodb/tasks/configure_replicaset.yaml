@@ -1,0 +1,9 @@
+---
+- name: Initialize Replicaset
+  shell:
+    'mongo --eval "rs.initiate()"'
+
+- name: Add Replicaset members
+  shell:
+    'mongo --eval "rs.add({{ item }})"'
+  with_items: '{{ mongodb_replicasetmembers }}''
