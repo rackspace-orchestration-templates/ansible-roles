@@ -1,1 +1,10 @@
 ---
+- name: Configure MongoDB
+  template:
+    src: 'Common/mongodb.conf.j2'
+    dest: '/etc/mongod.conf'
+
+- name: Restart MongoDB
+  service:
+    name: mongod
+    state: restarted

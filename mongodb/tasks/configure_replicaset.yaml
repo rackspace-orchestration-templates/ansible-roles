@@ -6,4 +6,4 @@
 - name: Add Replicaset members
   shell:
     'mongo --eval "rs.add({{ item }})"'
-  with_items: '{{ mongodb_replicasetmembers }}''
+  with_items: '{{ mongodb_replicaset_members }}''

@@ -1,0 +1,14 @@
+storage:
+    directoryPerDB: true
+    journal:
+        enabled: true
+systemLog:
+    destination: file
+    path: "/var/log/mongodb.log"
+    logAppend: true
+    timeStampFormat: iso8601-utc
+replication:
+    replSetName: "{{ mongodb_replicaset_name }}"
+net:
+    bindIp: 0.0.0.0
+    port: 27018

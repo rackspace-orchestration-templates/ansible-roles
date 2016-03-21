@@ -5,7 +5,7 @@
     id: EA312927
     state: present
   when:
-    - ansible_os_distribution == 'Ubuntu'
+    - ansible_distribution == 'Ubuntu'
 
 - name: Add Ubuntu Repo
   apt_repository:
@@ -13,11 +13,11 @@
     state: present
     update_cache: yes
   when:
-    - ansible_os_distribution == 'Ubuntu'
+    - ansible_distribution == 'Ubuntu'
 
 - name: Install MongoDB
   apt:
     name: 'mongodb-org'
     state: present
   when:
-    - ansible_os_distribution == 'Ubuntu'
+    - ansible_distribution == 'Ubuntu'
