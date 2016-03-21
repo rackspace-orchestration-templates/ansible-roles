@@ -1,3 +1,5 @@
 mongodb_replicaset_members: []
 
 mongodb_replicaset_name: 'RackReplica'
+
+mongodb_role: 'server'

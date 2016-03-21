@@ -1,8 +1,13 @@
 ---
 - include: install_debian.yaml
-  when: ansible_os_family == 'Debian'
+  when:
+    - ansible_os_family == 'Debian'
+    - mongodb_role == 'server'
 
 - include: configure_debian.yaml
-  when: ansible_os_family == 'Debian'
+  when:
+    - ansible_os_family == 'Debian'
+    - mongodb_role == 'server'
 
 - include: configure_replicaset.yaml
+  when: mongodb_role == 'replicaset'
