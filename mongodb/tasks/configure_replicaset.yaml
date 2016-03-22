@@ -3,7 +3,11 @@
   shell:
     'mongo --eval "rs.initiate()"'
 
+- name: Reset Replicaset Hostname
+  shell:
+    'mongo --eval "cfg = rs.conf(); cfg.members[0].host = \"{{ galera_primary_ip }}\"; rs.reconfig(cfg)"'
+
 - name: Add Replicaset members
   shell:
-    'mongo --eval "rs.add({{ item }})"'
+    'mongo --eval "rs.add(\"{{ item }}\")"'
   with_items: '{{ mongodb_replicaset_members }}'

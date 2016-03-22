@@ -19,11 +19,19 @@
   user:
     name: 'mongodb'
     state: present
+  ignore_errors: yes
 
 - name: Create Data Directory
   file:
     path: '/data/db'
     state: directory
+    owner: 'mongodb'
+    group: 'mongodb'
+
+- name: Create Data Directory
+  file:
+    path: '/var/log/mongodb.log'
+    state: touch
     owner: 'mongodb'
     group: 'mongodb'
 
