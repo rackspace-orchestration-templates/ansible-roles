@@ -3,3 +3,5 @@ mongodb_replicaset_members: []
 mongodb_replicaset_name: 'RackReplica'
 
 mongodb_role: 'server'
+
+mongodb_primary_ip: '127.0.0.1'

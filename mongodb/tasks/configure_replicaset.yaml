@@ -5,7 +5,7 @@
 
 - name: Reset Replicaset Hostname
   shell:
-    'mongo --eval "cfg = rs.conf(); cfg.members[0].host = \"{{ galera_primary_ip }}\"; rs.reconfig(cfg)"'
+    'mongo --eval "cfg = rs.conf(); cfg.members[0].host = \"{{ mongodb_primary_ip }}\"; rs.reconfig(cfg)"'
 
 - name: Add Replicaset members
   shell:
