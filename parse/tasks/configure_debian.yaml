@@ -72,3 +72,24 @@
   become_user: 'root'
   shell:
     'pm2 startup ubuntu -u {{ parse_user }} --hp /home/{{ parse_user }}'
+
+- name: Configure Upstart for Parse Dashboard
+  template:
+    src: 'Debian/upstart.config.j2'
+    dest: '/etc/init/parse-dashboard.conf'
+
+- name: Load Upstart configuration
+  shell:
+    'initctl reload-configuration'
+
+- name: Create example configuration for Parse Dashboard
+  template:
+    src: 'Common/parse-dashboard-config.json.j2'
+    dest: '/home/{{ parse_user }}/parse-dashboard-config.json'
+    owner: '{{ parse_user }}'
+    group: '{{ parse_user }}'
+
+- name: Start Parse Dashboard
+  service:
+    name: 'parse-dashboard'
+    state: restarted
