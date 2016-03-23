@@ -11,12 +11,6 @@
     state: directory
     owner: '{{ parse_user }}'
 
-# - name: Create test code (main.js)
-#   template:
-#     src: 'Common/main.js.j2'
-#     dest: '/home/{{ parse_user }}/cloud/main.js'
-#     owner: '{{ parse_user }}'
-
 - name: Create Git key
   template:
     src: 'Common/git_key.key.j2'
@@ -46,6 +40,13 @@
   shell:
     'cp -R /home/{{ parse_user }}/custom_code/* /home/{{ parse_user }}/'
   when: parse_repo_updated.changed
+
+- name: Create test code (main.js)
+  template:
+    src: 'Common/main.js.j2'
+    dest: '/home/{{ parse_user }}/cloud/main.js'
+    owner: '{{ parse_user }}'
+    force: no
 
 - name: Create 'ecosystem.json'
   template:
