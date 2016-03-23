@@ -72,3 +72,20 @@
   become_user: 'root'
   shell:
     'pm2 startup ubuntu -u {{ parse_user }} --hp /home/{{ parse_user }}'
+
+- name: Clone Parse Dashboard repository
+  git:
+    accept_hostkey: yes
+    clone: yes
+    force: yes
+    repo: 'https://github.com/ParsePlatform/parse-dashboard.git'
+    update: yes
+    dest: '/home/{{ parse_user }}/dashboard'
+
+- name: Install Parse Dashboard
+  become: yes
+  become_user: '{{ parse_user }}'
+  shell:
+    'npm install'
+  args:
+    chdir: '/home/{{ parse_user }}'
