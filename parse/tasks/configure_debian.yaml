@@ -73,19 +73,23 @@
   shell:
     'pm2 startup ubuntu -u {{ parse_user }} --hp /home/{{ parse_user }}'
 
-- name: Clone Parse Dashboard repository
-  git:
-    accept_hostkey: yes
-    clone: yes
-    force: yes
-    repo: 'https://github.com/ParsePlatform/parse-dashboard.git'
-    update: yes
-    dest: '/home/{{ parse_user }}/dashboard'
+- name: Configure Upstart for Parse Dashboard
+  template:
+    src: 'Debian/upstart.config.j2'
+    dest: '/etc/init/parse-dashboard.conf'
 
-- name: Install Parse Dashboard
-  become: yes
-  become_user: '{{ parse_user }}'
+- name: Load Upstart configuration
   shell:
-    'npm install'
-  args:
-    chdir: '/home/{{ parse_user }}'
+    'initctl reload-configuration'
+
+- name: Create example configuration for Parse Dashboard
+  template:
+    src: 'Common/parse-dashboard-configuration.json.j2'
+    dest: '/home/{{ parse_user }}/dashboard/Parse-Dashboard/parse-dashboard-configuration.json'
+    owner: '{{ parse_user }}'
+    group: '{{ parse_user }}'
+
+- name: Start Parse Dashboard
+  service:
+    name: 'parse-dashboard'
+    state: restarted
