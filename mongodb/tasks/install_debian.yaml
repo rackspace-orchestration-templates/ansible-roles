@@ -47,3 +47,4 @@
     line: '{{ mongodb_primary_ip }}     {{ mongodb_primary_name }}'
     insertafter: EOF
     dest: '/etc/hosts'
+  when: mongodb_primary_ip != ''
