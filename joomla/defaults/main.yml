@@ -1,5 +1,5 @@
 ---
-joomla_download: 'https://github.com/joomla/joomla-cms/releases/download/3.4.8/Joomla_3.4.8-Stable-Full_Package.zip'
+joomla_download: 'https://github.com/joomla/joomla-cms/releases/download/3.5.0/Joomla_3.5.0-Stable-Full_Package.zip'
 
 joomla_pass: 'admin'
 joomla_salt: '{{ lookup("password", "/tmp/joomlasalt chars=ascii_letters,digits length=32") }}'
