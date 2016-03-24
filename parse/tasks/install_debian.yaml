@@ -34,11 +34,11 @@
     'npm install -g {{ item }}'
   with_items: '{{ parse_npm_pkgs }}'
 
-- name: Create Symlink for PM2
-  file:
-    src: '/usr/local/n/versions/node/{{ parse_node_version.stdout }}/bin/pm2'
-    path: '/usr/local/bin/pm2'
-    state: link
+# - name: Create Symlink for PM2
+#   file:
+#     src: '/usr/local/n/versions/node/{{ parse_node_version.stdout }}/bin/pm2'
+#     path: '/usr/local/bin/pm2'
+#     state: link
 
 - name: Create Symlink for PM2
   file:
