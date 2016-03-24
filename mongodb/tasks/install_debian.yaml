@@ -41,3 +41,9 @@
     state: present
   when:
     - ansible_distribution == 'Ubuntu'
+
+- name: Add to Hosts file
+  lineinfile:
+    line: '{{ mongodb_primary_ip }}     {{ mongodb_primary_name }}'
+    insertafter: EOF
+    dest: '/etc/hosts'
