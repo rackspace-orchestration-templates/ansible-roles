@@ -21,3 +21,5 @@
   with_items:
   - mariadb-server
   - python-mysqldb
+
+- include_vars: Debian.yml

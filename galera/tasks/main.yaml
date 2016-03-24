@@ -1,9 +1,15 @@
 ---
-- include: install_ubuntu.yaml
+- include: install_ubuntu.yml
   when: ansible_distribution == "Ubuntu"
 
-- include: configure_ubuntu.yaml
-  when: ansible_distribution == "Ubuntu"
+- include: install_redhat.yml
+  when: ansible_os_family == 'RedHat'
 
-- include: configure_master.yaml
+- include: configure_debian.yml
+  when: ansible_os_family == 'Debian'
+
+- include: configure_redhat.yml
+  when: ansible_os_family == 'RedHat'
+
+- include: configure_master.yml
   when: galera_role == 'master'

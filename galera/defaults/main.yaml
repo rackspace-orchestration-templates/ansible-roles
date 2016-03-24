@@ -1,6 +1,4 @@
 ---
-galera_provider: '/usr/lib/galera/libgalera_smm.so'
-
 galera_root_password: 'password'
 
 galera_debian_maint_pass: 'password'
@@ -25,7 +23,7 @@ galera_dbs: [
 ]
 
 galera_master_ip: '127.0.0.1'
-galera_ip: '127.0.0.1'
+galera_ip: '{{ ansible_eth1.ipv4.address }}'
 
 galera_nodes: []
 

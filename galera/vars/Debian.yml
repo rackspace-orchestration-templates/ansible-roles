@@ -1,0 +1,4 @@
+---
+galera_mycnf_path: '/etc/mysql/my.cnf'
+
+galera_provider: '/usr/lib/galera/libgalera_smm.so'

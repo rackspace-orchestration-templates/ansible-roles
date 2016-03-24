@@ -1,0 +1,16 @@
+---
+- name: Create Galera Databases
+  mysql_db:
+    name: '{{ item }}'
+    state: present
+  with_items: galera_dbs
+
+- name: Create Galera Users
+  mysql_user:
+    name: '{{ item[0].name }}'
+    password: '{{ item[0].password }}'
+    priv: '{{ item[0].privs }}'
+    host: '{{ item[1] }}'
+  with_subelements:
+    - galera_users
+    - hosts

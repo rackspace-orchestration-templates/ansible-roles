@@ -4,10 +4,26 @@
     name: mysql
     state: started
 
+- name: Ensure /etc/mysql/ exists
+  file:
+    path: '/etc/mysql'
+    state: directory
+
+- name: Ensure /etc/mysql/conf.d/ exists
+  file:
+    path: '/etc/mysql/conf.d'
+    state: directory
+
+- name: Check if .configured is set
+  stat:
+    path: '/etc/mysql/.configured'
+  register: galera_configured
+
 - name: Set Root Password
   mysql_user:
     name: root
     password: '{{ galera_root_password }}'
+  when: not galera_configured.stat.exists
 
 - name: Configure .my.cnf
   template:
@@ -18,6 +34,13 @@
   mysql_user:
     name: debian-sys-maint
     password: '{{ galera_debian_maint_pass }}'
+  when:
+    - not galera_configured.stat.exists
+
+- name: Create .configured file
+  file:
+    path: '/etc/mysql/.configured'
+    state: touch
 
 - name: Configure 'debian.cnf'
   template:
@@ -31,8 +54,8 @@
 
 - name: Configure 'my.cnf'
   template:
-    src: 'Common/my.cnf.j2'
-    dest: '/etc/mysql/my.cnf'
+    src: 'Debian/my.cnf.j2'
+    dest: '{{ galera_mycnf_path }}'
 
 - name: Start Galera (Master)
   service:
