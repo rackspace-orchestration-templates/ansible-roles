@@ -73,6 +73,7 @@
     password: '{{ item[0].password }}'
     priv: '{{ item[0].privs }}'
     host: '{{ item[1] }}'
+    append_privs: yes
   with_subelements:
     - mysql_users
     - hosts
