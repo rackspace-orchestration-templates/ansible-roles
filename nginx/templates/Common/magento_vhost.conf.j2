@@ -75,7 +75,6 @@ server {
   location ~ ^/(php-status|ping)$ {
     access_log off;
     allow 127.0.0.1;
-    allow {{ ansible_eth0["ipv4"]["address"] }};
     deny all;
     include fastcgi_params;
     fastcgi_pass $phpfpm_upstream;
