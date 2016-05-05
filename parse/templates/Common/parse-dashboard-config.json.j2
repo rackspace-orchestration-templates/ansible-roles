@@ -1,10 +1,10 @@
 {
   "apps": [
     {
-      "serverURL": "https://{{ nginx_vhost_str }}/parse",
-      "appId": "your_application_id",
-      "masterKey": "your_master_key",
-      "appName": "Your Application"
+      "serverURL": "https://{{ nginx_vhost_str }}/{{ parse_short_name }}",
+      "appId": "{{ parse_application_id }}"",
+      "masterKey": "{{ parse_master_key }}",
+      "appName": "{{ parse_app_name }}"
     }
   ]
 }

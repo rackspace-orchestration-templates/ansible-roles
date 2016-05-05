@@ -38,6 +38,7 @@
   template:
     src: 'Common/{{ item.template }}_vhost.conf.j2'
     dest: '/etc/nginx/conf.d/{{ item.name }}.conf'
+    force: nginx_overwrite
   with_items: nginx_vhosts
   when: nginx_vhosts is defined
 

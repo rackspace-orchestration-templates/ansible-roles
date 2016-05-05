@@ -23,16 +23,16 @@ server {
         ssl_prefer_server_ciphers on;
         ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
 
-        # Pass requests for /parse/ to Parse Server instance at localhost:1337
-        location /parse/ {
-                proxy_set_header X-Real-IP $remote_addr;
-                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                proxy_set_header X-NginX-Proxy true;
-                proxy_pass http://localhost:1337/parse/;
-                proxy_ssl_session_reuse off;
-                proxy_set_header Host $http_host;
-                proxy_redirect off;
-        }
+        #PARSE
+#        location /parse/ {
+#                proxy_set_header X-Real-IP $remote_addr;
+#                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#                proxy_set_header X-NginX-Proxy true;
+#                proxy_pass http://localhost:1337/parse/;
+#                proxy_ssl_session_reuse off;
+#                proxy_set_header Host $http_host;
+#                proxy_redirect off;
+#        }
 
         location / {
                 proxy_set_header X-Real-IP $remote_addr;

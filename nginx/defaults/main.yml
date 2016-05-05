@@ -9,6 +9,7 @@ nginx_vhost_str: 'example.com'
 nginx_vhost_template: 'default'
 nginx_vhost_phpmyadmin: "false"
 nginx_lb_nodes: ['127.0.0.1']
+nginx_overwrite: true
 nginx_vhosts: [
   {
     name: '{{ nginx_vhost_str }}',

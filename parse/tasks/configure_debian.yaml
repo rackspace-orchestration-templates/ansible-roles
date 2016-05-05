@@ -51,7 +51,7 @@
 - name: Create 'ecosystem.json'
   template:
     src: 'Common/ecosystem.json.j2'
-    dest: '/home/{{ parse_user }}/ecosystem.json'
+    dest: '/home/{{ parse_user }}/{{ parse_short_name }}.json'
     owner: '{{ parse_user }}'
     force: no
 
@@ -59,7 +59,7 @@
   become: yes
   become_user: '{{ parse_user }}'
   shell:
-    'pm2 start ~/ecosystem.json'
+    'pm2 start ~/{{ parse_short_name }}.json'
 
 - name: Save pm2
   become: yes
@@ -72,6 +72,24 @@
   become_user: 'root'
   shell:
     'pm2 startup ubuntu -u {{ parse_user }} --hp /home/{{ parse_user }}'
+
+- name: Add to nginx vhost configuration
+  blockinfile:
+    backup: yes
+    dest: /etc/nginx/conf.d/{{ ngnix_vhost_str }}.conf
+    marker: '# {mark} ANSIBLE MANAGED BLOCK - {{ parse_short_name }}'
+    insertafter: '#PARSE'
+    block: |
+              location /{{ parse_short_name }}/ {
+                      proxy_set_header X-Real-IP $remote_addr;
+                      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                      proxy_set_header X-NginX-Proxy true;
+                      proxy_pass http://localhost:{{ parse_port }}/parse/;
+                      proxy_ssl_session_reuse off;
+                      proxy_set_header Host $http_host;
+                      proxy_redirect off;
+              }
+    state: present
 
 - name: Configure Upstart for Parse Dashboard
   template:
@@ -88,6 +106,7 @@
     dest: '/home/{{ parse_user }}/parse-dashboard-config.json'
     owner: '{{ parse_user }}'
     group: '{{ parse_user }}'
+    force: no
 
 - name: Start Parse Dashboard
   service:

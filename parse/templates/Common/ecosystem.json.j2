@@ -1,6 +1,6 @@
 {
   "apps" : [{
-    "name"        : "parse-wrapper",
+    "name"        : "{{ parse_application_name }}",
     "script"      : "/usr/local/bin/parse-server",
     "watch"       : true,
     "merge_logs"  : true,
@@ -18,6 +18,7 @@
       "PARSE_SERVER_FILE_KEY": "{{ parse_file_key }}",
       "PARSE_SERVER_FACEBOOK_APP_IDS": "{{ parse_facebook_app_ids }}",
       "PARSE_MOUNT": "/1",
+      "PORT": "{{ parse_port }}",
     }
   }]
 }

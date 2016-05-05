@@ -37,3 +37,6 @@ parse_facebook_app_ids: ""
 parse_git_key: 'Insert deploy key here'
 parse_git_repo: 'https://github.com/ParsePlatform/AnyBlog.git'
 parse_git_version: 'HEAD'
+parse_app_name: 'Your Application'
+parse_short_name: "parse"
+parse_port: 1337
