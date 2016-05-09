@@ -76,7 +76,7 @@
 - name: Add to nginx vhost configuration
   blockinfile:
     backup: yes
-    dest: /etc/nginx/conf.d/{{ ngnix_vhost_str }}.conf
+    dest: /etc/nginx/conf.d/{{ nginx_vhost_str }}.conf
     marker: '# {mark} ANSIBLE MANAGED BLOCK - {{ parse_short_name }}'
     insertafter: '#PARSE'
     block: |
