@@ -3,8 +3,5 @@
   template:
     src: Common/nrsysmond.cfg.j2
     dest: /etc/newrelic/nrsysmond.cfg
-
-- name: Start NewRelic
-  service:
-    name: newrelic-sysmond
-    state: restarted
+  notify:
+    - Restart NewRelic
