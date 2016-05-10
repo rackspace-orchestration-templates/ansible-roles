@@ -118,7 +118,7 @@
     backup: yes
     dest: '/home/{{ parse_user }}/parse-dashboard-config.json'
     marker: '# {mark} ANSIBLE MANAGED BLOCK - {{ parse_short_name }}'
-    insertafter: '"apps": ['
+    insertafter: '\"apps\"\: \['
     block: |
         {
           "serverURL": "https://{{ nginx_vhost_str }}/{{ parse_short_name }}",
