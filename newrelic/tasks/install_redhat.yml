@@ -1,0 +1,9 @@
+---
+- name: Configure Repository
+  yum:
+    name: 'https://yum.newrelic.com/pub/newrelic/el5/x86_64/newrelic-repo-5-3.noarch.rpm'
+
+- name: Install NewRelic Agent
+  yum:
+    name: newrelic-sysmond
+    state: present
