@@ -3,3 +3,11 @@
   template:
     src: 'Common/ports.conf.j2'
     dest: '/etc/{{ apache_pkg }}/ports.conf'
+
+- name: Configure default welcome pages
+  template:
+    src: 'Common/index.html.j2'
+    dest: '/etc/httpd/vhost.d/{{ item.name }}/index.html'
+  with_items:
+    apache_vhosts
+  when: apache_vhosts is defined
