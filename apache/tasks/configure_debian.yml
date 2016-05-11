@@ -86,3 +86,11 @@
   with_items:
     apache_vhosts
   when: apache_vhosts is defined
+
+- name: Configure default welcome pages
+  template:
+    src: 'Common/index.html.j2'
+    dest: '/etc/httpd/vhost.d/{{ item.name }}/index.html'
+  with_items:
+    apache_vhosts
+  when: apache_vhosts is defined
