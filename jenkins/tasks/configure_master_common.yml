@@ -35,4 +35,4 @@
 
 - name: Wait for Jenkins to initialize
   wait_for:
-    timeout: 30
+    timeout: 60
