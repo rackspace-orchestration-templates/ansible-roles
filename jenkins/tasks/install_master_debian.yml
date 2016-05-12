@@ -15,7 +15,7 @@
 
 - name: Add Jenkins repository
   apt_repository:
-    repo: 'deb http://pkg.jenkins-ci.org/debian binary/'
+    repo: 'deb http://pkg.jenkins-ci.org/debian-stable binary/'
     state: present
 
 - name: Install Java
