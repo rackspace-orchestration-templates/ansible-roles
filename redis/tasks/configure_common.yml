@@ -72,3 +72,4 @@
   service:
     name: redis-server
     state: stopped
+  ignore_errors: yes
