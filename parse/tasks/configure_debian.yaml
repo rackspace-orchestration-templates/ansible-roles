@@ -59,7 +59,7 @@
   become: yes
   become_user: 'root'
   shell:
-    'pm2 startup ubuntu -u {{ parse_user }} --hp /home/{{ parse_user }}'
+    'pm2 startup ubuntu -u {{ parse_user }} --hp /home/{{ parse_user }} >& /dev/null'
 
 - name: Start pm2
   become: yes
