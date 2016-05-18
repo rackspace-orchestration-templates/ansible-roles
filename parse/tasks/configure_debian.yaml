@@ -108,7 +108,7 @@
 - name: Create example configuration for Parse Dashboard
   template:
     src: 'Common/parse-dashboard-config.json.j2'
-    dest: '/home/{{ parse_user }}/parse-dashboard-config.json'
+    dest: '/home/{{ parse_user }}/parse-dashboard-config.json.ansible'
     owner: '{{ parse_user }}'
     group: '{{ parse_user }}'
     force: no
@@ -117,17 +117,22 @@
 - name: Add to Parse Dashboard Configuration
   blockinfile:
     backup: yes
-    dest: '/home/{{ parse_user }}/parse-dashboard-config.json'
-    marker: '# {mark} ANSIBLE MANAGED BLOCK - {{ parse_short_name }}'
-    insertafter: '\"apps\"\: \['
-    block: |
+    dest: '/home/{{ parse_user }}/parse-dashboard-config.json.ansible'
+    marker: '# {mark} ANSIBLE MANAGED - {{ parse_app_name }}'
+    insertafter: 'apps'
+    block: '
         {
           "serverURL": "https://{{ nginx_vhost_str }}/{{ parse_short_name }}",
           "appId": "{{ parse_application_id }}",
           "masterKey": "{{ parse_master_key }}",
           "appName": "{{ parse_app_name }}"
         },
-  when: !new_config.changed
+        '
+  when: not new_config.changed
+
+- name: Generate Final Parse Dashboard Configuration
+  shell:
+    "grep -o '^[^#]*' /home/{{ parse_user }}/parse-dashboard-config.json.ansible > /home/{{ parse_user }}/parse-dashboard-config.json"
 
 - name: Start Parse Dashboard
   service:
