@@ -112,6 +112,7 @@
     owner: '{{ parse_user }}'
     group: '{{ parse_user }}'
     force: no
+  register: new_config
 
 - name: Add to Parse Dashboard Configuration
   blockinfile:
@@ -126,6 +127,7 @@
           "masterKey": "{{ parse_master_key }}",
           "appName": "{{ parse_app_name }}"
         },
+  when: !new_config.changed
 
 - name: Start Parse Dashboard
   service:
