@@ -55,6 +55,12 @@
     owner: '{{ parse_user }}'
     force: no
 
+- name: Run 'parse-server' via PM2 on startup
+  become: yes
+  become_user: 'root'
+  shell:
+    'pm2 startup ubuntu -u {{ parse_user }} --hp /home/{{ parse_user }}'
+
 - name: Start pm2
   become: yes
   become_user: '{{ parse_user }}'
@@ -66,12 +72,6 @@
   become_user: '{{ parse_user }}'
   shell:
     'pm2 save'
-
-- name: Run 'parse-server' via PM2 on startup
-  become: yes
-  become_user: 'root'
-  shell:
-    'pm2 startup ubuntu -u {{ parse_user }} --hp /home/{{ parse_user }}'
 
 - name: Add to nginx vhost configuration
   blockinfile:
