@@ -1,11 +1,25 @@
 ---
-- name: Ensure Plugins Directory Exists
+- name: Ensure Rackspace Monitoring Agent Directories Exist
   file:
-    path: '/usr/lib/rackspace-monitoring-agent/plugins/'
+    path: '{{ item }}'
     state: directory
+    owner: root
+    group: root
+  with_items:
+    - '/etc/rackspace-monitoring-agent.conf.d/'
+    - '/usr/lib/rackspace-monitoring-agent/plugins/'
+
+- name: Copy holland_mysqldump.yaml
+  template:
+    src: 'Common/holland_mysqldump.yaml.j2'
+    dest: '/etc/rackspace-monitoring-agent.conf.d/holland_mysqldump.yaml'
+  notify: Restart Monitoring Agent
 
 - name: Download Monitoring Script
   get_url:
     url: 'https://raw.github.rackspace.com/ManagedCloud/mckick/master/cookbooks/holland/files/default/holland_monitor.py'
     dest: '/usr/lib/rackspace-monitoring-agent/plugins/holland_monitor.py'
     mode: 0755
+    owner: root
+    group: root
+  notify: Restart Monitoring Agent
