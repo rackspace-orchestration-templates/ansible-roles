@@ -13,7 +13,7 @@ php_modules: [
 
 php_modules_pecl: [
 'lzf',
-'redis',
+'redis-2.2.8.tar',
 'memcache',
 'zendopcache-7.0.4'
 ]
