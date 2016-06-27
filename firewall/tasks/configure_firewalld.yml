@@ -18,37 +18,37 @@
 - name: Configure Global Rules
   shell: 'firewall-cmd --add-rich-rule="rule family=\"ipv4\" source address=\"{{ item.split(",")[0] }}/{{ item.split(",")[1] }}\" port port=\"{{ item.split(",")[2] }}\" protocol=\"{{ item.split(",")[3] }}\" accept"'
   with_items: firewall_global_rules
-  when: not firewalld_enabled
+  when: not firewalld_enabled|failed
 
 - name: Configure Permanent Global Rules
   shell: 'firewall-cmd --permanent --add-rich-rule="rule family=\"ipv4\" source address=\"{{ item.split(",")[0] }}/{{ item.split(",")[1] }}\" port port=\"{{ item.split(",")[2] }}\" protocol=\"{{ item.split(",")[3] }}\" accept"'
   with_items: firewall_global_rules
-  when: not firewalld_enabled
+  when: not firewalld_enabled|failed
 
 - name: Configure Node-Specific Rules
   shell: 'firewall-cmd --add-rich-rule="rule family=\"ipv4\" source address=\"{{ item[0] }}/{{ item[1].split(",")[0] }}\" port port=\"{{ item[1].split(",")[1] }}\" protocol=\"{{ item[1].split(",")[2] }}\" accept"'
   with_nested:
   - firewall_nodes
   - firewall_node_rules
-  when: not firewalld_enabled
+  when: not firewalld_enabled|failed
 
 - name: Configure Permanent Node-Specific Rules
   shell: 'firewall-cmd --permanent --add-rich-rule="rule family=\"ipv4\" source address=\"{{ item[0] }}/{{ item[1].split(",")[0] }}\" port port=\"{{ item[1].split(",")[1] }}\" protocol=\"{{ item[1].split(",")[2] }}\" accept"'
   with_nested:
   - firewall_nodes
   - firewall_node_rules
-  when: not firewalld_enabled
+  when: not firewalld_enabled|failed
 
 - name: Allow All Traffic From Nodes
   shell: 'firewall-cmd --add-rich-rule="rule family=\"ipv4\" source address=\"{{ item }}/32\" accept"'
   with_items: firewall_nodes
   when:
     - firewall_node_allow_all or firewall_node_allow_all == 'True'
-    - not firewalld_enabled
+    - not firewalld_enabled|failed
 
 - name: Allow All Traffic From Nodes - Permanent
   shell: 'firewall-cmd --permanent --add-rich-rule="rule family=\"ipv4\" source address=\"{{ item }}/32\" accept"'
   with_items: firewall_nodes
   when:
     - firewall_node_allow_all or firewall_node_allow_all == 'True'
-    - not firewalld_enabled
+    - not firewalld_enabled|failed
