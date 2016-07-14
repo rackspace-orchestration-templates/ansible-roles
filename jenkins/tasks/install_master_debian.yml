@@ -31,7 +31,12 @@
 #     name: jenkins
 #     state: present
 
+- name: Download Jenkins DEB
+  get_url:
+    url: '{{ jenkins_deb }}'
+    dest: '/tmp/jenkins.deb'
+
 - name: Install Jenkins
   apt:
-    deb: '{{ jenkins_deb }}'
+    deb: '/tmp/jenkins.deb'
     state: present
