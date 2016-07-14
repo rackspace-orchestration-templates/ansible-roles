@@ -8,6 +8,9 @@ jenkins_ip: ""
 jenkins_port: ""
 jenkins_args: ""
 
+jenkins_deb: 'http://pkg.jenkins-ci.org/debian-stable/binary/jenkins_1.651.3_all.deb'
+jenkins_rpm: 'http://pkg.jenkins-ci.org/redhat-stable/jenkins-1.651.3-1.1.noarch.rpm'
+
 jenkins_plugins: ["credentials",
 "ssh-credentials",
 "scm-api",
