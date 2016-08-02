@@ -7,9 +7,3 @@
     name: '{{ item }}'
     state: present
   with_items: wordpress_dependencies
-
-- name: Create .my.cnf
-  template:
-    backup: yes
-    dest: ~root/.my.cnf
-    src: my.cnf.j2
