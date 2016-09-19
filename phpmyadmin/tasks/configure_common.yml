@@ -3,3 +3,4 @@
   template:
     src: 'Common/config.inc.php.j2'
     dest: '{{ phpmyadmin_config }}'
+    mode: '654'
