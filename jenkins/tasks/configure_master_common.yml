@@ -15,17 +15,22 @@
     state: present
 
 - name: Generate Jenkins Password
-  shell: import bcrypt; bcrypt.hashpw('{{ jenkins_admin_pass }}', bcrypt.gensalt(10))
+  shell: python -c "import bcrypt; print(bcrypt.hashpw('{{ jenkins_admin_pass }}', bcrypt.gensalt(10)))"
   register: jenkins_password_crypt
 
 - name: Generate Jenkins API key
-  shell: import os; import hashlib; hashlib.sha256(os.urandom(128)).hexdigest()
+  shell: python -c "import os; import hashlib; print(hashlib.sha256(os.urandom(128)).hexdigest())"
   register: jenkins_api_key
 
 - name: Configure Jenkins Admin User
   template:
-    src: 'Common/config.xml.j2'
+    src: 'Common/user_config.xml.j2'
     dest: '/var/lib/jenkins/users/admin/config.xml'
+
+- name: Enable Jenkins CLI
+  template:
+    src: 'Common/jenkins_config.xml.j2'
+    dest: '/var/lib/jenkins/config.xml'
 
 - name: Restart Jenkins
   service:
@@ -43,7 +48,7 @@
 
 - name: Install Jenkins Plugins
   shell:
-    'java -jar {{ jenkins_cli }} -s {{ jenkins_url }} install-plugin {{ item }}'
+    'java -jar {{ jenkins_cli }} -s {{ jenkins_url }} install-plugin {{ item }} --username admin --password {{ jenkins_admin_pass }}'
   with_items: jenkins_plugins
 
 - name: Restart Jenkins
