@@ -22,6 +22,14 @@
   shell: python -c "import os; import hashlib; print(hashlib.sha256(os.urandom(128)).hexdigest())"
   register: jenkins_api_key
 
+- name: Ensure Jenkins Admin User Directory exists
+  file:
+    path: '/var/lib/jenkins/users/admin'
+    state: present
+    owner: jenkins
+    group: jenkins
+    state: directory
+
 - name: Configure Jenkins Admin User
   template:
     src: 'Common/user_config.xml.j2'
