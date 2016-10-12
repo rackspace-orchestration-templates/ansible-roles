@@ -15,7 +15,7 @@
     state: present
 
 - name: Generate Jenkins Password
-  shell: python -c "import bcrypt; print(bcrypt.hashpw('{{ jenkins_admin_pass }}', bcrypt.gensalt(10)))"
+  shell: python -c "import bcrypt; print(bcrypt.hashpw('{{ jenkins_admin_pass }}', bcrypt.gensalt(10, prefix=b'2a')))"
   register: jenkins_password_crypt
 
 - name: Generate Jenkins API key
