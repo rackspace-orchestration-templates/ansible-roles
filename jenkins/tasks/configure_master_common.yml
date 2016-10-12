@@ -9,6 +9,24 @@
     src: 'Common/jenkins.model.JenkinsLocationConfiguration.xml.j2'
     dest: '/var/lib/jenkins/jenkins.model.JenkinsLocationConfiguration.xml'
 
+- name: Install Python BCrypt
+  pip:
+    name: bcrypt
+    state: present
+
+- name: Generate Jenkins Password
+  shell: import bcrypt; bcrypt.hashpw('{{ jenkins_admin_pass }}', bcrypt.gensalt(10))
+  register: jenkins_password_crypt
+
+- name: Generate Jenkins API key
+  shell: import os; import hashlib; hashlib.sha256(os.urandom(128)).hexdigest()
+  register: jenkins_api_key
+
+- name: Configure Jenkins Admin User
+  template:
+    src: 'Common/config.xml.j2'
+    dest: '/var/lib/jenkins/users/admin/config.xml'
+
 - name: Restart Jenkins
   service:
     name: jenkins
