@@ -6,7 +6,7 @@ After=network.target
 WorkingDirectory=/home/jenkins
 User=jenkins
 
-ExecStart=/usr/bin/java -jar swarm.jar -autoDiscoveryAddress {{ jenkins_ip }} --username {{ swarm_user }} --password {{ swarm_password }}
+ExecStart=/usr/bin/java -jar swarm.jar -autoDiscoveryAddress {{ jenkins_ip }} --username swarm --password {{ swarm_password }}
 Restart=on-failure
 
 [Install]
