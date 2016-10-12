@@ -58,6 +58,10 @@
     'java -jar {{ jenkins_cli }} -s {{ jenkins_url }} install-plugin {{ item }} --username admin --password {{ jenkins_admin_pass }}'
   with_items: jenkins_plugins
 
+- name: Configure Swarm User
+  shell: |
+    echo 'jenkins.model.Jenkins.instance.securityRealm.createAccount("swarm", "swarmtest")' | java -jar {{ jenkins_cli }} -s {{ jenkins_url }} groovy = --username admin --password {{ jenkins_admin_pass }}'
+
 - name: Restart Jenkins
   service:
     name: jenkins
