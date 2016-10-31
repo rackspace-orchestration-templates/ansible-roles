@@ -10,4 +10,4 @@ setuid jenkins
 respawn
 respawn limit 20 5
 
-exec /usr/bin/java -jar swarm.jar -autoDiscoveryAddress {{ jenkins_ip }}
+exec /usr/bin/java -jar swarm.jar -autoDiscoveryAddress {{ jenkins_ip }} -username swarm -password {{ swarm_password }}
