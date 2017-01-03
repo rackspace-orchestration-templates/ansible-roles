@@ -21,6 +21,7 @@
 - name: Configure Backups
   cron:
     job: 'gitlab-rake gitlab:backup:create'
+    minute: '0'
     hour: '0'
     name: 'GitLab Backup'
     state: present
