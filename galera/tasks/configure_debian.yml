@@ -63,6 +63,7 @@
     regexp: '^safe_to_bootstrap: 0$'
     replace: 'safe_to_bootstrap: 1'
     backup: yes
+  ignore_errors: yes
 
 - name: Start Galera (Master)
   service:
