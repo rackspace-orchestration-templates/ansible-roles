@@ -57,6 +57,13 @@
     src: 'Debian/my.cnf.j2'
     dest: '{{ galera_mycnf_path }}'
 
+- name: Configure 'safe_to_bootstrap'
+  replace:
+    dest: '/var/lib/mysql/grastate.dat'
+    regexp: '^safe_to_bootstrap: 0$'
+    replace: 'safe_to_bootstrap: 1'
+    backup: yes
+
 - name: Start Galera (Master)
   service:
     name: mysql
