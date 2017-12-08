@@ -1,18 +1,12 @@
 ---
-- name: Install libselinux-python
+- name: Install packages
   yum:
-    name: libselinux-python
+    pkg: "{{ item }}"
     state: present
-
-- name: Configure EPEL Repository
-  yum:
-    name: epel-release
-    state: present
- 
-- name: Install NTPD
-  yum:
-    name: ntp
-    state: present
+  with_items:
+    - libselinux-python
+    - epel-release
+    - ntp
 
 - name: Set NTP Service Fact
   set_fact:
