@@ -1,32 +1,31 @@
 ---
-php_modules: [
-'libapache2-mod-php5',
-'php5',
-'php5-fpm',
-'php5-dev',
-'php5-imap',
-'php5-gd',
-'php5-mysql',
-'php5-mcrypt',
-'php5-xmlrpc'
-]
+php_modules:
+  - libapache2-mod-php5
+  - php5
+  - php5-fpm
+  - php5-dev
+  - php5-imap
+  - php5-gd
+  - php5-mysql
+  - php5-mcrypt
+  - php5-xmlrpc
 
-php_modules_pecl: [
-'lzf',
-'redis-2.2.8.tar',
-'memcache',
-'zendopcache-7.0.4'
-]
+php_modules_pecl:
+  - lzf
+  - redis-2.2.8.tar
+  - memcache
+  - zendopcache-7.0.4
 
-php_modules_config: [
-{ src: 'php.ini.j2', dest: '/etc/php.ini' },
-{ src: 'opcache.ini.j2', dest: '{{ php_modules_config_root }}/opcache.ini' },
-{ src: 'redis.ini.j2', dest: '{{ php_modules_config_root }}/redis.ini' }
-]
+php_modules_config:
+  - src: php.ini.j2
+    dest: '/etc/php.ini'
+  - src: opcache.ini.j2
+    dest: "{{ php_modules_config_root }}/opcache.ini"
+  - src: redis.ini.j2
+    dest: "{{ php_modules_config_root }}/redis.ini' }"
 
 php_modules_config_root: '/etc/php5/mods-available'
 
-php_modules_enable: [
-'mcrypt',
-'redis'
-]
+php_modules_enable:
+  - mcrypt
+  - redis

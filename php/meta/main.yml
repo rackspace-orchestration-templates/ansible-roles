@@ -1,5 +1,4 @@
 ---
 dependencies:
-  - { role: common }
-  - { role: ius }
-
+  - role: common
+  - role: ius

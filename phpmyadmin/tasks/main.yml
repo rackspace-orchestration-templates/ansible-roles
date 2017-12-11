@@ -1,13 +1,13 @@
 ---
 - include: install_debian.yml
-  when: (ansible_os_family == 'Debian') and (phpmyadmin_install == 'True')
+  when: ansible_os_family == 'Debian' and phpmyadmin_install == 'True'
 
-- include: install_redhat.yml
-  when: (ansible_os_family == 'RedHat') and (phpmyadmin_install == 'True')
+- include: install_configure_redhat.yml
+  when: ansible_os_family == 'RedHat' and phpmyadmin_install == 'True'
 
-- include: configure_redhat.yml
-  when: (ansible_os_family == 'RedHat') and (phpmyadmin_install == 'True')
-
-- include: configure_common.yml
+- name: Copy PHPMyAdmin Configuration
+  template:
+    src: "Common/config.inc.php.j2"
+    dest: "{{ phpmyadmin_config }}"
+    mode: 654
   when: phpmyadmin_install == 'True'
-

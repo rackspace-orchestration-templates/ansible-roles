@@ -70,7 +70,6 @@
 User www-data
 Group www-data
 
-#ServerRoot "/etc/apache2"
 ServerRoot "/etc/apache2"
 
 #
@@ -173,9 +172,6 @@ Include /etc/apache2/ports.conf
 #	Require all granted
 #</Directory>
 
-
-
-
 # AccessFileName: The name of the file to look for in each directory
 # for additional configuration directives.  See also the AllowOverride
 # directive.
@@ -189,7 +185,6 @@ AccessFileName .htaccess
 <FilesMatch "^\.ht">
 	Require all denied
 </FilesMatch>
-
 
 #
 # The following directives define some format nicknames for use with
