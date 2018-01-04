@@ -4,6 +4,6 @@
 
 - name: Install PHP packages
   yum:
-    name: '{{ item }}'
+    name: "{{ item }}"
     state: present
-  with_items: php_modules
+  with_items: "{{ php_modules }}"
