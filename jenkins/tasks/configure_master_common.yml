@@ -56,7 +56,7 @@
 - name: Install Jenkins Plugins
   shell:
     'java -jar {{ jenkins_cli }} -s {{ jenkins_url }} install-plugin {{ item }} --username admin --password {{ jenkins_admin_pass }}'
-  with_items: jenkins_plugins
+  with_items: '{{ jenkins_plugins }}'
 
 - name: Configure Swarm User
   shell: |
