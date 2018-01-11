@@ -3,23 +3,23 @@
   template:
     src: 'Debian/initd_instance.j2'
     dest: '/etc/init.d/redis-{{ item.name }}'
-  with_items: redis_instances
+  with_items: '{{ redis_instances }}'
 
 - name: Configure upstart scripts
   template:
     src: 'Debian/upstart_instance.j2'
     dest: '/etc/init/redis-{{ item.name }}.conf'
-  with_items: redis_instances
+  with_items: '{{ redis_instances }}'
   when: ansible_distribution == 'Ubuntu'
 
 - name: Start Redis instances
   service:
     name: "redis-{{ item.name }}"
     state: started
-  with_items: redis_instances
+  with_items: '{{ redis_instances }}'
 
 - name: Enable Redis instances
   service:
     name: "redis-{{ item.name }}"
     enabled: yes
-  with_items: redis_instances
+  with_items: '{{ redis_instances }}'

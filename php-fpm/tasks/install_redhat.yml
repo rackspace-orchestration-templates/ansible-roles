@@ -16,4 +16,4 @@
   yum:
     name: '{{ item }}'
     state: present
-  with_items: phpfpm_pkgs
+  with_items: '{{ phpfpm_pkgs }}'

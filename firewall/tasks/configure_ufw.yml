@@ -27,7 +27,7 @@
   register: ufw_output
   changed_when: '"Rules updated" in ufw_output.stdout'
   failed_when: '"ERROR" in ufw_output.stdout'
-  with_items: firewall_global_rules
+  with_items: '{{ firewall_global_rules }}'
 
 - name: Add Node-Specific Rules
   shell: 'ufw allow from {{ item[0] }}/{{ item[1].split(",")[0] }} to any port {{ item[1].split(",")[1] }} proto {{ item[1].split(",")[2] }}'
@@ -35,13 +35,13 @@
   changed_when: '"Rules updated" in ufw_output.stdout'
   failed_when: '"ERROR" in ufw_output.stdout'
   with_nested:
-  - firewall_nodes
-  - firewall_node_rules
+  - '{{ firewall_nodes }}'
+  - '{{ firewall_node_rules }}'
 
 - name: Allow All Traffic From Nodes
   shell: 'ufw allow from {{ item }}'
   register: ufw_output
   changed_when: '"Rules updated" in ufw_output.stdout'
   failed_when: '"ERROR" in ufw_output.stdout'
-  with_items: firewall_nodes
+  with_items: '{{ firewall_nodes }}'
   when: firewall_node_allow_all or firewall_node_allow_all == 'True'
