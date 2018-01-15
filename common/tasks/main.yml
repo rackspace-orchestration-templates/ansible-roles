@@ -1,8 +1,8 @@
 ---
-- include: install_debian.yml
+- include_tasks: install_debian.yml
   when: ansible_os_family == 'Debian'
 
-- include: install_redhat.yml
+- include_tasks: install_redhat.yml
   when: ansible_os_family == 'RedHat'
 
 - name: Enable NTPD
