@@ -1,30 +1,21 @@
 ---
 galera_root_password: 'password'
-
-galera_debian_maint_pass: 'password'
-
 galera_default_user: example
 galera_default_user_password: example
 galera_default_database: example
-
 galera_role: 'master'
 
-galera_users: [
-  {
-    name: '{{ galera_default_user }}',
-    password: '{{ galera_default_user_password }}',
-    privs: '{{ galera_default_database }}.*:ALL',
-    hosts: ['%']
-  }
-]
+galera_users:
+  - name: '{{ galera_default_user }}'
+    password: '{{ galera_default_user_password }}'
+    privs: '{{ galera_default_database }}.*:ALL'
+    hosts:
+      - '%'
 
-galera_dbs: [
-  '{{ galera_default_database }}'
-]
+galera_dbs:
+  - '{{ galera_default_database }}'
 
 galera_master_ip: '127.0.0.1'
 galera_ip: '{{ ansible_eth1.ipv4.address }}'
-
 galera_nodes: []
-
 galera_version: '10.1'

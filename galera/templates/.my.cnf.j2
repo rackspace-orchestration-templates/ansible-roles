@@ -1,0 +1,5 @@
+[client]
+user = root
+password = {{ galera_root_password }}
+host = localhost
+{%- if ansible_os_family == 'Debian' %}socket = /var/run/mysqld/mysqld.sock{% endif %}

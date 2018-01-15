@@ -1,0 +1,86 @@
+---
+- name: Start MySQL
+  service:
+    name: mysql
+    state: started
+
+- name: Ensure /etc/mysql/ exists
+  file:
+    path: '/etc/mysql'
+    state: directory
+
+- name: Ensure /etc/mysql/conf.d/ exists
+  file:
+    path: '/etc/mysql/conf.d'
+    state: directory
+
+- name: Check if .configured is set
+  stat:
+    path: '/etc/mysql/.configured'
+  register: galera_configured
+
+- name: Set Root Password
+  mysql_user:
+    name: root
+    password: "{{ galera_root_password }}"
+  when: not galera_configured.stat.exists
+
+- name: Configure .my.cnf
+  template:
+    src: '.my.cnf.j2'
+    dest: '/root/.my.cnf'
+
+- name: Create .configured file
+  file:
+    path: '/etc/mysql/.configured'
+    state: touch
+
+- name: Stop MySQL
+  service:
+    name: mysql
+    state: stopped
+
+- name: Configure 'server.cnf' RedHat
+  template:
+    src: 'RedHat/my.cnf.j2'
+    dest: "{{ galera_mycnf_path }}"
+  when: ansible_os_family == 'RedHat'
+
+- name: Configure 'my.cnf' Debian
+  template:
+    src: 'Debian/my.cnf.j2'
+    dest: "{{ galera_mycnf_path }}"
+  when: ansible_os_family == 'Debian'
+
+- name: Start Galera (Master) (Trusty)
+  command:
+    'service mysql start --wsrep-new-cluster'
+  when: galera_role == 'master' and ansible_os_family == 'Debian' and ansible_distribution_release == 'trusty'
+
+- name: Start Galera (Master) (CentOS and Xenial)
+  command:
+    'galera_new_cluster'
+  when: galera_role == 'master' and ansible_os_family == 'Debian' and ansible_distribution_release != 'trusty'
+
+- name: Start Galera (Secondary)
+  service:
+    name: mysql
+    state: started
+
+- name: Create Galera Databases on Master
+  mysql_db:
+    name: "{{ item }}"
+    state: present
+  with_items: galera_dbs
+  when: galera_role == 'master'
+
+- name: Create Galera Users on Master
+  mysql_user:
+    name: "{{ item.0.name }}"
+    password: "{{ item.0.password }}"
+    priv: "{{ item.0.privs }}"
+    host: "{{ item.1 }}"
+  with_subelements:
+    - "{{ galera_users }}"
+    - hosts
+  when: galera_role == 'master'
