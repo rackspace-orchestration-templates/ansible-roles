@@ -1,0 +1,53 @@
+---
+# RedHat Install
+- name: Add MariaDB Repository
+  template:
+    src: 'mariadb.repo.j2'
+    dest: '/etc/yum.repos.d/mariadb.repo'
+  when: ansible_os_family == 'RedHat'
+
+- name: Install Galera
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - mariadb-server
+    - mariadb
+    - MySQL-python
+  when: ansible_os_family == 'RedHat'
+
+# Ubuntu Install
+- name: Install software-properties-common
+  apt:
+    name: software-properties-common
+    state: present
+    update_cache: yes
+  when: ansible_os_family == 'Debian'
+
+- name: Add Repository Key (Trusty)
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: '0xcbcb082a1bb943db'
+  when: ansible_os_family == 'Debian' and ansible_distribution_release == 'trusty'
+
+- name: Add Repository Key (Xenial)
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: '0xF1656F24C74CD1D8'
+  when: ansible_os_family == 'Debian' and ansible_distribution_release == 'xenial'
+
+- name: Add Repository
+  apt_repository:
+    repo: "deb http://ftp.osuosl.org/pub/mariadb/repo/{{ galera_version }}/ubuntu {{ ansible_distribution_release }} main"
+    state: present
+  when: ansible_os_family == 'Debian'
+
+- name: Install Galera
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - mariadb-server
+    - python-mysqldb
+  when: ansible_os_family == 'Debian'

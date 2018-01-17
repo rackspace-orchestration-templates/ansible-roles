@@ -1,8 +1,8 @@
 ---
-- include: install_debian.yml
+- include_tasks: install_debian.yml
   when: ansible_os_family == 'Debian' and phpmyadmin_install == 'True'
 
-- include: install_configure_redhat.yml
+- include_tasks: install_configure_redhat.yml
   when: ansible_os_family == 'RedHat' and phpmyadmin_install == 'True'
 
 - name: Copy PHPMyAdmin Configuration
