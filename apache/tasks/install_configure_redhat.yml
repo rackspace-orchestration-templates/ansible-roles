@@ -1,4 +1,24 @@
 ---
+- name: Include RedHat Vars
+  include_vars: RedHat.yml
+
+- name: Install packages for httpd
+  yum:
+    pkg: "{{ item }}"
+    state: present
+  with_items:
+    - httpd
+    - mod_ssl
+
+- name: Set apache_pkg fact
+  set_fact:
+    apache_pkg: 'httpd'
+
+- name: Copy ports.conf
+  template:
+    src: 'Common/ports.conf.j2'
+    dest: '/etc/{{ apache_pkg }}/conf.d/ports.conf'
+
 - name: Configure HTTPD to run on startup
   service:
     name: httpd
@@ -6,16 +26,17 @@
 
 - name: Copy httpd.conf
   template:
-    src: 'RedHat/{{ apache_ver }}/httpd.conf.j2'
+    src: 'RedHat/httpd.conf.j2'
     dest: '/etc/httpd/conf/httpd.conf'
   notify:
-  - Restart Apache
+    - Restart Apache
 
 - name: Copy ssl.conf
   template:
-    src: 'RedHat/{{ apache_ver }}/ssl.conf.j2'
+    src: 'RedHat/ssl.conf.j2'
     dest: '/etc/httpd/conf.d/ssl.conf'
-  notify: Restart Apache
+  notify:
+    - Restart Apache
 
 - name: Generate SSL certificate
   shell: '/etc/ssl/certs/make-dummy-cert /etc/ssl/certs/snakeoil.key'
@@ -28,17 +49,16 @@
     mode: 0755
     state: directory
   notify:
-  - Restart Apache
+    - Restart Apache
 
 - name: Configure vhosts
   template:
     src: 'Common/vhost.conf.j2'
     dest: '/etc/httpd/vhost.d/{{ item.name }}.conf'
-  with_items:
-    apache_vhosts
+  with_items: "{{ apache_vhosts }}"
   when: apache_vhosts is defined
   notify:
-  - Restart Apache
+    - Restart Apache
 
 - name: Set up VHOST root
   file:
@@ -52,8 +72,7 @@
     state: directory
     owner: '{{ apache_user }}'
     group: '{{ apache_user }}'
-  with_items:
-    apache_vhosts
+  with_items: "{{ apache_vhosts }}"
   when: apache_vhosts is defined
 
 - name: Configure default welcome pages
@@ -61,6 +80,16 @@
     src: 'Common/index.html.j2'
     dest: '/var/www/vhosts/{{ item.name }}/index.html'
     force: no
-  with_items:
-    apache_vhosts
+  with_items: "{{ apache_vhosts }}"
   when: apache_vhosts is defined
+
+- name: Update firewall
+  firewalld:
+    service: "{{ item }}"
+    permanent: true
+    state: enabled
+    zone: public
+    immediate: yes
+  with_items:
+    - http
+    - https

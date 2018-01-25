@@ -1,15 +1,10 @@
 ---
-- include: install_ubuntu.yml
-  when: ansible_distribution == "Ubuntu"
+- include_tasks: install.yml
 
-- include: install_redhat.yml
+- include_vars: RedHat.yml
   when: ansible_os_family == 'RedHat'
 
-- include: configure_debian.yml
+- include_vars: Debian.yml
   when: ansible_os_family == 'Debian'
 
-- include: configure_redhat.yml
-  when: ansible_os_family == 'RedHat'
-
-- include: configure_master.yml
-  when: galera_role == 'master'
+- include_tasks: configure.yml

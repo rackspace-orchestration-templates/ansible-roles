@@ -1,11 +1,28 @@
 ---
+- name: Include Debian Vars
+  include_vars: Debian.yml
+
+- name: Install apache2
+  apt:
+    name: apache2
+    state: present
+
+- name: Set apache_pkg fact
+  set_fact:
+    apache_pkg: 'apache2'
+
+- name: Copy ports.conf
+  template:
+    src: 'Common/ports.conf.j2'
+    dest: '/etc/{{ apache_pkg }}/ports.conf'
+
 # Only on Ubuntu 14.04 or Debian 8
 - name: Unlink MPM modules
   command: 'a2dismod mpm_*'
   when: ansible_distribution_major_version == '8' or ansible_distribution_version == '14.04'
   ignore_errors: yes
   notify:
-  - Restart Apache
+    - Restart Apache
 
 - name: Configure Apache2 to run on startup
   service:
@@ -14,10 +31,10 @@
 
 - name: Copy apache2.conf
   template:
-    src: 'Debian/{{ apache_ver }}/apache2.conf.j2'
+    src: 'Debian/apache2.conf.j2'
     dest: '/etc/apache2/apache2.conf'
   notify:
-  - Restart Apache
+    - Restart Apache
 
 - name: Create SSL Mutex directory - Apache 2.4
   file:
@@ -29,47 +46,45 @@
 
 - name: Copy Module Configurations
   template:
-    src: 'Debian/{{ apache_ver }}/mods/{{ item }}.conf.j2'
-    dest: '/etc/apach32/mods-available/{{ item }}.conf'
+    src: 'Debian/mods/{{ item }}.conf.j2'
+    dest: '/etc/apache2/mods-available/{{ item }}.conf'
     owner: root
     group: root
-  with_items: apache_modules_config
-  when: apache_modules_config is defined
+  with_items: "{{ apache_modules_configs }}"
+  # when: apache_modules_configs is defined
   notify:
-  - Restart Apache
+    - Restart Apache
 
 - name: Enable modules
   command: 'a2enmod {{ item }}'
-  with_items: apache_modules
-  when: apache_modules is defined
+  with_items: "{{ apache_modules }}"
+  # when: apache_modules is defined
   notify:
-  - Restart Apache
+    - Restart Apache
 
 - name: Remove default site
   file:
     path: '/etc/apache2/sites-enabled/000-default.conf'
     state: absent
   notify:
-  - Restart Apache
+    - Restart Apache
 
 - name: Configure vhosts
   template:
     src: 'Common/vhost.conf.j2'
     dest: '/etc/apache2/sites-available/{{ item.name }}.conf'
-  with_items:
-    apache_vhosts
-  when: apache_vhosts is defined
+  with_items: "{{ apache_vhosts }}"
+  # when: apache_vhosts is defined
 
 - name: Enable vhosts
   file:
     src: '/etc/apache2/sites-available/{{ item.name }}.conf'
     path: '/etc/apache2/sites-enabled/{{ item.name }}.conf'
     state: link
-  with_items:
-    apache_vhosts
-  when: apache_vhosts is defined
+  with_items: "{{ apache_vhosts }}"
+  # when: apache_vhosts is defined
   notify:
-  - Restart Apache
+    - Restart Apache
 
 - name: Set up VHOST root
   file:
@@ -83,15 +98,13 @@
     state: directory
     owner: '{{ apache_user }}'
     group: '{{ apache_user }}'
-  with_items:
-    apache_vhosts
-  when: apache_vhosts is defined
+  with_items: "{{ apache_vhosts }}"
+  # when: apache_vhosts is defined
 
 - name: Configure default welcome pages
   template:
     src: 'Common/index.html.j2'
     dest: '/var/www/vhosts/{{ item.name }}/index.html'
     force: no
-  with_items:
-    apache_vhosts
-  when: apache_vhosts is defined
+  with_items: "{{ apache_vhosts }}"
+  # when: apache_vhosts is defined

@@ -3,7 +3,7 @@ jenkins_java_path: ""
 jenkins_java_options: ""
 
 jenkins_home_path: ""
-jenkins_log_path: ""
+jenkins_log_path: "/var/log/jenkins/jenkins.log"
 jenkins_ip: ""
 jenkins_port: ""
 jenkins_args: ""

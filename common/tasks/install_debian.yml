@@ -1,19 +1,14 @@
 ---
-- name: Install python-selinux
+- name: Install packages
   apt:
-    name: python-selinux
+    pkg: "{{ item }}"
     state: present
-
-- name: Install Vim
-  apt:
-    name: vim
-    state: present
-
-- name: Install NTPD
-  apt:
-    name: ntp
-    state: present
+    update_cache: yes
+  with_items:
+    - python-selinux
+    - vim
+    - ntp
 
 - name: Set NTP Service Fact
   set_fact:
-    ntp_service: ntpd
+    ntp_service: ntp

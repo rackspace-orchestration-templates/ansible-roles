@@ -1,4 +1,7 @@
 ---
+- name: Include Debian Vars
+  include_vars: Debian.yml
+
 - name: Configure default PHPMyAdmin settings
   shell: 'echo "phpmyadmin phpmyadmin/reconfigure-webserver multiselect apache2" | debconf-set-selections'
 
@@ -15,12 +18,9 @@
 
 - name: Import phpmyadmin data
   mysql_db:
-    login_host: '{{ phpmyadmin_host }}'
-    login_user: '{{ phpmyadmin_user }}'
-    login_password: '{{ phpmyadmin_pass }}'
-    name: 'phpmyadmin'
+    login_host: "{{ phpmyadmin_host }}"
+    login_user: "{{ phpmyadmin_user }}"
+    login_password: "{{ phpmyadmin_pass }}"
+    name: phpmyadmin
     state: import
-    target: '/usr/share/doc/phpmyadmin/examples/create_tables.sql'
-
-- name: Include Debian Vars
-  include_vars: Debian.yml
+    target: /usr/share/doc/phpmyadmin/examples/create_tables.sql

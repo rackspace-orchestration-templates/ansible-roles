@@ -1,7 +1,7 @@
 ---
 - name: Download WordPress CLI
   get_url:
-    url: 'https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar'
+    url: 'https://github.com/wp-cli/wp-cli/releases/download/v1.4.0/wp-cli-1.4.0.phar'
     dest: '/tmp/wp-cli.phar'
     mode: '0644'
     validate_certs: no

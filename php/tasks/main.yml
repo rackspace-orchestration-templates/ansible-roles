@@ -1,8 +1,18 @@
 ---
-- include: install_debian.yml
+- include_tasks: install_debian.yml
   when: ansible_os_family == 'Debian'
 
-- include: install_redhat.yml
+- include_tasks: install_redhat.yml
   when: ansible_os_family == 'RedHat'
 
-- include: configure_common.yml
+- name: Configure PHP
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items: "{{ php_modules_config }}"
+
+- name: Restart Apache
+  service:
+    name: "{{ apache_pkg }}"
+    state: restarted
+  when: apache_pkg is defined

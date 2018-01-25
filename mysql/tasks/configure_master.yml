@@ -5,4 +5,4 @@
     password: '{{ mysql_slave_password }}'
     priv: '*.*:REPLICATION SLAVE'
     host: '{{ item }}'
-  with_items: mysql_slave_nodes
+  with_items: '{{ mysql_slave_nodes }}'
