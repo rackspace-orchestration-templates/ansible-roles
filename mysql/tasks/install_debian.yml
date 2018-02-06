@@ -24,6 +24,12 @@
     state: link
   when: ansible_distribution == "Ubuntu"
 
+- name: Disable AppArmor (continued)
+  shell: apparmor_parser -R /etc/apparmor.d/usr.sbin.mysqld
+  args:
+    executable: /bin/bash
+  when: ansible_distribution == "Ubuntu"
+
 - name: Reload AppArmor Config (Ubuntu)
   service:
     name: apparmor
